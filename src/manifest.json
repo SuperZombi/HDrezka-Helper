@@ -1,0 +1,15 @@
+{
+   "manifest_version": 2,
+   "version": "1.0",
+   "name": "HDrezka Downloader",
+   "description": "Добавляет кнопку «Скачать» под видео.",
+   "content_scripts": [{
+      "matches": ["https://hdrezka.cm/*", "https://rezka.ag/*"],
+      "js": ["script.js"],
+      "run_at": "document_end"
+   }],
+   "icons": {
+      "128": "images/logo.png"
+   },
+   "minimum_chrome_version": "71.0.3578.80"
+}
