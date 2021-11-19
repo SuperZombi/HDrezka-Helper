@@ -4,13 +4,21 @@ window.onload = function(){
 	document.body.appendChild(script);
 }
 
-var main = async function() {
-	try{
+var main = function() {
+	try{ main() }
+	catch{}
+
+	function main(){
 		var arr = CDNPlayerInfo.streams.split(",")
 		createButton()
 		createDownloadMenu(arr)
+		document.getElementById("player").onclick = function(){
+			main()
+		}
+	}
 
-		function createButton() {
+	function createButton() {
+		if (!document.getElementById("downloadButton")){
 			el = document.getElementById("send-video-issue")
 			let div = document.createElement("div");
 			div.id = "downloadButton"
@@ -43,8 +51,10 @@ var main = async function() {
 
 			el.parentNode.insertBefore(div, el);
 		}
+	}
 
-		async function createDownloadMenu(array){
+	async function createDownloadMenu(array){
+		if (!document.getElementById("downloadMenu")){
 			let div = document.createElement("div")
 			div.id = "downloadMenu"
 			div.style.minHeight = "50px"
@@ -63,114 +73,117 @@ var main = async function() {
 			div.style.transition = "0.5s"
 
 			document.getElementById("send-video-issue").parentNode.appendChild(div)
-
-			var Videos = []
-			for (const e of array) {
-				var temp = e.split("[")[1].split("]")
-				var quality = temp[0]
-				var link = temp[1].split(" or ")[1]
-				var size = await getFileSize(link)
-				size = formatBytes(size, 1)
-				Videos.push({res: quality, link: link, size: size})
-			}
-
-			for (const e of Videos) {
-				let a = document.createElement("a")
-				a.href = e.link
-				a.target = '_blank'
-				a.download = "video.mp4"
-				a.title = "Нажмите на ссылку, удерживая клавишу Alt или Ctrl, чтобы сохранить файл."
-				a.style.display = "block"
-				a.style.color = "white"
-				a.style.textDecoration = "none"
-				a.style.padding = "0 5px"
-				a.style.margin = "2px 0"
-				a.style.borderRadius = "4px"
-
-				a.onmouseover = function(){
-					a.style.background = "blue"
-				}
-				a.onmouseout = function(){
-					a.style.background = null
-				}
-
-				let span = document.createElement("span")
-				span.innerHTML = e.res
-				let span2 = document.createElement("span")
-				span2.style.float = "right"
-				span2.innerHTML = e.size
-
-				a.appendChild(span)
-				a.appendChild(span2)
-
-				div.appendChild(a)
-			}
+		}
+		else{
+			document.getElementById("downloadMenu").innerHTML = ""
 		}
 
-		var timer;
-		function show_download_menu(){
-			let div = document.getElementById("downloadMenu")
-			setTimeout(function(){
-				document.body.onclick = hide_download_menu
-			}, 50)
-			if (div.style.display == "none"){
-				div.style.display = "block"
-				setTimeout(function(){
-					div.style.transform = "scale(1)"
-					div.style.opacity = 1
-				}, 10)
-			}
-			else{
-				if (timer) {
-					clearTimeout(timer);
-					div.style.transform = "scale(1)"
-					div.style.opacity = 1
-				}
-			}
-		}
-		function hide_download_menu(e){
-			let div = document.getElementById("downloadMenu")
-			if (e.target.closest("div") != div){
-				div.style.transform = "scale(0)"
-				div.style.opacity = 0
-				setTimeout(function(){
-					document.body.onclick = ""
-				}, 50)
-				timer = setTimeout(function(){
-					div.style.display = "none"
-				}, 400)
-			}
+		let div_ = document.getElementById("downloadMenu")
+		var Videos = []
+		for (const e of array) {
+			var temp = e.split("[")[1].split("]")
+			var quality = temp[0]
+			var link = temp[1].split(" or ")[1]
+			var size = await getFileSize(link)
+			size = formatBytes(size, 1)
+			Videos.push({res: quality, link: link, size: size})
 		}
 
+		for (const e of Videos) {
+			let a = document.createElement("a")
+			a.href = e.link
+			a.target = '_blank'
+			a.download = "video.mp4"
+			a.title = "Нажмите на ссылку, удерживая клавишу Alt или Ctrl, чтобы сохранить файл."
+			a.style.display = "block"
+			a.style.color = "white"
+			a.style.textDecoration = "none"
+			a.style.padding = "0 5px"
+			a.style.margin = "2px 0"
+			a.style.borderRadius = "4px"
 
-		async function getFileSize(url)
-		{
-			return await new Promise((resolve, reject) => {
-				var http = new XMLHttpRequest();
-			    http.open('HEAD', url, true); // true = Asynchronous
-			    http.onreadystatechange = function() {
-			        if (this.readyState == this.DONE) {
-			            if (this.status === 200) {
-			                fileSize = this.getResponseHeader('content-length');
-			                resolve(fileSize)
-			            }
-			        }
-			    };
-			    http.send();
-			})
-		}
+			a.onmouseover = function(){
+				a.style.background = "blue"
+			}
+			a.onmouseout = function(){
+				a.style.background = null
+			}
 
-		function formatBytes(bytes, decimals = 2) {
-		    if (bytes === 0) return '0 Bytes';
+			let span = document.createElement("span")
+			span.innerHTML = e.res
+			let span2 = document.createElement("span")
+			span2.style.float = "right"
+			span2.innerHTML = e.size
 
-		    const k = 1024;
-		    const dm = decimals < 0 ? 0 : decimals;
-		    const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+			a.appendChild(span)
+			a.appendChild(span2)
 
-		    const i = Math.floor(Math.log(bytes) / Math.log(k));
-
-		    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+			div_.appendChild(a)
 		}
 	}
-	catch{}
+
+	var timer;
+	function show_download_menu(){
+		let div = document.getElementById("downloadMenu")
+		setTimeout(function(){
+			document.body.onclick = hide_download_menu
+		}, 50)
+		if (div.style.display == "none"){
+			div.style.display = "block"
+			setTimeout(function(){
+				div.style.transform = "scale(1)"
+				div.style.opacity = 1
+			}, 10)
+		}
+		else{
+			if (timer) {
+				clearTimeout(timer);
+				div.style.transform = "scale(1)"
+				div.style.opacity = 1
+			}
+		}
+	}
+	function hide_download_menu(e){
+		let div = document.getElementById("downloadMenu")
+		if (e.target.closest("div") != div){
+			div.style.transform = "scale(0)"
+			div.style.opacity = 0
+			setTimeout(function(){
+				document.body.onclick = ""
+			}, 50)
+			timer = setTimeout(function(){
+				div.style.display = "none"
+			}, 400)
+		}
+	}
+
+
+	async function getFileSize(url)
+	{
+		return await new Promise((resolve, reject) => {
+			var http = new XMLHttpRequest();
+		    http.open('HEAD', url, true); // true = Asynchronous
+		    http.onreadystatechange = function() {
+		        if (this.readyState == this.DONE) {
+		            if (this.status === 200) {
+		                fileSize = this.getResponseHeader('content-length');
+		                resolve(fileSize)
+		            }
+		        }
+		    };
+		    http.send();
+		})
+	}
+
+	function formatBytes(bytes, decimals = 2) {
+	    if (bytes === 0) return '0 Bytes';
+
+	    const k = 1024;
+	    const dm = decimals < 0 ? 0 : decimals;
+	    const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+
+	    const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+	    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+	}
 };
