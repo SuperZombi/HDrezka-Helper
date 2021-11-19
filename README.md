@@ -1,5 +1,6 @@
 # HDrezka downloader
-Adds a Download button below the video.
+
+Добавляет кнопку «Скачать» под видео.
 
 <img src="https://shields.io/badge/version-v1.0-blue">
 
@@ -15,7 +16,6 @@ Adds a Download button below the video.
 5. Нажмите ```Загрузить распакованое расширение```.
 6. Выберите путь к папке ```src```.
 
-</br>
 <hr>
 
-#### <a href="https://www.donationalerts.com/r/super_zombi">Support the project</a>
+#### <a href="https://www.donationalerts.com/r/super_zombi">Поддержать</a>
