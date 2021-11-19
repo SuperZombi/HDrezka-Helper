@@ -128,6 +128,7 @@ var main = function() {
 			a.style.padding = "0 5px"
 			a.style.margin = "2px 0"
 			a.style.borderRadius = "4px"
+			a.style.transition = "0.2s"
 
 			a.onmouseover = function(){
 				a.style.background = "blue"
