@@ -43,21 +43,18 @@ var main = function() {
 							</svg>`
 			div.style.right = "55px"
 			div.style.top = "0"
-			div.style.height = "46px"
-			div.style.width = "46px"
+			div.style.height = "50px"
+			div.style.width = "50px"
 			div.style.position = "absolute"
 			div.style.cursor = "pointer"
-			div.style.border = "2px solid green"
-			div.style.borderRadius = "35%"
-			div.style.transition = "0.35s"
+			div.style.transition = "0.3s"
+			div.style.background = "#2d2d2d"
 
 			div.onmouseover = function(){
-				div.style.background = "lightgreen"
-				div.style.borderRadius = "40%"
+				div.style.background = "#4D4D4D"
 			}
 			div.onmouseout = function(){
-				div.style.background = null
-				div.style.borderRadius = "35%"
+				div.style.background = "#2d2d2d"
 			}
 			div.onclick = show_download_menu
 
