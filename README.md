@@ -3,7 +3,9 @@ Adds a Download button below the video
 
 <img src="https://shields.io/badge/version-v1.0-blue">
 
-<img src="img.png">
+<p align="center">
+   <img src="img.png">
+</p>
 
 ## Установка:
 1. ```Code``` > ```Download Zip```.
