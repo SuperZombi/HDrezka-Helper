@@ -14,3 +14,8 @@ Adds a Download button below the video.
 4. Включите ```Режим разработчика```.
 5. Нажмите ```Загрузить распакованое расширение```.
 6. Выберите путь к папке ```src```.
+
+</br>
+<hr>
+
+#### <a href="https://www.donationalerts.com/r/super_zombi">Support the project</a>
