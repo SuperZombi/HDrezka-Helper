@@ -5,23 +5,23 @@ window.onload = function(){
 }
 
 var main = function() {
-	try{ main(); temp_video_src = ""; checkVideoChange();}
+	try{
+		main();
+		temp_video_src = document.getElementById('player').getElementsByTagName("video")[0].src
+
+		let observer = new MutationObserver(function(mutations) {
+			mutations.forEach(function(mutation) {
+				if (temp_video_src != document.getElementById('player').getElementsByTagName("video")[0].src) {
+					temp_video_src = document.getElementById('player').getElementsByTagName("video")[0].src
+					main();
+				}
+			});
+		});
+
+		observer.observe(document.querySelector("body"), {childList: true, subtree: true});
+	}
 	catch{}
 
-	function checkVideoChange(){
-		document.getElementById("player").onclick = function(){
-			setTimeout(function(){
-				if (temp_video_src != document.getElementById('player').getElementsByTagName("video")[0].src)
-				{
-					main()
-					temp_video_src = document.getElementById('player').getElementsByTagName("video")[0].src
-				}
-				else{
-					setTimeout(function(){checkVideoChange()}, 100)
-				}
-			}, 100)
-		}
-	}
 
 	function main(){
 		var arr = CDNPlayerInfo.streams.split(",")
