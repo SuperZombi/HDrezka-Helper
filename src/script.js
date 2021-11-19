@@ -5,16 +5,28 @@ window.onload = function(){
 }
 
 var main = function() {
-	try{ main() }
+	try{ main(); temp_video_src = ""; checkVideoChange();}
 	catch{}
+
+	function checkVideoChange(){
+		document.getElementById("player").onclick = function(){
+			setTimeout(function(){
+				if (temp_video_src != document.getElementById('player').getElementsByTagName("video")[0].src)
+				{
+					main()
+					temp_video_src = document.getElementById('player').getElementsByTagName("video")[0].src
+				}
+				else{
+					setTimeout(function(){checkVideoChange()}, 100)
+				}
+			}, 100)
+		}
+	}
 
 	function main(){
 		var arr = CDNPlayerInfo.streams.split(",")
 		createButton()
 		createDownloadMenu(arr)
-		document.getElementById("player").onclick = function(){
-			main()
-		}
 	}
 
 	function createButton() {
