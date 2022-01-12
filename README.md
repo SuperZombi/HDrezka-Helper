@@ -2,10 +2,9 @@
 
 Добавляет кнопку «Скачать» под видео.
 
-<img src="https://shields.io/badge/version-v1.0-blue">
+<img src="https://shields.io/badge/version-v2.0-blue">
 
-## ❗Не работает❗
-### ❗HdRezka заблокировали своё API❗
+#### Работает с новым API от 05.01.2022
 
 <hr></br>
 
