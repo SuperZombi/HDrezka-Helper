@@ -24,9 +24,53 @@ var main = function() {
 
 
 	function main(){
-		var arr = CDNPlayerInfo.streams.split(",")
+		var arr = clearTrash(CDNPlayerInfo.streams).split(",")
 		createButton()
 		createDownloadMenu(arr)
+	}
+
+	function clearTrash(data){
+		function product(iterables, repeat) {
+			var argv = Array.prototype.slice.call(arguments), argc = argv.length;
+			if (argc === 2 && !isNaN(argv[argc - 1])) {
+				var copies = [];
+			for (var i = 0; i < argv[argc - 1]; i++) {
+				copies.push(argv[0].slice()); // Clone
+			}
+			argv = copies;
+			}
+			return argv.reduce(function tl(accumulator, value) {
+			var tmp = [];
+			accumulator.forEach(function(a0) {
+				value.forEach(function(a1) {
+				tmp.push(a0.concat(a1));
+				});
+			});
+			return tmp;
+			}, [[]]);
+		}
+		function unite(arr){
+			var final = [];
+			arr.forEach(function(e){
+				final.push(e.join(""))
+			})
+			return final;
+		}
+		var trashList = ["@","#","!","^","$"];
+		var two = unite(product(trashList, 2));
+		var tree = unite(product(trashList, 3));
+		var trashCodesSet = two.concat(tree);
+
+		var arr = data.replace("#h", "").split("//_//");
+		var trashString = arr.join('');
+
+		trashCodesSet.forEach(function(i){
+			var temp = btoa(i)
+			trashString = trashString.replaceAll(temp, '')
+		})
+
+		var final_string = atob(trashString);
+		return final_string;
 	}
 
 	function createButton() {
@@ -190,28 +234,28 @@ var main = function() {
 	{
 		return await new Promise((resolve, reject) => {
 			var http = new XMLHttpRequest();
-		    http.open('HEAD', url, true); // true = Asynchronous
-		    http.onreadystatechange = function() {
-		        if (this.readyState == this.DONE) {
-		            if (this.status === 200) {
-		                fileSize = this.getResponseHeader('content-length');
-		                resolve(fileSize)
-		            }
-		        }
-		    };
-		    http.send();
+			http.open('HEAD', url, true); // true = Asynchronous
+			http.onreadystatechange = function() {
+				if (this.readyState == this.DONE) {
+					if (this.status === 200) {
+						fileSize = this.getResponseHeader('content-length');
+						resolve(fileSize)
+					}
+				}
+			};
+			http.send();
 		})
 	}
 
 	function formatBytes(bytes, decimals = 2) {
-	    if (bytes === 0) return '0 Bytes';
+		if (bytes === 0) return '0 Bytes';
 
-	    const k = 1024;
-	    const dm = decimals < 0 ? 0 : decimals;
-	    const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+		const k = 1024;
+		const dm = decimals < 0 ? 0 : decimals;
+		const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
 
-	    const i = Math.floor(Math.log(bytes) / Math.log(k));
+		const i = Math.floor(Math.log(bytes) / Math.log(k));
 
-	    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+		return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
 	}
 };
