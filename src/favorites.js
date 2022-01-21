@@ -12,9 +12,11 @@ window.onload = function(){
 		localStorage.setItem(`parsedArray${num}`, JSON.stringify(parseContent()));
 		if (num+1 >= arr.length){
 			var finalResult = {};
+			localStorage.removeItem(`parseArray`);
 			for (let i = 0; i < arr.length; i++) {
 				let parsed = JSON.parse(localStorage.getItem(`parsedArray${i}`));
 				finalResult[arr[i].name] = parsed
+				localStorage.removeItem(`parsedArray${i}`);
 			}
 			download('my_favorites.json', JSON.stringify(finalResult, null, 2));
 			document.location.replace("https://hdrezka.cm/favorites/")
