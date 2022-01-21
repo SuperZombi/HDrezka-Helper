@@ -2,7 +2,7 @@
 
 Добавляет кнопку «Скачать» под видео.
 
-<img src="https://shields.io/badge/version-v2.0-blue">
+<img src="https://shields.io/badge/version-v2.1-blue">
 
 #### Работает с новым API от 05.01.2022
 
@@ -20,6 +20,8 @@
 5. Нажмите ```Загрузить распакованое расширение```.
 6. Выберите путь к папке ```src```.
 
+## Новое:
+* <details><summary>Экспорт закладок</summary><img src="favorites.png"></details>
 <hr>
 
 #### <a href="https://www.donationalerts.com/r/super_zombi">Поддержать</a>
