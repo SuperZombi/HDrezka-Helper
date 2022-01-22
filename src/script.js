@@ -4,8 +4,13 @@ chrome.storage.sync.get({ download: true, hideVK: true }, results => {
 	}
 	if (results.download){
 		window.onload = function(){
+			let chrome_arr = {
+				downloadStr: chrome.i18n.getMessage("downloadStr"),
+				downloadLinkDesc: chrome.i18n.getMessage("downloadLinkDesc"),
+			}
+
 			var script = document.createElement('script');
-			script.appendChild(document.createTextNode('(' + main + ')();'));
+			script.appendChild(document.createTextNode('(' + main + ')('+JSON.stringify(chrome_arr)+');'));
 			document.body.appendChild(script);
 		}
 	}
@@ -18,7 +23,8 @@ function hideVK(){
 	}
 }
 
-var main = function() {
+
+var main = function(chrome_i18n) {
 	try{
 		main();
 		temp_video_src = document.getElementById('player').getElementsByTagName("video")[0].src
@@ -92,7 +98,7 @@ var main = function() {
 			el = document.getElementById("send-video-issue")
 			let div = document.createElement("div");
 			div.id = "downloadButton"
-			div.title = "Скачать"
+			div.title = chrome_i18n.downloadStr
 			div.innerHTML = `<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 330 330" xml:space="preserve">
 								<g fill="green">
 									<path d="M211.667,127.121l-31.669,31.666V75c0-8.285-6.716-15-15-15c-8.284,0-15,6.715-15,15v83.787l-31.665-31.666 c-5.857-5.857-15.355-5.857-21.213,0c-5.858,5.859-5.858,15.355,0,21.213l57.271,57.271c2.929,2.93,6.768,4.395,10.606,4.395 c3.838,0,7.678-1.465,10.607-4.393l57.275-57.271c5.857-5.857,5.858-15.355,0.001-21.215 C227.021,121.264,217.524,121.264,211.667,127.121z"/>
@@ -179,7 +185,7 @@ var main = function() {
 			a.href = e.link
 			a.target = '_blank'
 			a.download = "video.mp4"
-			a.title = "Нажмите на ссылку, удерживая клавишу Alt, чтобы сохранить файл."
+			a.title = chrome_i18n.downloadLinkDesc
 			a.style.display = "block"
 			a.style.color = "white"
 			a.style.textDecoration = "none"
