@@ -8,7 +8,8 @@ chrome.storage.sync.get({ export: true, export_animation: true }, results => {
 
 				let el = document.getElementsByClassName("b-content__htitle")[0];
 				let span = document.createElement("span");
-				span.innerHTML = `— Экспорт ${num+1}/${arr.length}`
+				let exportStr = chrome.i18n.getMessage("exportStr");
+				span.innerHTML = `— ${exportStr} ${num+1}/${arr.length}`
 				span.style.color = "cornflowerblue";
 				el.appendChild(span)
 
@@ -39,7 +40,7 @@ chrome.storage.sync.get({ export: true, export_animation: true }, results => {
 					</g>
 				</svg>
 				`
-				div.title = "Экспорт"
+				div.title = chrome.i18n.getMessage("exportStr")
 				div.style.cursor = "pointer"
 				div.style.verticalAlign = "bottom"
 				div.style.borderRadius = "8px"
