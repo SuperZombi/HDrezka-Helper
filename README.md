@@ -22,6 +22,7 @@
 
 ## Новое:
 * <details><summary>Экспорт закладок</summary><img src="github/images/favorites.png"></details>
+* Скрытие блока с группой ВК
 <hr>
 
 #### <a href="https://www.donationalerts.com/r/super_zombi">Поддержать</a>
