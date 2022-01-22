@@ -29,7 +29,6 @@ label input[type="checkbox"]{
 	font-size: 11pt;
 	margin-left: 8px;
 	transition: 0.2s;
-
 }
 .sub-disabled{
 	filter: grayscale(1);
