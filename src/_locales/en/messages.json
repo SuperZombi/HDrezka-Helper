@@ -1,6 +1,6 @@
 {
    "extDesc": {
-      "message": "Adds a «Download» button below the video. Export favorites and more."
+      "message": "Adds a «Download» button below the video. Export favorites and more"
    },
    "versionStr": {
       "message": "version"
@@ -37,5 +37,11 @@
    },
    "saveBut": {
       "message": "Save"
+   },
+   "downloadStr": {
+      "message": "Download"
+   },
+   "downloadLinkDesc": {
+      "message": "Alt click on the link to save the file"
    }
 }
