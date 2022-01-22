@@ -1,6 +1,6 @@
 {
    "manifest_version": 2,
-   "version": "2.1",
+   "version": "2.2",
    "name": "HDrezka Downloader",
    "description": "Добавляет кнопку «Скачать» под видео.",
    "content_scripts": [{
@@ -16,6 +16,16 @@
    ],
    "icons": {
       "128": "images/logo.png"
+   },
+   "permissions": [
+      "storage"
+   ],
+   "options_ui": {
+      "open_in_tab": false,
+      "page": "options.html"
+   },
+   "browser_action": {
+      "default_popup": "options.html"
    },
    "homepage_url": "https://github.com/SuperZombi/HDrezka-downloader",
    "minimum_chrome_version": "71.0.3578.80"
