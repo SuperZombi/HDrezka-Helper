@@ -4,7 +4,9 @@
 
 <img src="https://shields.io/badge/version-v2.2-blue">
 
-<a href="https://github.com/SuperZombi/HDrezka-downloader/releases/tag/2.2">Скачать</a>
+<a href="https://github.com/SuperZombi/HDrezka-downloader/releases/tag/2.2">
+   <img src="github/images/Downloads-Icon.png" height="25px">
+   Скачать</a>
 
 #### Работает с новым API от 05.01.2022
 
