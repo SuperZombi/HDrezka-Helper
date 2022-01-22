@@ -7,6 +7,8 @@ body{
 }
 h3{
 	text-align: center;
+	padding-right: 30px;
+	padding-left: 30px;
 }
 .cursor{
 	cursor: pointer;
