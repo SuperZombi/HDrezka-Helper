@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link rel='stylesheet' href='https://cdn.jsdelivr.net/gh/alphardex/aqua.css/dist/aqua.min.css'>
+	<style>
+		body{
+			font-size: 14pt;
+			white-space: nowrap;
+			padding-right: 25px;
+			padding-left: 25px;
+			text-align: left;
+		}
+		h3{
+			text-align: center;
+		}
+		.cursor{
+			cursor: pointer;
+		}
+		label{
+			margin-top: 5px;
+			display: flex;
+    	align-items: center;
+		}
+		label input[type="checkbox"]{
+			transform: scale(0.9);
+			margin-right: 5px !important;
+		}
+		#save {
+			display: block;
+			margin-left: auto;
+			margin-right: auto;
+		  border: 5em;
+		  cursor: pointer;
+		  outline: none;
+		  font-size: 18px;
+		  transform: translate(0);
+		  background-image: linear-gradient(45deg, #4568dc, #b06ab3);
+		  padding: 0.7em 2em;
+		  border-radius: 65px;
+		  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.5);
+		  transition: box-shadow 0.25s, font-size 0.3s ease-out;
+		  color: black;
+		}
+		#save:after {
+		  content: "";
+		  border-radius: 18px;
+		  position: absolute;
+		  margin: 4px;
+		  top: 0;
+		  left: 0;
+		  bottom: 0;
+		  right: 0;
+		  z-index: -1;
+		  background: white;
+		}
+		#save:hover {
+		  background-image: linear-gradient(-45deg, #4568dc, #b06ab3);
+		  box-shadow: 0 12px 24px rgba(128, 128, 128, 0.1) !important;
+		}
+		.disabled{
+			font-size: 0px !important;
+		}
+		.other-links{
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+		#href_text{
+			color: blue;
+			cursor: alias;
+			vertical-align: top;
+			font-size: 13pt;
+			display:flex;
+		}
+		#href_text svg{
+			transform: scale(0.95);
+			margin-right: 6px;
+		}
+
+		.dark{
+			background-color: #181818;
+			color: white;
+		}
+		.dark svg{
+			fill: white;
+		}
+		.dark #href_text{
+			color: #00C0FF;
+		}
+		.dark #save{
+			box-shadow: 1px 1px 10px rgba(255, 255, 255, 0.5);
+			color: white;
+		}
+		.dark #save:after {
+			background: #181818;
+		}
+	</style>
+</head>
+<body>
+	<h3>HDrezka Downloader</h3>
+	<hr>
+
+  <label>
+  	<input class="form-check-input" type="checkbox" id="export">
+    <a class="cursor" title="Добавить кнопку экпорта закладок">Экспорт закладок</a>
+  </label>
+  <label>
+  	<input class="form-check-input" type="checkbox" id="hideVK">
+    <a class="cursor">Скрывать VK</a>
+  </label>
+
+    <hr>
+
+    <button class="disabled" id="save">Сохранить</button>
+
+    <p class="other-links">
+    	<a id="href_text" href="https://github.com/SuperZombi/HDrezka-downloader" target="_blank">
+    		<svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+    		<span>GitHub</span>
+    	</a>
+
+    	<img style="margin-top:2px;" src="https://shields.io/badge/version-v2.2-blue">
+    </p>
+  <script src="options.js"></script>
+</body>
+</html>
