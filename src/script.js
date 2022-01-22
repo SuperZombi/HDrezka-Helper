@@ -1,14 +1,15 @@
-chrome.storage.sync.get({ hideVK: true }, results => {
+chrome.storage.sync.get({ download: true, hideVK: true }, results => {
 	if (results.hideVK){
 		hideVK()
 	}
+	if (results.download){
+		window.onload = function(){
+			var script = document.createElement('script');
+			script.appendChild(document.createTextNode('(' + main + ')();'));
+			document.body.appendChild(script);
+		}
+	}
 });
-
-window.onload = function(){
-	var script = document.createElement('script');
-	script.appendChild(document.createTextNode('(' + main + ')();'));
-	document.body.appendChild(script);
-}
 
 function hideVK(){
 	let el_ = document.getElementById("vk_groups");
