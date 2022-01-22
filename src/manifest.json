@@ -1,8 +1,8 @@
 {
    "manifest_version": 2,
-   "version": "2.2.1",
-   "name": "HDrezka Downloader",
-   "description": "Добавляет кнопку «Скачать» под видео.",
+   "version": "2.3",
+   "name": "HDrezka Helper",
+   "description": "Добавляет кнопку «Скачать» под видео. Экспорт закладок и многое другое.",
    "content_scripts": [{
       "matches": ["https://hdrezka.cm/*", "https://rezka.ag/*"],
       "js": ["script.js"],
