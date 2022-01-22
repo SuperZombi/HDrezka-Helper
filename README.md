@@ -4,7 +4,7 @@
 
 <img src="https://shields.io/badge/version-v2.2.1-blue">
 
-<a href="https://github.com/SuperZombi/HDrezka-downloader/releases/tag/2.2">
+<a href="https://github.com/SuperZombi/HDrezka-downloader/releases/tag/2.2.1">
    <img src="github/images/Downloads-Icon.png" height="25px">
    Скачать
 </a>
