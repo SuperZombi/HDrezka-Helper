@@ -1,4 +1,4 @@
-chrome.storage.sync.get({ export: true }, results => {
+chrome.storage.sync.get({ export: true, export_animation: true }, results => {
   if (results.export){
 
 		window.onload = function(){
@@ -40,15 +40,8 @@ chrome.storage.sync.get({ export: true }, results => {
 				</svg>
 				`
 				div.title = "Экспорт"
-				div.style.height = "0px"
-				div.style.width = "0px"
-				div.style.transform = "scale(0)"
-				div.style.transformOrigin = "center"
-				div.style.opacity = 0
-				div.style.margin = "0 0px"
 				div.style.cursor = "pointer"
 				div.style.verticalAlign = "bottom"
-				div.style.padding = "0px"
 				div.style.borderRadius = "8px"
 				div.style.transition = "0.3s"
 				div.style.boxShadow = "0 0 4px grey"
@@ -59,18 +52,38 @@ chrome.storage.sync.get({ export: true }, results => {
 					div.style.boxShadow = "0 0 4px grey"
 				}
 				div.onclick = parse
-				el.prepend(div)
-				setTimeout(function(){
-					div.style.height = "35px"
-					div.style.width = "35px"
-					div.style.margin = "0 5px"
-					div.style.padding = "5px"
-					div.style.transform = "scale(1)"
-					div.style.display = "inline-block"
-					div.style.opacity = 1
 
-					el.style.marginBottom = "2px"	
-				}, 50)
+				if (results.export_animation){
+					div.style.height = "0px"
+					div.style.width = "0px"
+					div.style.margin = "0 0px"
+					div.style.padding = "0px"
+					div.style.transform = "scale(0)"
+					div.style.transformOrigin = "center"
+					div.style.opacity = 0					
+
+					el.prepend(div)
+					setTimeout(function(){
+						div.style.height = "35px"
+						div.style.width = "35px"
+						div.style.margin = "0 5px"
+						div.style.padding = "5px"
+						div.style.transform = "scale(1)"
+						div.style.display = "inline-block"
+						div.style.opacity = 1
+
+						el.style.marginBottom = "2px"	
+					}, 50)
+
+				}
+				else{
+						div.style.height = "35px"
+						div.style.width = "35px"
+						div.style.margin = "0 5px"
+						div.style.padding = "5px"
+						div.style.display = "inline-block"
+						el.prepend(div)
+				}
 				
 			}
 		}
