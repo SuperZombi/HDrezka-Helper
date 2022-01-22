@@ -39,7 +39,7 @@ function checkSub(element){
   }
 }
 
-chrome.storage.sync.get({ export: true, export_animation: true, hideVK: true }, results => {
+chrome.storage.sync.get({ download: true, export: true, export_animation: true, hideVK: true }, results => {
   var els = document.getElementsByTagName("input")
   Object.keys(els).forEach(function(e){
     els[e].checked = results[els[e].id];
@@ -49,6 +49,7 @@ chrome.storage.sync.get({ export: true, export_animation: true, hideVK: true }, 
 
   document.getElementById("save").onclick = _ => {
     chrome.storage.sync.set({
+      download: document.getElementById("download").checked,
       export: document.getElementById("export").checked,
       export_animation: document.getElementById("export_animation").checked,
       hideVK: document.getElementById("hideVK").checked,
