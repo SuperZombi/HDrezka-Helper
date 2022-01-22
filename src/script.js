@@ -1,7 +1,20 @@
+chrome.storage.sync.get({ hideVK: true }, results => {
+	if (results.hideVK){
+		hideVK()
+	}
+});
+
 window.onload = function(){
 	var script = document.createElement('script');
 	script.appendChild(document.createTextNode('(' + main + ')();'));
 	document.body.appendChild(script);
+}
+
+function hideVK(){
+	let el_ = document.getElementById("vk_groups");
+	if (el_){
+		el_.style.display = "none";
+	}
 }
 
 var main = function() {
