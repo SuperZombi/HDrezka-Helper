@@ -1,0 +1,41 @@
+{
+   "extDesc": {
+      "message": "Добавляет кнопку «Скачать» под видео. Экспорт закладок и многое другое."
+   },
+   "versionStr": {
+      "message": "версия"
+   },
+   "goToStr": {
+      "message": "Перейти"
+   },
+   "downloadBut": {
+      "message": "Кнопка «Скачать»"
+   },
+   "downloadButDesc": {
+      "message": "Добавить кнопку загрузки видео"
+   },
+   "exportBut": {
+      "message": "Экспорт закладок"
+   },
+   "exportStr":{
+      "message": "Экспорт"
+   },
+   "exportButDesc": {
+      "message": "Добавить кнопку экспорта закладок"
+   },
+   "animationBut": {
+      "message": "Анимация"
+   },
+   "animationButDesc": {
+      "message": "Анимация появления кнопки"
+   },
+   "hideVkBut": {
+      "message": "Скрывать VK"
+   },
+   "hideVkButDesc": {
+      "message": "Скрывать блок с группой ВК"
+   },
+   "saveBut": {
+      "message": "Сохранить"
+   }
+}
