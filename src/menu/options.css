@@ -14,12 +14,37 @@ h3{
 label{
 	margin-top: 5px;
 	display: flex;
-align-items: center;
+	align-items: center;
+	flex-wrap: wrap;
+	width: 100%;
 }
 label input[type="checkbox"]{
 	transform: scale(0.9);
 	margin-right: 5px !important;
 }
+.sub{
+	font-size: 11pt;
+	margin-left: 8px;
+	transition: 0.2s;
+
+}
+.sub-disabled{
+	filter: grayscale(1);
+}
+.sub input[type="checkbox"]{
+	transform: scale(0.75);
+	margin-left: 3px;
+}
+.sub::before{
+	content: "";
+	display: block;
+	height: 8px;
+	width: 15px;
+	border: solid black;
+	border-width: 0 0 3px 3px;
+	margin-top: -8px;
+}
+
 #save {
 	display: block;
 	margin-left: auto;
@@ -88,4 +113,7 @@ label input[type="checkbox"]{
 }
 .dark #save:after {
 	background: #181818;
+}
+.dark .sub::before{
+	border-color: white;
 }
