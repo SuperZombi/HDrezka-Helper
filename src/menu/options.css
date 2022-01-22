@@ -4,6 +4,7 @@ body{
 	padding-right: 25px;
 	padding-left: 25px;
 	text-align: left;
+	user-select: none;
 }
 h3{
 	text-align: center;
