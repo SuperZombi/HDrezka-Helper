@@ -25,6 +25,13 @@
 5. Нажмите ```Загрузить распакованое расширение```.
 6. Выберите путь к папке ```src```.
 
+## Настройки
+<details><summary></summary>
+<p align="center">
+   <img src="github/images/settings.png">
+</p>
+</details>
+
 ## Новое:
 * <details><summary>Экспорт закладок.</summary><img src="github/images/favorites.png"></details>
 * Скрытие блока с группой ВК.
