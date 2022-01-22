@@ -22,10 +22,10 @@
    ],
    "options_ui": {
       "open_in_tab": false,
-      "page": "options.html"
+      "page": "menu/options.html"
    },
    "browser_action": {
-      "default_popup": "options.html"
+      "default_popup": "menu/options.html"
    },
    "homepage_url": "https://github.com/SuperZombi/HDrezka-downloader",
    "minimum_chrome_version": "71.0.3578.80"
