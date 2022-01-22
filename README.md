@@ -2,7 +2,7 @@
 
 Добавляет кнопку «Скачать» под видео. Экспорт закладок и многое другое.
 
-<img src="https://shields.io/badge/version-v2.3-blue">
+<img src="https://shields.io/badge/version-v2.4-blue">
 
 <a href="https://github.com/SuperZombi/HDrezka-downloader/releases/tag/2.3">
    <img src="github/images/Downloads-Icon.png" height="25px">
