@@ -8,11 +8,14 @@ else{
 }
 
 function obserse(element, arr){
-  var els = document.getElementsByTagName("input")
+  let els = document.getElementById("main-wraper").getElementsByTagName("label")
   var enabled = false;
+  if (!blocking){
+    checkSub(element)
+  }
   for (let i = 0; i < els.length; i++){
-    checkSub(els[i])
-    if (els[i].checked != arr[els[i].id]){
+    let inpt = els[i].getElementsByTagName("input")[0]
+    if (inpt.checked != arr[inpt.id]){
       enabled = true;
       break;
     }
@@ -25,26 +28,32 @@ function obserse(element, arr){
   }
 }
 
+var blocking = false;
 function checkSub(element){
-  let els_ = element.parentNode.getElementsByClassName("sub")
-  if (element.checked){
-    Object.keys(els_).forEach(function(e){
-      els_[e].classList.remove("sub-disabled")
-    })
-  }
-  else{
-    Object.keys(els_).forEach(function(e){
-      els_[e].classList.add("sub-disabled")
-    })    
-  }
+  blocking = true;
+  let childs = element.children
+  let input = element.getElementsByTagName("input")[0]
+  Object.keys(childs).forEach(function(el){
+    if (childs[el].classList.contains("sub")){
+      if (input.checked){
+        childs[el].classList.remove("sub-disabled")
+      }
+      else{
+        childs[el].classList.add("sub-disabled") 
+      }
+    }
+  })
+
+  setTimeout(function(){blocking = false;}, 100)
 }
 
 chrome.storage.sync.get({ download: true, export: true, export_animation: true, hideVK: true }, results => {
-  var els = document.getElementsByTagName("input")
-  Object.keys(els).forEach(function(e){
-    els[e].checked = results[els[e].id];
-    els[e].onclick = function(){obserse(els[e], results)}
-    checkSub(els[e])
+  let labels = document.getElementById("main-wraper").getElementsByTagName("label")
+  Object.keys(labels).forEach(function(e){
+    let input = labels[e].getElementsByTagName("input")[0]
+    input.checked = results[input.id]
+    labels[e].onclick = function(){obserse(labels[e], results)}
+    checkSub(labels[e])
   })
 
   document.getElementById("save").onclick = _ => {
