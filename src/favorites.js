@@ -72,8 +72,6 @@ chrome.storage.sync.get({ export: true, export_animation: true }, results => {
 						div.style.transform = "scale(1)"
 						div.style.display = "inline-block"
 						div.style.opacity = 1
-
-						el.style.marginBottom = "2px"	
 					}, 50)
 
 				}
