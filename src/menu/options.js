@@ -11,7 +11,7 @@ function obserse(element, arr){
   let els = document.getElementById("main-wraper").getElementsByTagName("label")
   var enabled = false;
   if (!blocking){
-    checkSub(element)
+    setTimeout(function(){checkSub(element)}, 10)
   }
   for (let i = 0; i < els.length; i++){
     let inpt = els[i].getElementsByTagName("input")[0]
