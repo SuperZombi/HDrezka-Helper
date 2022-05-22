@@ -23,7 +23,7 @@ chrome.storage.sync.get({ export: true, export_animation: true }, results => {
 						localStorage.removeItem(`parsedArray${i}`);
 					}
 					download('my_favorites.json', JSON.stringify(finalResult, null, 2));
-					document.location.replace("https://hdrezka.cm/favorites/")
+					document.location.replace(window.location.origin + "/favorites/")
 				}
 				else{
 					document.location.replace(arr[num+1].link)
