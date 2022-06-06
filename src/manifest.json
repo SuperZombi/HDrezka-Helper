@@ -1,24 +1,25 @@
 {
    "manifest_version": 3,
-   "version": "3.0.1",
+   "version": "3.0.2",
    "name": "HDrezka Helper",
    "description": "__MSG_extDesc__",
    "default_locale": "en",
    "web_accessible_resources": [
       {
          "resources": [ "myscript.js" ],
-         "matches": [ "https://hdrezka.cm/*", "https://rezka.ag/*", "https://hdrezka.ag/*" ]
+         "matches": [ "https://hdrezka.cm/*", "https://rezka.ag/*", "https://hdrezka.ag/*", "http://hdrezka.me/*" ]
       }
    ],
    "content_scripts": [{
-      "matches": [ "https://hdrezka.cm/*", "https://rezka.ag/*", "https://hdrezka.ag/*" ],
+      "matches": [ "https://hdrezka.cm/*", "https://rezka.ag/*", "https://hdrezka.ag/*", "http://hdrezka.me/*" ],
       "js": ["script.js"],
       "run_at": "document_end"
    },
    {
       "matches": ["https://hdrezka.cm/favorites/*",
                   "https://rezka.ag/favorites/*",
-                  "https://hdrezka.ag/favorites/*"],
+                  "https://hdrezka.ag/favorites/*",
+                  "http://hdrezka.me/favorites/*"],
       "js": ["favorites.js"],
       "run_at": "document_end"
    }
