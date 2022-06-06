@@ -37,4 +37,4 @@
 * Скрытие блока с группой ВК.
 <hr>
 
-#### <a href="https://www.donationalerts.com/r/super_zombi">Поддержать</a>
+#### <a href="https://www.donationalerts.com/r/super_zombi">Поддержать</a> (Но сейчас лучше напишите на почту и я вышлю вам реквизиты)
