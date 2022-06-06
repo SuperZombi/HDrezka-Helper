@@ -7,11 +7,11 @@
    "web_accessible_resources": [
       {
          "resources": [ "myscript.js" ],
-         "matches": [ "https://hdrezka.cm/*", "https://rezka.ag/*", "https://hdrezka.ag/*", "http://hdrezka.me/*" ]
+         "matches": [ "https://hdrezka.cm/*", "https://rezka.ag/*", "https://hdrezka.ag/*", "https://hdrezka.me/*" ]
       }
    ],
    "content_scripts": [{
-      "matches": [ "https://hdrezka.cm/*", "https://rezka.ag/*", "https://hdrezka.ag/*", "http://hdrezka.me/*" ],
+      "matches": [ "https://hdrezka.cm/*", "https://rezka.ag/*", "https://hdrezka.ag/*", "https://hdrezka.me/*" ],
       "js": ["script.js"],
       "run_at": "document_end"
    },
@@ -19,7 +19,7 @@
       "matches": ["https://hdrezka.cm/favorites/*",
                   "https://rezka.ag/favorites/*",
                   "https://hdrezka.ag/favorites/*",
-                  "http://hdrezka.me/favorites/*"],
+                  "https://hdrezka.me/favorites/*"],
       "js": ["favorites.js"],
       "run_at": "document_end"
    }
