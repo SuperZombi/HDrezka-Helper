@@ -47,7 +47,11 @@ function checkSub(element){
   setTimeout(function(){blocking = false;}, 100)
 }
 
-chrome.storage.sync.get({ download: true, export: true, export_animation: true, hideVK: true }, results => {
+chrome.storage.sync.get({ download: true,
+                          subtitles: true,
+                          export: true,
+                          export_animation: true,
+                          hideVK: true }, results => {
   let labels = document.getElementById("main-wraper").getElementsByTagName("label")
   Object.keys(labels).forEach(function(e){
     let input = labels[e].getElementsByTagName("input")[0]
@@ -57,12 +61,14 @@ chrome.storage.sync.get({ download: true, export: true, export_animation: true, 
   })
 
   document.getElementById("save").onclick = _ => {
-    chrome.storage.sync.set({
-      download: document.getElementById("download").checked,
-      export: document.getElementById("export").checked,
-      export_animation: document.getElementById("export_animation").checked,
-      hideVK: document.getElementById("hideVK").checked,
-    }, _ => {
+    let labels = document.getElementById("main-wraper").getElementsByTagName("label")
+    let settings = {};
+    Object.keys(labels).forEach(function(e){
+      let input = labels[e].getElementsByTagName("input")[0]
+      settings[input.id] = input.checked;
+    })
+
+    chrome.storage.sync.set(settings, _ => {
       // Reload extension to make opt-out change immediate. 
       chrome.runtime.reload();
       window.close();
