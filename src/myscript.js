@@ -6,6 +6,7 @@
 })();
 
 function script(chrome_i18n) {
+	var args = chrome_i18n.args;
 	try{
 		main();
 		temp_video_src = document.getElementById('player').getElementsByTagName("video")[0].src
@@ -24,10 +25,13 @@ function script(chrome_i18n) {
 	catch{}
 
 
-	function main(){
+	async function main(){
 		var arr = clearTrash(CDNPlayerInfo.streams).split(",")
 		createButton()
-		createDownloadMenu(arr)
+		await createDownloadMenu(arr)
+		if (args.subtitles){
+			addSubtitles()
+		}
 	}
 
 	function clearTrash(data){
@@ -112,7 +116,7 @@ function script(chrome_i18n) {
 			let div = document.createElement("div")
 			div.id = "downloadMenu"
 			div.style.minHeight = "50px"
-			div.style.width = "155px"
+			div.style.width = "160px"
 			div.style.background = "#5D5D5D"
 			div.style.position = "absolute"
 			div.style.borderRadius = "5px"
@@ -149,49 +153,87 @@ function script(chrome_i18n) {
 		}
 
 		let div_ = document.getElementById("downloadMenu")
-		var Videos = []
+		div_.innerHTML = ""
 		for (const e of array) {
-			var temp = e.split("[")[1].split("]")
-			var quality = temp[0]
-			var link = temp[1].split(" or ")[1]
-			var size = await getFileSize(link)
-			size = formatBytes(size, 1)
-			Videos.push({res: quality, link: link, size: size})
+			var temp = e.split("[")[1].split("]");
+			var quality = temp[0];
+			var link = temp[1].split(" or ")[1];
+			var size = await getFileSize(link);
+			size = formatBytes(size, 1);
+
+			let element = makeLink(quality, link, size);
+			div_.appendChild(element);
+		}
+	}
+
+	function makeLink(title, href, size){
+		let a = document.createElement("a")
+		a.href = href
+		a.target = '_blank'
+		a.download = "video.mp4"
+		a.title = chrome_i18n.downloadLinkDesc
+		a.style.display = "block"
+		a.style.color = "white"
+		a.style.textDecoration = "none"
+		a.style.padding = "0 5px"
+		a.style.margin = "2px 0"
+		a.style.borderRadius = "4px"
+		a.style.transition = "0.2s"
+
+		a.onmouseover = function(){
+			a.style.background = "blue"
+		}
+		a.onmouseout = function(){
+			a.style.background = null
 		}
 
-		div_.innerHTML = ""
+		let span = document.createElement("span")
+		span.innerHTML = title
+		let span2 = document.createElement("span")
+		span2.style.float = "right"
+		span2.innerHTML = size
 
-		for (const e of Videos) {
-			let a = document.createElement("a")
-			a.href = e.link
-			a.target = '_blank'
-			a.download = "video.mp4"
-			a.title = chrome_i18n.downloadLinkDesc
-			a.style.display = "block"
-			a.style.color = "white"
-			a.style.textDecoration = "none"
-			a.style.padding = "0 5px"
-			a.style.margin = "2px 0"
-			a.style.borderRadius = "4px"
-			a.style.transition = "0.2s"
+		a.appendChild(span)
+		a.appendChild(span2)
+		return a;
+	}
 
-			a.onmouseover = function(){
-				a.style.background = "blue"
+	function addSubtitles(){
+		const Subtitles = CDNPlayerInfo.subtitle;
+		if (Subtitles){
+			let div_ = document.getElementById("downloadMenu");
+			let details = document.createElement("details");
+			details.style.border = "1px solid white";
+			details.style.borderRadius = "8px";
+			details.style.margin = "2px";
+			details.style.marginTop = "8px";
+			details.style.cursor = "pointer";
+			let summary = document.createElement("summary");
+			summary.innerHTML = chrome_i18n.subtitles;
+			summary.style.color = "aqua";
+			summary.style.borderRadius = "8px";
+			summary.style.textAlign = "center";
+			summary.style.transition = "0.2s"
+			summary.onmouseover = function(){
+				summary.style.background = "blueviolet"
 			}
-			a.onmouseout = function(){
-				a.style.background = null
+			summary.onmouseout = function(){
+				summary.style.background = null
 			}
 
-			let span = document.createElement("span")
-			span.innerHTML = e.res
-			let span2 = document.createElement("span")
-			span2.style.float = "right"
-			span2.innerHTML = e.size
+			details.appendChild(summary);
+			div_.appendChild(details);
 
-			a.appendChild(span)
-			a.appendChild(span2)
+			Subtitles.split(",").forEach(async function(e){
+				let temp = e.split("[")[1].split("]");
+				let lang = temp[0];
+				let link = temp[1];
+				let size = await getFileSize(link);
+				size = formatBytes(size, 1);
 
-			div_.appendChild(a)
+				let element = makeLink(lang, link, size);
+				details.appendChild(element);
+			})
 		}
 	}
 
