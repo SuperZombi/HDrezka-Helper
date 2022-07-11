@@ -2,7 +2,7 @@
 
 Добавляет кнопку «Скачать» под видео. Экспорт закладок и многое другое.
 
-<img src="https://shields.io/badge/version-v3.0.2-blue">
+<img src="https://shields.io/badge/version-v3.1.0-blue">
 
 <a href="https://github.com/SuperZombi/HDrezka-downloader/releases">
    <img src="github/images/Downloads-Icon.png" height="25px">
@@ -35,6 +35,7 @@
 ## Новое:
 * <details><summary>Экспорт закладок.</summary><img src="github/images/favorites.png"></details>
 * Скрытие блока с группой ВК.
+* Скачивание субтитров
 <hr>
 
 #### <a href="https://www.donationalerts.com/r/super_zombi">Поддержать</a> (Но сейчас лучше напишите на почту и я вышлю вам реквизиты)
