@@ -1,4 +1,7 @@
-chrome.storage.sync.get({ download: true, hideVK: true }, results => {
+chrome.storage.sync.get({ download: true,
+						  hideVK: true,
+						  subtitles: true,
+						}, results => {
 	if (results.hideVK){
 		hideVK()
 	}
@@ -7,6 +10,11 @@ chrome.storage.sync.get({ download: true, hideVK: true }, results => {
 			let chrome_arr = {
 				downloadStr: chrome.i18n.getMessage("downloadStr"),
 				downloadLinkDesc: chrome.i18n.getMessage("downloadLinkDesc"),
+				subtitles: chrome.i18n.getMessage("subtitles"),
+
+				args: {
+					subtitles: results.subtitles
+				}
 			}
 
 			const script = document.createElement('script');
