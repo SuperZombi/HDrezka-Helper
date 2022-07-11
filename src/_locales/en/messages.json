@@ -43,5 +43,11 @@
    },
    "downloadLinkDesc": {
       "message": "Alt click on the link to save the file"
+   },
+   "subtitles": {
+      "message": "Subtitles"
+   },
+   "subtitlesDesc": {
+      "message": "Add subtitles download menu"
    }
 }
