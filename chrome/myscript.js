@@ -1,29 +1,23 @@
 (() => {
-  const el = document.currentScript;
-  const args = JSON.parse(el.dataset.args);
-  script(args.chrome_arr)
-  el.remove();
+	const el = document.currentScript;
+	const args = JSON.parse(el.dataset.args);
+	script(args.chrome_arr)
+	el.remove();
 })();
 
 function script(chrome_i18n) {
 	var args = chrome_i18n.args;
-	try{
-		main();
-		temp_video_src = document.getElementById('player').getElementsByTagName("video")[0].src
-
-		let observer = new MutationObserver(function(mutations) {
-			mutations.forEach(function(mutation) {
-				if (temp_video_src != document.getElementById('player').getElementsByTagName("video")[0].src) {
-					temp_video_src = document.getElementById('player').getElementsByTagName("video")[0].src
-					main();
-				}
-			});
+	main();
+	temp_video_src = document.getElementById('player').getElementsByTagName("video")[0].src
+	let observer = new MutationObserver(function(mutations) {
+		mutations.forEach(function(mutation) {
+			if (temp_video_src != document.getElementById('player').getElementsByTagName("video")[0].src) {
+				temp_video_src = document.getElementById('player').getElementsByTagName("video")[0].src
+				main();
+			}
 		});
-
-		observer.observe(document.querySelector("body"), {childList: true, subtree: true});
-	}
-	catch{}
-
+	});
+	observer.observe(document.querySelector("body"), {childList: true, subtree: true});
 
 	async function main(){
 		var arr = clearTrash(CDNPlayerInfo.streams).split(",")
@@ -277,7 +271,7 @@ function script(chrome_i18n) {
 	{
 		return await new Promise((resolve, reject) => {
 			var http = new XMLHttpRequest();
-			http.open('HEAD', url, true); // true = Asynchronous
+			http.open('HEAD', url, true);
 			http.onreadystatechange = function() {
 				if (this.readyState == this.DONE) {
 					if (this.status === 200) {
@@ -292,13 +286,10 @@ function script(chrome_i18n) {
 
 	function formatBytes(bytes, decimals = 2) {
 		if (bytes === 0) return '0 Bytes';
-
 		const k = 1024;
 		const dm = decimals < 0 ? 0 : decimals;
 		const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
-
 		const i = Math.floor(Math.log(bytes) / Math.log(k));
-
 		return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
 	}
 };
