@@ -25,7 +25,7 @@ chrome.storage.sync.get({ download: true,
 				script.dataset.args = JSON.stringify({chrome_arr});
 				document.documentElement.appendChild(script);
 			}
-		}	
+		}
 	}
 });
 
