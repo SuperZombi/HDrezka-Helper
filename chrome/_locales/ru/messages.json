@@ -41,6 +41,33 @@
    "downloadStr": {
       "message": "Скачать"
    },
+   "cancelDownload": {
+      "message": "Отменить"
+   },
+   "fileNamePattern": {
+      "message": "Шаблон имени файла"
+   },
+   "pressPercentToPasteVars": {
+      "message": "Нажмите <code>%</code>, чтобы вставить переменную"
+   },
+   "help": {
+      "message": "Помощь"
+   },
+   "movieTitle": {
+      "message": "Название фильма"
+   },
+   "season": {
+      "message": "Сезон"
+   },
+   "episode": {
+      "message": "Эпизод"
+   },
+   "translation": {
+      "message": "Перевод"
+   },
+   "resolution": {
+      "message": "Качество"
+   },
    "downloadLinkDesc": {
       "message": "Нажмите на ссылку, удерживая клавишу Alt, чтобы сохранить файл"
    },

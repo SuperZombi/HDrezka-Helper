@@ -111,9 +111,11 @@ function script(chrome_i18n) {
 			div.id = "downloadMenu"
 			div.style.minHeight = "50px"
 			div.style.width = "160px"
-			div.style.background = "#5D5D5D"
+			div.style.background = "rgba(93, 93, 93, 0.5)"
+			div.style.backdropFilter = "blur(5px)"
 			div.style.position = "absolute"
-			div.style.borderRadius = "5px"
+			div.style.borderRadius = "6px"
+			div.style.padding = "4px"
 			div.style.filter = "drop-shadow(black 2px 4px 6px)"
 			div.style.zIndex = "2"
 			div.style.right = "0"
@@ -160,22 +162,130 @@ function script(chrome_i18n) {
 		}
 	}
 
+	function buildFileName(name, season, episode, translation, res){
+		if (args.filename_structure){
+			var selectArray = {
+				"title": name,
+				"s": season,
+				"ep": episode,
+				"transl": translation,
+				"res": res
+			}
+			let temp = args.filename_structure
+			Object.keys(selectArray).forEach(function(e){
+				if (selectArray[e]){
+					temp = temp.replaceAll("%" + e, selectArray[e])
+				}else{
+					temp = temp.replaceAll("%" + e, "")
+				}
+			})
+			return temp
+		}else{return "video"}
+	}
+
 	function makeLink(title, href, size){
 		let a = document.createElement("a")
-		a.href = href
-		a.target = '_blank'
-		a.download = "video.mp4"
-		a.title = chrome_i18n.downloadLinkDesc
+		if (args.downloader_2){
+			a.title = chrome_i18n.downloadStr
+			a.onclick = _=>{
+				if (!a.getAttribute("blocked")){
+					a.setAttribute("blocked", true)
+					let season, episode, translation, name;
+					var xhr = new XMLHttpRequest();
+					let el = document.querySelector("#simple-episodes-tabs .active")
+					if (el){
+						season = el.getAttribute("data-season_id")
+						episode = el.getAttribute("data-episode_id")
+					}
+					let el2 = document.querySelector("#translators-list .active")
+					if (el2){
+						translation = el2.innerText
+					}
+					name = document.querySelector('.b-content__main .b-post__title').innerText
+
+					var targetFileName = buildFileName(name, season, episode, translation, title)
+
+					let div = document.createElement("span")
+					div.className = "download-area"
+					div.style.display = "flex"
+					div.style.alignItems = "center"
+					div.style.padding = "6px 0"
+					let progress = document.createElement("progress")
+					progress.max = 100;
+					let percentage = document.createElement("span")
+					percentage.style.marginLeft = "5px"
+					percentage.innerHTML = "0%"
+					let close_but = document.createElement("button")
+					close_but.innerHTML = "✖"
+					close_but.style.marginLeft = "5px"
+					close_but.style.borderRadius = "50px"
+					close_but.style.border = "2px solid transparent"
+					close_but.style.height = "20px";
+					close_but.style.width = "20px";
+					close_but.style.display = "flex";
+					close_but.style.alignItems = "center";
+					close_but.style.justifyContent = "center";
+					close_but.style.color = "red";
+					close_but.style.transition = "0.25s"
+					close_but.title = chrome_i18n.cancelDownload
+					close_but.onclick = _=>{
+						xhr.abort();
+						a.querySelector(".download-area").remove()
+						a.style.background = null
+						setTimeout(function(){
+							a.removeAttribute("blocked")
+						}, 100)
+					}
+					close_but.onmouseover = _=>{
+						close_but.style.borderColor = "red"
+					}
+					close_but.onmouseout = _=>{
+						close_but.style.borderColor = "transparent"
+					}
+					div.appendChild(progress)
+					div.appendChild(percentage)
+					div.appendChild(close_but)
+					a.appendChild(div)
+
+					window.URL = window.URL || window.webkitURL;
+					xhr.open('GET', href, true);
+					xhr.responseType = 'blob';
+					xhr.onprogress = prog=>{
+						let percentComplete = Math.round((prog.loaded / prog.total) * 100);
+						progress.value = percentComplete;
+						percentage.innerHTML = percentComplete + "%"
+					}
+					xhr.onload = function () {
+						var file = new Blob([xhr.response], { type : 'application/octet-stream' });
+						let a_el = document.createElement('a')
+						a_el.href = window.URL.createObjectURL(file);
+						a_el.download = targetFileName + '.mp4'; 
+						a_el.click();
+						setTimeout(function(){
+							close_but.click();
+						}, 1000)
+					};
+					xhr.send();
+				}
+			}
+		}
+		else{
+			a.href = href
+			a.target = '_blank'
+			a.download = "video.mp4"
+			a.title = chrome_i18n.downloadLinkDesc
+		}
 		a.style.display = "block"
 		a.style.color = "white"
 		a.style.textDecoration = "none"
-		a.style.padding = "0 5px"
+		a.style.padding = "4px 5px"
 		a.style.margin = "2px 0"
-		a.style.borderRadius = "4px"
+		a.style.borderRadius = "6px"
 		a.style.transition = "0.2s"
+		a.style.cursor = "pointer"
 
 		a.onmouseover = function(){
-			a.style.background = "blue"
+			a.style.background = "rgb(0, 0, 255, 0.75)"
 		}
 		a.onmouseout = function(){
 			a.style.background = null
@@ -254,7 +364,7 @@ function script(chrome_i18n) {
 	}
 	function hide_download_menu(e){
 		let div = document.getElementById("downloadMenu")
-		if (e.target.closest("div") != div){
+		if (e.target.closest("div") && e.target.closest("div") != div){
 			div.style.transform = "scale(0)"
 			div.style.opacity = 0
 			setTimeout(function(){

@@ -41,6 +41,33 @@
    "downloadStr": {
       "message": "Завантажити"
    },
+   "cancelDownload": {
+      "message": "Скасувати"
+   },
+   "fileNamePattern": {
+      "message": "Шаблон імені файлу"
+   },
+   "pressPercentToPasteVars": {
+      "message": "Натисніть <code>%</code>, щоб вставити змінну"
+   },
+   "help": {
+      "message": "Допомога"
+   },
+   "movieTitle": {
+      "message": "Назва фільму"
+   },
+   "season": {
+      "message": "Сезон"
+   },
+   "episode": {
+      "message": "Епізод"
+   },
+   "translation": {
+      "message": "Переклад"
+   },
+   "resolution": {
+      "message": "Якість"
+   },
    "downloadLinkDesc": {
       "message": "Натисніть на посилання, утримуючи клавішу Alt, щоб зберегти файл"
    },

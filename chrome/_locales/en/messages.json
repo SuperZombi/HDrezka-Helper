@@ -41,6 +41,33 @@
    "downloadStr": {
       "message": "Download"
    },
+   "cancelDownload": {
+      "message": "Cancel"
+   },
+   "fileNamePattern": {
+      "message": "File name pattern"
+   },
+   "pressPercentToPasteVars": {
+      "message": "Press <code>%</code> to insert var"
+   },
+   "help": {
+      "message": "Help"
+   },
+   "movieTitle": {
+      "message": "Movie title"
+   },
+   "season": {
+      "message": "Season"
+   },
+   "episode": {
+      "message": "Episode"
+   },
+   "translation": {
+      "message": "Translation"
+   },
+   "resolution": {
+      "message": "Resolution"
+   },
    "downloadLinkDesc": {
       "message": "Alt click on the link to save the file"
    },

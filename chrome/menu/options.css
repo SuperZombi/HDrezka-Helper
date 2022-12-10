@@ -119,3 +119,64 @@ label input[type="checkbox"]{
 .dark .sub::before{
 	border-color: white;
 }
+
+#filename_structure{
+	height: 16px;
+	font-size: 16px;
+	border: 1px solid;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	padding: 4px;
+	border-radius: 4px;
+	margin-top: 5px;
+}
+#filename_structure .cursor{
+	background: orange;
+	width: 2px;
+	height: 16px;
+	display: block;
+	animation: 0.7s cursor_anim infinite;
+}
+#filename_structure .space{
+	width: 6px;
+}
+@keyframes cursor_anim{
+	0%{
+		opacity: 0;
+	}
+	50% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
+	}
+}
+#filename_structure .select-area{
+	display: flex;
+	flex-direction: column;
+	background: lightblue;
+	padding: 0 6px;
+	border-radius: 8px;
+	z-index: 2;
+}
+.dark .select-area{
+	color: #444444;
+}
+#filename_structure .select-area.opened{
+	align-self: flex-start;
+	padding: 2px;
+}
+#filename_structure .select-area > *{
+	transition: 0.2s;
+	padding: 2px 6px;
+	border-radius: 10px;
+}
+#filename_structure .select-area > .hover{
+	background: #00C0FF;
+	cursor: pointer;
+}
+
+#filename_structure_block table tr td:last-child{
+	text-align: center;
+}

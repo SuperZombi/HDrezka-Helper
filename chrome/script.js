@@ -1,4 +1,6 @@
 chrome.storage.sync.get({ download: true,
+						  downloader_2: false,
+                          filename_structure: "",
 						  hideVK: true,
 						  subtitles: true,
 						}, results => {
@@ -15,9 +17,12 @@ chrome.storage.sync.get({ download: true,
 					downloadStr: chrome.i18n.getMessage("downloadStr"),
 					downloadLinkDesc: chrome.i18n.getMessage("downloadLinkDesc"),
 					subtitles: chrome.i18n.getMessage("subtitles"),
+					cancelDownload: chrome.i18n.getMessage("cancelDownload"),
 
 					args: {
-						subtitles: results.subtitles
+						subtitles: results.subtitles,
+						downloader_2: results.downloader_2,
+						filename_structure: results.filename_structure,
 					}
 				}
 				const script = document.createElement('script');
