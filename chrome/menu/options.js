@@ -96,14 +96,12 @@ function dinamic_input(init_value){
         input.insertBefore(temp, input.querySelector(".cursor"));
       }
       else{
-        if (e.key.match(/[\wА-я-_.\[\] ]/g)){
-          let temp = document.createElement("span")
-          temp.innerHTML = e.key;
-          if (e.key == " "){
-            temp.className = "space"
-          }
-          input.insertBefore(temp, input.querySelector(".cursor"));
+        let temp = document.createElement("span")
+        temp.innerHTML = e.key;
+        if (e.key == " "){
+          temp.className = "space"
         }
+        input.insertBefore(temp, input.querySelector(".cursor"));
       }
     }
     else{
