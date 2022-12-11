@@ -45,6 +45,7 @@
 * <details><summary>Downloader 2.0</summary>
    (Шаблон имени скачанного файла + быстрая загрузка внутри страницы)
    <img src="github/images/downloader2.png">
+   <img src="github/images/fileNamePattern.png">
 </details>
 <hr>
 
