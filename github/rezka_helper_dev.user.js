@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         HDrezka Helper DEV
-// @version      3.1.1
+// @version      3.1.1.1
 // @description  Adds a «Download» button below the video. Export favorites and more.
 // @author       Super Zombi
 // @include      *rezka.*
@@ -20,7 +20,7 @@
 	'use strict';
 
 const Console = document.createElement("div");
-Console.style.height = "40vh";
+Console.style.height = "30vh";
 Console.style.width = "100vw";
 Console.style.position = "fixed";
 Console.style.bottom = 0;
@@ -28,6 +28,7 @@ Console.style.left = 0;
 Console.style.right = 0;
 Console.style.fontSize = "1rem";
 Console.style.fontFamily = "monospace";
+Console.style.overflow = "auto";
 Console.style.background = "rgb(100, 100, 100, 0.85)";
 Console.style.color = "white";
 Console.style.zIndex = "100";
@@ -274,7 +275,9 @@ async function downloader(){
 	var arr = clearTrash(CDNPlayerInfo.streams).split(",")
 	Console.log("Create download button")
 	createButton()
+	Console.log("Create download menu")
 	await createDownloadMenu(arr)
+	Console.log("OK")
 	if (db_get("subtitles", true)){
 		addSubtitles()
 	}
