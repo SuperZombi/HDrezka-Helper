@@ -32,14 +32,20 @@ Console.style.overflow = "auto";
 Console.style.background = "rgb(100, 100, 100, 0.85)";
 Console.style.color = "white";
 Console.style.zIndex = "100";
+Console.style.direction = "rtl";
 Console.log = function(msg){
 	let element = document.createElement("div")
 	element.style.margin = "5px"
+	element.style.direction = "ltr";
+	element.style.whiteSpace = "nowrap";
 	element.innerHTML = ">> " + msg
 	Console.appendChild(element)
+	setTimeout(function(){
+		Console.scrollTo(0, Console.scrollHeight);
+	}, 0)
 }
 document.body.appendChild(Console)
-Console.log("Init Console")
+Console.log("Init Console 2.0")
 
 const locale = {
   'en': {
@@ -272,7 +278,10 @@ function hideVK(){
 
 async function downloader(){
 	Console.log("Get Streams")
+	Console.log(CDNPlayerInfo.streams)
+	Console.log(clearTrash)
 	var arr = clearTrash(CDNPlayerInfo.streams).split(",")
+	Console.log(arr)
 	Console.log("Create download button")
 	createButton()
 	Console.log("Create download menu")
