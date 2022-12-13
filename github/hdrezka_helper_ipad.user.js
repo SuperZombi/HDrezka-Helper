@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         HDrezka Helper (IPAD)
-// @version      4.0
+// @version      4.0.1
 // @description  Adds a «Download» button below the video. Export favorites and more.
 // @author       Super Zombi
 // @match        https://hdrezka.cm/*
@@ -38,7 +38,7 @@ const locale = {
 		"subtitles": "Subtitles",
 		"cancelDownload": "Cancel",
 		"fileNamePattern": "File name pattern",
-		"pressPercentToPasteVars": "Press <code>%</code> to insert var",
+		"insertVariable": "Insert Variable",
 		"help": "Help",
 		"movieTitle": "Movie title",
 		"season": "Season",
@@ -61,7 +61,7 @@ const locale = {
 		"subtitles": "Субтитры",
 		"cancelDownload": "Отменить",
 		"fileNamePattern": "Шаблон имени файла",
-		"pressPercentToPasteVars": "Нажмите <code>%</code>, чтобы вставить переменную",
+		"insertVariable": "Вставить переменную",
 		"help": "Помощь",
 		"movieTitle": "Название фильма",
 		"season": "Сезон",
@@ -84,7 +84,7 @@ const locale = {
 		"subtitles": "Субтитри",
 		"cancelDownload": "Скасувати",
 		"fileNamePattern": "Шаблон імені файлу",
-		"pressPercentToPasteVars": "Натисніть <code>%</code>, щоб вставити змінну",
+		"insertVariable": "Вставити змінну",
 		"help": "Допомога",
 		"movieTitle": "Назва фільму",
 		"season": "Сезон",
@@ -128,7 +128,7 @@ GM_registerMenuCommand(get_message('settings'), ()=>{
 	div.style.background = "white";
 	div.style.filter = "drop-shadow(0px 0px 2px black)";
 	div.style.fontSize = "14pt"
-	div.style.minWidth = "280px"
+	div.style.minWidth = "300px"
 
 	if (document.body.classList.contains("b-theme__template__night")){
 		div.style.backgroundColor = "#181818";
@@ -179,13 +179,27 @@ GM_registerMenuCommand(get_message('settings'), ()=>{
 
 		<span id="filename_structure_block" style="margin: 8px 0 10px 30px;display:none">
 				<span>${get_message("fileNamePattern")}:</span><br>
-				<div id="filename_structure" tabindex="0" style="
-						height: 16px;font-size: 16px;border: 1px solid;display: flex;flex-direction: row;
-						align-items: center;padding: 4px;border-radius: 4px;margin-top: 5px;">
+				<div style="position: relative;">
+					<input type="text" id="filename_structure" style="display: block; width: 100%;
+							font-size: 16px; margin: 5px 0; font-family: monospace;">
+					<div id="variables_list" style="position: absolute; display: none; flex-direction: column;
+							background: lightblue; color: black; padding: 3px; border-radius: 15px;
+							font-size: 0.9em; font-family: monospace;">
+						<span style="padding: 3px 12px; cursor: pointer; border-radius: 12px;"
+							value="%title">${get_message("movieTitle")}</span>
+						<span style="padding: 3px 12px; cursor: pointer; border-radius: 12px;"
+							value="%s">${get_message("season")}</span>
+						<span style="padding: 3px 12px; cursor: pointer; border-radius: 12px;"
+							value="%ep">${get_message("episode")}</span>
+						<span style="padding: 3px 12px; cursor: pointer; border-radius: 12px;"
+							value="%transl">${get_message("translation")}</span>
+						<span style="padding: 3px 12px; cursor: pointer; border-radius: 12px;"
+							value="%res">${get_message("resolution")}</span>
+					</div>
 				</div>
-				<span style="font-size: 0.8em;color:grey;">${get_message("pressPercentToPasteVars")}</span>
+				<button id="insert_variable_but">${get_message("insertVariable")}</button>
 				<details style="color:grey;font-size: 0.8em;">
-					<summary style="padding: 5px 0;cursor:pointer;">${get_message("help")}</summary>
+					<summary style="padding: 10px 0;cursor:pointer;">${get_message("help")}</summary>
 					<table>
 						<tr>
 							<td><code>%title</code></td>
@@ -241,7 +255,7 @@ GM_registerMenuCommand(get_message('settings'), ()=>{
 		<span style="margin-left:5px; color: blue;">GitHub</span>
 		</a>
 
-		<img style="margin-top:2px;" src="https://shields.io/badge/version-v4.0-blue">
+		<img style="margin-top:2px;" src="https://shields.io/badge/version-v4.0.1-blue">
 	</p>
 	`
 	div.appendChild(content)
@@ -304,13 +318,12 @@ GM_registerMenuCommand(get_message('settings'), ()=>{
 			settings[e.name] = e.value
 			}
 		})
-		settings['filename_structure'] = div.querySelector("#filename_structure").getAttribute("value")
+		settings['filename_structure'] = div.querySelector("#filename_structure").value
 		db_save(settings)
 		window.location.reload()
 	}
 	function dinamic_input(init_value){
 		var input = div.querySelector("#filename_structure")
-		var selectArray = ["title", "s", "ep", "transl", "res"]
 		set_value(init_value)
 		div.querySelector("[name=downloader_2]").onchange = e=>{
 			if (e.target.checked){
@@ -323,166 +336,35 @@ GM_registerMenuCommand(get_message('settings'), ()=>{
 		if (div.querySelector("[name=downloader_2]").checked){
 			div.querySelector("#filename_structure_block").style.display = "block"
 		}
-		input.onblur = _=>{
-			if (input.querySelector(".cursor")){
-				input.querySelector(".cursor").remove()
+		div.querySelectorAll("#variables_list > *").forEach(e=>{
+			e.onmouseover = _=>{
+				e.style.background = "#00C0FF"
 			}
+			e.onmouseout = _=>{
+				e.style.background = ""
+			}
+			e.onclick = _=>{
+				if (input.value != ""){
+					input.value += " "
+				}
+				input.value += e.getAttribute("value")
+				div.querySelector("#variables_list").style.display = "none"
+				input.focus()
+			}
+		})
+		function hideInsertMenu(){
+			div.querySelector("#variables_list").style.display = "none"
+			div.removeEventListener("click", hideInsertMenu)
 		}
-		input.onkeydown = function(e){
-			if (e.key.length == 1){
-				if (e.key == "%"){
-					let temp = document.createElement("span")
-					temp.className = "select-area opened"
-					temp.style.display = "flex"
-					temp.style.flexDirection = "column"
-					temp.style.background = "lightblue"
-					temp.style.borderRadius = "8px"
-					temp.style.zIndex = 2
-					temp.style.alignSelf = "flex-start"
-					temp.style.padding = "2px"
-					temp.style.color = "black"
-					selectArray.forEach(el=>{
-						let a = document.createElement("a")
-						a.innerHTML = el;
-						a.style.cursor = "pointer"
-						a.style.textDecoration = "none"
-						a.style.transition = "0.2s"
-						a.style.padding = "2px 6px"
-						a.style.borderRadius = "10px"
-						a.style.color = "black"
-						a.onmouseover = _=>{
-							temp.querySelectorAll(".hover").forEach(el_=>{el_.className = ""})
-							a.className = "hover"
-							a.style.background = "#00C0FF"
-						}
-						a.onmouseout = _=>{
-							a.className = ""
-							a.style.background = ""
-						}
-						a.onclick = _=>{
-							temp.classList.remove("opened")
-							temp.style.alignSelf = "unset"
-							temp.style.padding = "0 6px"
-							temp.innerHTML = el
-							update_value()
-							setTimeout(function(){
-								setCursorHere(temp)
-							}, 10)
-						}
-						temp.appendChild(a)
-					})
-					input.insertBefore(temp, input.querySelector(".cursor"));
-				}
-				else{
-					let temp = document.createElement("span")
-					temp.innerHTML = e.key;
-					if (e.key == " "){
-						temp.className = "space"
-						temp.style.width = "6px"
-					}
-					input.insertBefore(temp, input.querySelector(".cursor"));
-				}
-			}
-			else{
-				if (e.keyCode == 8){
-					let temp = input.querySelector(".cursor").previousSibling
-					if (temp){
-						temp.remove()
-					}
-				}
-				else if (e.keyCode == 46){
-					let temp = input.querySelector(".cursor").nextSibling
-					if (temp){
-						temp.remove()
-					}
-				}
-				else if (e.keyCode == 37){
-					let temp = input.querySelector(".cursor").previousSibling
-					if (temp){
-						setCursorHere(temp, true)
-					}
-				}
-				else if (e.keyCode == 39){
-					let temp = input.querySelector(".cursor").nextSibling
-					if (temp){
-						setCursorHere(temp)
-					}
-				}
-			}
-			update_value()
+		div.querySelector("#insert_variable_but").onclick = _=>{
+			div.querySelector("#variables_list").style.display = "flex"
+			setTimeout(function(){div.addEventListener("click", hideInsertMenu)}, 500)
 		}
-		input.onclick = e=>{
-			if (e.target != input && e.target.tagName == 'SPAN'){
-				setCursorHere(e.target)
-			}
-			else{
-				setCursorHere(input.lastChild)
-			}
-		}
-		function update_value(init=false){
-			let string = ""
-			input.querySelectorAll(":scope > *").forEach(e=>{
-				if (e.classList.contains("select-area")){
-					if (!e.classList.contains("opened")){
-						string += "%" + e.innerHTML
-					}
-				}
-				else{
-					string += e.innerHTML
-				}
-			})
-			input.setAttribute("value", string)
-			if (init){
-				input.setAttribute("init-value", string)
-			}
-		}
+		input.addEventListener("focus", _=>{
+			input.selectionStart = input.selectionEnd = input.value.length;
+		})
 		function set_value(text){
-			for (let i = 0; i < text.length; i++){
-				if (text[i] == "%"){
-					let temp = text.slice(i)
-					for (let j = 0; j < selectArray.length; j++){
-						if (temp.split(selectArray[j])[0] == "%"){
-							input.innerHTML += `<span class="select-area"
-								style="display: flex; flex-direction: column; background: lightblue;
-								padding: 0 6px; border-radius: 8px;z-index: 2;color:black;
-								">${selectArray[j]}</span>`
-							i += selectArray[j].length
-							break
-						}
-					}
-				}
-				else{
-					if (text[i] == " "){
-						input.innerHTML += '<span class="space" style="width: 6px;"> </span>'
-					}
-					else{
-						input.innerHTML += `<span>${text[i]}</span>`
-					}
-				}
-			}
-			update_value(true)
-		}
-		function setCursorHere(el, before=false){
-			if (input.querySelector(".cursor")){
-				input.querySelector(".cursor").remove()
-			}
-			let span = document.createElement("span")
-			span.className = "cursor"
-			span.style.background = "orange"
-			span.style.width = "2px"
-			span.style.height = "16px"
-			span.style.display = "block"
-			if (before){
-				input.insertBefore(span, el);
-			}
-			else{
-				if (el){
-					el.after(span)
-				}
-				else{
-					input.appendChild(span)
-				}
-			}
+			input.value = text
 		}
 	}
 
