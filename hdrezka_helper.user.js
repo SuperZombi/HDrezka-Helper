@@ -324,7 +324,6 @@ GM_registerMenuCommand(get_message('settings'), ()=>{
 	}
 	function dinamic_input(init_value){
 		var input = div.querySelector("#filename_structure")
-		var selectArray = ["title", "s", "ep", "transl", "res"]
 		set_value(init_value)
 		div.querySelector("[name=downloader_2]").onchange = e=>{
 			if (e.target.checked){
