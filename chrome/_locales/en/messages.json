@@ -20,6 +20,9 @@
    "exportStr":{
       "message": "Export"
    },
+   "importStr":{
+      "message": "Import"
+   },
    "exportButDesc": {
       "message": "Add an export favorites button"
    },

@@ -20,6 +20,9 @@
    "exportStr":{
       "message": "Экспорт"
    },
+   "importStr":{
+      "message": "Импорт"
+   },
    "exportButDesc": {
       "message": "Добавить кнопку экспорта закладок"
    },
