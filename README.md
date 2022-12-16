@@ -2,7 +2,7 @@
 
 Добавляет кнопку «Скачать» под видео. Экспорт закладок и многое другое.
 
-<img src="https://shields.io/badge/version-v4.0-blue">
+<img src="https://shields.io/badge/version-v4.1-blue">
 
 <a href="https://github.com/SuperZombi/HDrezka-downloader/releases">
    <img src="github/images/Downloads-Icon.png" height="25px">
@@ -39,7 +39,7 @@
 </details>
 
 ## Новое:
-* <details><summary>Экспорт закладок.</summary><img src="github/images/favorites.png"></details>
+* <details><summary>Импорт и Экспорт закладок.</summary><img src="github/images/favorites.png"></details>
 * Скрытие блока с группой ВК.
 * Скачивание субтитров
 * <details><summary>Downloader 2.0</summary>
