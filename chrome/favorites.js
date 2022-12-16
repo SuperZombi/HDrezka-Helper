@@ -147,7 +147,6 @@ chrome.storage.sync.get({ export: true, export_animation: true }, results => {
 				import_.onclick = importing
 				popup.appendChild(import_)
 
-
 				if (results.export_animation){
 					div.style.height = "0px"
 					div.style.width = "0px"
@@ -155,7 +154,7 @@ chrome.storage.sync.get({ export: true, export_animation: true }, results => {
 					div.style.padding = "0px"
 					div.style.transform = "scale(0)"
 					div.style.transformOrigin = "center"
-					div.style.opacity = 0					
+					div.style.opacity = 0
 
 					el.prepend(div)
 					setTimeout(function(){
@@ -310,7 +309,9 @@ chrome.storage.sync.get({ export: true, export_animation: true }, results => {
 				})
 			);
 			if (error_arr.length == 0){
-				window.location.reload();
+				setTimeout(function(){
+					window.location.reload();
+				}, 500)
 			} else{
 				console.error(error_arr)
 				alert(JSON.stringify(error_arr, null, 2))
