@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         HDrezka Helper (IPAD)
-// @version      4.1
+// @version      4.1.1
 // @description  Adds a «Download» button below the video. Export favorites and more.
 // @author       Super Zombi
 // @match        https://hdrezka.cm/*
@@ -258,7 +258,7 @@ GM_registerMenuCommand(get_message('settings'), ()=>{
 		<span style="margin-left:5px; color: blue;">GitHub</span>
 		</a>
 
-		<img style="margin-top:2px;" src="https://shields.io/badge/version-v4.0.1-blue">
+		<img style="margin-top:2px;" src="https://shields.io/badge/version-v4.1.1-blue">
 	</p>
 	`
 	div.appendChild(content)
@@ -488,7 +488,7 @@ async function downloader_wrap(){
 			div.style.borderRadius = "6px"
 			div.style.padding = "4px"
 			div.style.filter = "drop-shadow(black 2px 4px 6px)"
-			div.style.zIndex = "2"
+			div.style.zIndex = "100"
 			div.style.right = "0"
 			div.style.top = "55px"
 			div.style.display = "none"
@@ -519,18 +519,23 @@ async function downloader_wrap(){
 							</svg>`
 		}
 
-		let div_ = document.getElementById("downloadMenu")
-		div_.innerHTML = ""
+		let div_target = document.getElementById("downloadMenu")
+		let div_ = document.createElement("div")
 		for (const e of array) {
 			var temp = e.split("[")[1].split("]");
 			var quality = temp[0];
 			var link = temp[1].split(" or ")[1];
 			var size = await getFileSize(link);
-			size = formatBytes(size, 1);
-
-			let element = makeLink(quality, link, size);
-			div_.appendChild(element);
+			if (size){
+				size = formatBytes(size, 1);
+				let element = makeLink(quality, link, size);
+				div_.appendChild(element);
+			} else{
+				console.error({"_": "Error", "name": quality, "url": link})
+			}
 		}
+		div_target.innerHTML = ""
+		div_target.appendChild(div_)
 	}
 
 	function buildFileName(name, season, episode, translation, res){
@@ -684,6 +689,9 @@ async function downloader_wrap(){
 					}
 				}
 			};
+			http.onerror = function(){
+				resolve(false)
+			}
 			http.send();
 		})
 	}
@@ -719,7 +727,7 @@ async function downloader_wrap(){
 	}
 	function hide_download_menu(e){
 		let div = document.getElementById("downloadMenu")
-		if (e.target.closest("div") && e.target.closest("div") != div){
+		if (!e.path.includes(div)){
 			div.style.transform = "scale(0)"
 			div.style.opacity = 0
 			setTimeout(function(){

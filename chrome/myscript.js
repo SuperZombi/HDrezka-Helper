@@ -117,7 +117,7 @@ function script(chrome_i18n) {
 			div.style.borderRadius = "6px"
 			div.style.padding = "4px"
 			div.style.filter = "drop-shadow(black 2px 4px 6px)"
-			div.style.zIndex = "2"
+			div.style.zIndex = "100"
 			div.style.right = "0"
 			div.style.top = "55px"
 			div.style.display = "none"
@@ -148,18 +148,23 @@ function script(chrome_i18n) {
 							</svg>`
 		}
 
-		let div_ = document.getElementById("downloadMenu")
-		div_.innerHTML = ""
+		let div_target = document.getElementById("downloadMenu")
+		let div_ = document.createElement("div")
 		for (const e of array) {
 			var temp = e.split("[")[1].split("]");
 			var quality = temp[0];
 			var link = temp[1].split(" or ")[1];
 			var size = await getFileSize(link);
-			size = formatBytes(size, 1);
-
-			let element = makeLink(quality, link, size);
-			div_.appendChild(element);
+			if (size){
+				size = formatBytes(size, 1);
+				let element = makeLink(quality, link, size);
+				div_.appendChild(element);
+			} else{
+				console.error({"_": "Error", "name": quality, "url": link})
+			}
 		}
+		div_target.innerHTML = ""
+		div_target.appendChild(div_)
 	}
 
 	function buildFileName(name, season, episode, translation, res){
@@ -364,7 +369,7 @@ function script(chrome_i18n) {
 	}
 	function hide_download_menu(e){
 		let div = document.getElementById("downloadMenu")
-		if (e.target.closest("div") && e.target.closest("div") != div){
+		if (!e.path.includes(div)){
 			div.style.transform = "scale(0)"
 			div.style.opacity = 0
 			setTimeout(function(){
@@ -390,6 +395,9 @@ function script(chrome_i18n) {
 					}
 				}
 			};
+			http.onerror = function(){
+				resolve(false)
+			}
 			http.send();
 		})
 	}
