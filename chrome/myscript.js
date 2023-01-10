@@ -369,7 +369,8 @@ function script(chrome_i18n) {
 	}
 	function hide_download_menu(e){
 		let div = document.getElementById("downloadMenu")
-		if (!e.path.includes(div)){
+		let path = event.path || (event.composedPath && event.composedPath());
+		if (!path.includes(div)){
 			div.style.transform = "scale(0)"
 			div.style.opacity = 0
 			setTimeout(function(){

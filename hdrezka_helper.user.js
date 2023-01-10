@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         HDrezka Helper
-// @version      4.1.1
+// @version      4.2
 // @description  Adds a «Download» button below the video. Export favorites and more.
 // @author       Super Zombi
 // @match        https://hdrezka.cm/*
@@ -258,7 +258,7 @@ GM_registerMenuCommand(get_message('settings'), ()=>{
 		<span style="margin-left:5px; color: blue;">GitHub</span>
 		</a>
 
-		<img style="margin-top:2px;" src="https://shields.io/badge/version-v4.1.1-blue">
+		<img style="margin-top:2px;" src="https://shields.io/badge/version-v4.2-blue">
 	</p>
 	`
 	div.appendChild(content)
@@ -705,7 +705,8 @@ async function downloader(){
 	}
 	function hide_download_menu(e){
 		let div = document.getElementById("downloadMenu")
-		if (!e.path.includes(div)){
+		let path = event.path || (event.composedPath && event.composedPath());
+		if (!path.includes(div)){
 			div.style.transform = "scale(0)"
 			div.style.opacity = 0
 			setTimeout(function(){
@@ -885,7 +886,8 @@ function exportFavorites(){
 				}
 				popup.style.visibility = "visible"
 				function hide_popup_menu(e){
-					if (!e.path.includes(popup)){
+					let path = event.path || (event.composedPath && event.composedPath());
+					if (!path.includes(popup)){
 						if (db_get('export_animation', true)){
 							popup.style.transform = "scale(0)"
 							popup.style.opacity = 0
