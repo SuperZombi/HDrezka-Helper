@@ -703,7 +703,7 @@ async function downloader(){
 			}
 		}
 	}
-	function hide_download_menu(e){
+	function hide_download_menu(event){
 		let div = document.getElementById("downloadMenu")
 		let path = event.path || (event.composedPath && event.composedPath());
 		if (!path.includes(div)){
@@ -885,7 +885,7 @@ function exportFavorites(){
 					popup.style.opacity = 1
 				}
 				popup.style.visibility = "visible"
-				function hide_popup_menu(e){
+				function hide_popup_menu(event){
 					let path = event.path || (event.composedPath && event.composedPath());
 					if (!path.includes(popup)){
 						if (db_get('export_animation', true)){

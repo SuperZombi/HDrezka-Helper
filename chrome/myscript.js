@@ -367,7 +367,7 @@ function script(chrome_i18n) {
 			}
 		}
 	}
-	function hide_download_menu(e){
+	function hide_download_menu(event){
 		let div = document.getElementById("downloadMenu")
 		let path = event.path || (event.composedPath && event.composedPath());
 		if (!path.includes(div)){

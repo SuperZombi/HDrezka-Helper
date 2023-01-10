@@ -85,7 +85,7 @@ chrome.storage.sync.get({ export: true, export_animation: true }, results => {
 							popup.style.opacity = 1
 						}
 						popup.style.visibility = "visible"
-						function hide_popup_menu(e){
+						function hide_popup_menu(event){
 							let path = event.path || (event.composedPath && event.composedPath());
 							if (!path.includes(popup)){
 								if (results.export_animation){
