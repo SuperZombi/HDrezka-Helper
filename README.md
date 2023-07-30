@@ -2,12 +2,13 @@
 
 Добавляет кнопку «Скачать» под видео. Экспорт закладок и многое другое.
 
-<img src="https://shields.io/badge/version-v4.2.0.1-blue">
 
-<a href="https://github.com/SuperZombi/HDrezka-downloader/releases">
-   <img src="github/images/Downloads-Icon.png" height="25px">
-   Скачать
-</a>
+<p align="right">
+    <img align="left" src="https://shields.io/badge/версия-v4.2.0.1-blue">
+    <a href="#донат">💲Поддержать</a>
+</p>
+
+
 
 #### Работает с новым API от 05.01.2022
 
@@ -49,4 +50,24 @@
 </details>
 <hr>
 
-#### <a href="https://www.donationalerts.com/r/super_zombi">Поддержать</a> (Но сейчас лучше напишите на почту и я вышлю вам реквизиты)
+#### 💲Донат
+<table>
+  <tr>
+    <td>
+       <img width="18px" src="https://www.google.com/s2/favicons?domain=https://donatello.to&sz=256">
+    </td>
+    <td>
+      <a href="https://donatello.to/super_zombi">Donatello</a>
+    </td>
+  </tr>
+  <tr>
+    <td>
+       <img width="18px" src="https://www.google.com/s2/favicons?domain=https://www.donationalerts.com&sz=256">
+    </td>
+    <td>
+      <a href="https://www.donationalerts.com/r/super_zombi">Donation Alerts</a>
+    </td>
+  </tr>
+</table>
+
+(Но сейчас лучше напишите на почту и я вышлю вам реквизиты)
