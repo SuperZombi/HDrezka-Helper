@@ -39,5 +39,5 @@
       "default_popup": "menu/options.html"
    },
    "homepage_url": "https://github.com/SuperZombi/HDrezka-downloader",
-   "minimum_chrome_version": "71.0.3578.80"
+   "minimum_chrome_version": "107.0.5304.87"
 }
