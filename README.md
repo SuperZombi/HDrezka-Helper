@@ -15,6 +15,8 @@
 </p>
 
 ## Установка:
+
+### [Магазин Chrome](https://chrome.google.com/webstore/detail/hdrezka-helper/dccbdaopjpaemaleakdlahglfbhkdldj)
 ### Chrome:
   1. Скачайте последний **[Релиз](https://github.com/SuperZombi/HDrezka-downloader/releases)**.
   2. Извлеките папку ```src``` в место для установки.
