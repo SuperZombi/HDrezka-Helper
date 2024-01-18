@@ -14,6 +14,8 @@
    <img src="github/images/main.png">
 </p>
 
+### <img src="https://www.stevenskelton.ca/flag-icon/png/36/country-4x3/ua.png" height="16px"> У зв'язку з блокуванням Hdrezka в Україні, для коректної роботи плагіна рекомендується використовувати VPN.⚠️
+
 ## Установка:
 
 ### [Магазин Chrome](https://chrome.google.com/webstore/detail/hdrezka-helper/dccbdaopjpaemaleakdlahglfbhkdldj)
