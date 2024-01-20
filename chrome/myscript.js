@@ -153,14 +153,17 @@ function script(chrome_i18n) {
 		for (const e of array) {
 			var temp = e.split("[")[1].split("]");
 			var quality = temp[0];
-			var link = temp[1].split(" or ")[1];
-			var size = await getFileSize(link);
-			if (size){
-				size = formatBytes(size, 1);
-				let element = makeLink(quality, link, size);
-				div_.appendChild(element);
-			} else{
-				console.error({"_": "Error", "name": quality, "url": link})
+			var links = temp[1].split(" or ").filter(x=>x.endsWith('.mp4'))
+			for (let link of links){
+				let size = await getFileSize(link);
+				if (size){
+					size = formatBytes(size, 1);
+					let element = makeLink(quality, link, size);
+					div_.appendChild(element);
+					break
+				} else{
+					console.error({"_": "Error", "name": quality, "url": link})
+				}
 			}
 		}
 		div_target.innerHTML = ""
@@ -385,20 +388,16 @@ function script(chrome_i18n) {
 
 	async function getFileSize(url)
 	{
-		return await new Promise((resolve, reject) => {
+		return new Promise((resolve, reject) => {
+			fetch(url, {headers: {Range: "bytes=0-0"}})
 			var http = new XMLHttpRequest();
 			http.open('HEAD', url, true);
 			http.onreadystatechange = function() {
-				if (this.readyState == this.DONE) {
-					if (this.status === 200) {
-						fileSize = this.getResponseHeader('content-length');
-						resolve(fileSize)
-					}
+				if (this.readyState == this.DONE && this.status === 200) {
+					resolve(this.getResponseHeader('content-length'))
 				}
 			};
-			http.onerror = function(){
-				resolve(false)
-			}
+			http.onerror = function(){resolve(false)}
 			http.send();
 		})
 	}

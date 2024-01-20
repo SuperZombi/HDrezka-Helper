@@ -4,7 +4,7 @@
 
 
 <p align="right">
-    <img align="left" src="https://shields.io/badge/версия-v4.2.0.1-blue">
+    <img align="left" src="https://shields.io/badge/версия-v4.3.0-blue">
     <a href="#донат"><img src="https://shields.io/badge/💲-Поддержать-2ea043"></a>
 </p>
 
@@ -14,7 +14,7 @@
    <img src="github/images/main.png">
 </p>
 
-### <img src="https://www.stevenskelton.ca/flag-icon/png/36/country-4x3/ua.png" height="16px"> У зв'язку з блокуванням Hdrezka в Україні, для коректної роботи плагіна рекомендується використовувати VPN.⚠️
+### <img src="https://www.stevenskelton.ca/flag-icon/png/36/country-4x3/ua.png" height="16px"> У зв'язку з блокуванням Hdrezka в Україні, рекомендується використовувати VPN.⚠️
 
 ## Установка:
 
