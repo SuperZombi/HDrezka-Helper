@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         HDrezka Helper (IPAD)
-// @version      4.2.0.1
+// @version      4.3.0
 // @description  Adds a «Download» button below the video. Export favorites and more.
 // @author       Super Zombi
 // @match        https://hdrezka.cm/*
@@ -259,7 +259,7 @@ GM_registerMenuCommand(get_message('settings'), ()=>{
 		<span style="margin-left:5px; color: blue;">GitHub</span>
 		</a>
 
-		<img style="margin-top:2px;" src="https://shields.io/badge/version-v4.2.0.1-blue">
+		<img style="margin-top:2px;" src="https://shields.io/badge/version-v4.3.0-blue">
 	</p>
 	`
 	div.appendChild(content)
@@ -525,14 +525,17 @@ async function downloader_wrap(){
 		for (const e of array) {
 			var temp = e.split("[")[1].split("]");
 			var quality = temp[0];
-			var link = temp[1].split(" or ")[1];
-			var size = await getFileSize(link);
-			if (size){
-				size = formatBytes(size, 1);
-				let element = makeLink(quality, link, size);
-				div_.appendChild(element);
-			} else{
-				console.error({"_": "Error", "name": quality, "url": link})
+			var links = temp[1].split(" or ").filter(x=>x.endsWith('.mp4'))
+			for (let link of links){
+				let size = await getFileSize(link);
+				if (size){
+					size = formatBytes(size, 1);
+					let element = makeLink(quality, link, size);
+					div_.appendChild(element);
+					break
+				} else{
+					console.error({"_": "Error", "name": quality, "url": link})
+				}
 			}
 		}
 		div_target.innerHTML = ""
@@ -679,20 +682,16 @@ async function downloader_wrap(){
 		return a;
 	}
 	async function getFileSize(url){
-		return await new Promise((resolve, reject) => {
+		return new Promise((resolve, reject) => {
+			fetch(url, {headers: {Range: "bytes=0-0"}})
 			var http = new XMLHttpRequest();
 			http.open('HEAD', url, true);
 			http.onreadystatechange = function() {
-				if (this.readyState == this.DONE) {
-					if (this.status === 200) {
-						let fileSize = this.getResponseHeader('content-length');
-						resolve(fileSize)
-					}
+				if (this.readyState == this.DONE && this.status === 200) {
+					resolve(this.getResponseHeader('content-length'))
 				}
 			};
-			http.onerror = function(){
-				resolve(false)
-			}
+			http.onerror = function(){resolve(false)}
 			http.send();
 		})
 	}
