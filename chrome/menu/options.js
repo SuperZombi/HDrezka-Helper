@@ -6,6 +6,8 @@ if (darkThemeMq.matches) {
 else{
   theme = "light"
 }
+const manifestData = chrome.runtime.getManifest();
+document.querySelector("#version").src = `https://shields.io/badge/${chrome.i18n.getMessage("versionStr")}-${manifestData.version}-blue`
 
 function obserse(element, arr){
   let els = document.getElementById("main-wraper").getElementsByTagName("label")

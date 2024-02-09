@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         HDrezka Helper (IPAD)
-// @version      4.3.0
+// @version      4.3.1
 // @description  Adds a «Download» button below the video. Export favorites and more.
 // @author       Super Zombi
 // @match        https://hdrezka.cm/*
@@ -259,7 +259,7 @@ GM_registerMenuCommand(get_message('settings'), ()=>{
 		<span style="margin-left:5px; color: blue;">GitHub</span>
 		</a>
 
-		<img style="margin-top:2px;" src="https://shields.io/badge/version-v4.3.0-blue">
+		<img style="margin-top:2px;" src="https://shields.io/badge/version-v4.3.1-blue">
 	</p>
 	`
 	div.appendChild(content)
@@ -497,6 +497,7 @@ async function downloader_wrap(){
 			div.style.transform = "scale(0)"
 			div.style.transformOrigin = "top center"
 			div.style.transition = "0.5s"
+			div.style.userSelect = "none"
 
 			div.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 100 100" height="50px" style="margin:auto;display:block;" >
 							<g transform="translate(25 50)">
@@ -564,6 +565,7 @@ async function downloader_wrap(){
 	}
 
 	function makeLink(title, href, size){
+		let filename = href.split('/').pop()
 		let a = document.createElement("a")
 		if (args.database.downloader_2){
 			a.title = args.downloadStr
@@ -639,7 +641,8 @@ async function downloader_wrap(){
 						var file = new Blob([xhr.response], { type : 'application/octet-stream' });
 						let a_el = document.createElement('a')
 						a_el.href = window.URL.createObjectURL(file);
-						a_el.download = targetFileName + '.mp4'; 
+						let extension = filename.split('.').pop();
+						a_el.download = `${targetFileName}.${extension}`;
 						a_el.click();
 						setTimeout(function(){
 							close_but.click();
@@ -652,7 +655,7 @@ async function downloader_wrap(){
 		else{
 			a.href = href
 			a.target = '_blank'
-			a.download = "video.mp4"
+			a.download = filename
 			a.title = args.downloadLinkDesc
 		}
 		a.style.display = "block"
@@ -696,7 +699,7 @@ async function downloader_wrap(){
 		})
 	}
 	function formatBytes(bytes, decimals = 2) {
-		if (bytes === 0) return '0 Bytes';
+		if (bytes == 0) return '';
 		const k = 1024;
 		const dm = decimals < 0 ? 0 : decimals;
 		const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
@@ -755,7 +758,8 @@ async function downloader_wrap(){
 			summary.style.color = "aqua";
 			summary.style.borderRadius = "8px";
 			summary.style.textAlign = "center";
-			summary.style.transition = "0.2s"
+			summary.style.transition = "0.2s";
+			summary.style.padding = "2px 0";
 			summary.onmouseover = function(){
 				summary.style.background = "blueviolet"
 			}
@@ -765,6 +769,10 @@ async function downloader_wrap(){
 
 			details.appendChild(summary);
 			div_.appendChild(details);
+
+			let hr = document.createElement("hr");
+			hr.style.margin = 0;
+			details.appendChild(hr);
 
 			Subtitles.split(",").forEach(async function(e){
 				let temp = e.split("[")[1].split("]");

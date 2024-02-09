@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         HDrezka Helper
-// @version      4.3.0
+// @version      4.3.1
 // @description  Adds a «Download» button below the video. Export favorites and more.
 // @author       Super Zombi
 // @match        https://hdrezka.cm/*
@@ -259,7 +259,7 @@ GM_registerMenuCommand(get_message('settings'), ()=>{
 		<span style="margin-left:5px; color: blue;">GitHub</span>
 		</a>
 
-		<img style="margin-top:2px;" src="https://shields.io/badge/version-v4.3.0-blue">
+		<img style="margin-top:2px;" src="https://shields.io/badge/version-v4.3.1-blue">
 	</p>
 	`
 	div.appendChild(content)
@@ -376,6 +376,15 @@ GM_registerMenuCommand(get_message('settings'), ()=>{
 	setTimeout(()=>{ div.style.right = 0; }, 1)
 })
 
+var LOADER = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 100 100" height="50px" style="margin:auto;display:block;" >
+	<g transform="translate(25 50)">
+	<circle cx="0" cy="0" r="6" fill="lightblue"><animateTransform attributeName="transform" type="scale" begin="-0.3s" calcMode="spline" keySplines="0.3 0 0.7 1;0.3 0 0.7 1" values="0;1;0" keyTimes="0;0.5;1" dur="1s" repeatCount="indefinite"></animateTransform></circle></g>
+	<g transform="translate(50 50)">
+	<circle cx="0" cy="0" r="6" fill="lightblue"><animateTransform attributeName="transform" type="scale" begin="-0.16s" calcMode="spline" keySplines="0.3 0 0.7 1;0.3 0 0.7 1" values="0;1;0" keyTimes="0;0.5;1" dur="1s" repeatCount="indefinite"></animateTransform></circle></g>
+	<g transform="translate(75 50)">
+	<circle cx="0" cy="0" r="6" fill="lightblue"><animateTransform attributeName="transform" type="scale" begin="0s" calcMode="spline" keySplines="0.3 0 0.7 1;0.3 0 0.7 1" values="0;1;0" keyTimes="0;0.5;1" dur="1s" repeatCount="indefinite"></animateTransform></circle></g>
+</svg>`
+
 function main(){
 	let keys = GM_listValues()
 	if (db_get("hideVK", true)){
@@ -474,27 +483,12 @@ async function downloader(){
 			div.style.transform = "scale(0)"
 			div.style.transformOrigin = "top center"
 			div.style.transition = "0.5s"
-
-			div.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 100 100" height="50px" style="margin:auto;display:block;" >
-							<g transform="translate(25 50)">
-							<circle cx="0" cy="0" r="6" fill="lightblue"><animateTransform attributeName="transform" type="scale" begin="-0.3333333333333333s" calcMode="spline" keySplines="0.3 0 0.7 1;0.3 0 0.7 1" values="0;1;0" keyTimes="0;0.5;1" dur="1s" repeatCount="indefinite"></animateTransform></circle></g>
-							<g transform="translate(50 50)">
-							<circle cx="0" cy="0" r="6" fill="lightblue"><animateTransform attributeName="transform" type="scale" begin="-0.16666666666666666s" calcMode="spline" keySplines="0.3 0 0.7 1;0.3 0 0.7 1" values="0;1;0" keyTimes="0;0.5;1" dur="1s" repeatCount="indefinite"></animateTransform></circle></g>
-							<g transform="translate(75 50)">
-							<circle cx="0" cy="0" r="6" fill="lightblue"><animateTransform attributeName="transform" type="scale" begin="0s" calcMode="spline" keySplines="0.3 0 0.7 1;0.3 0 0.7 1" values="0;1;0" keyTimes="0;0.5;1" dur="1s" repeatCount="indefinite"></animateTransform></circle></g>
-							</svg>`
-
+			div.style.userSelect = "none"
+			div.innerHTML = LOADER;
 			document.getElementById("send-video-issue").parentNode.appendChild(div)
 		}
 		else{
-			document.getElementById("downloadMenu").innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 100 100" height="50px" style="margin:auto;display:block;" >
-							<g transform="translate(25 50)">
-							<circle cx="0" cy="0" r="6" fill="lightblue"><animateTransform attributeName="transform" type="scale" begin="-0.3333333333333333s" calcMode="spline" keySplines="0.3 0 0.7 1;0.3 0 0.7 1" values="0;1;0" keyTimes="0;0.5;1" dur="1s" repeatCount="indefinite"></animateTransform></circle></g>
-							<g transform="translate(50 50)">
-							<circle cx="0" cy="0" r="6" fill="lightblue"><animateTransform attributeName="transform" type="scale" begin="-0.16666666666666666s" calcMode="spline" keySplines="0.3 0 0.7 1;0.3 0 0.7 1" values="0;1;0" keyTimes="0;0.5;1" dur="1s" repeatCount="indefinite"></animateTransform></circle></g>
-							<g transform="translate(75 50)">
-							<circle cx="0" cy="0" r="6" fill="lightblue"><animateTransform attributeName="transform" type="scale" begin="0s" calcMode="spline" keySplines="0.3 0 0.7 1;0.3 0 0.7 1" values="0;1;0" keyTimes="0;0.5;1" dur="1s" repeatCount="indefinite"></animateTransform></circle></g>
-							</svg>`
+			document.getElementById("downloadMenu").innerHTML = LOADER;
 		}
 
 		let div_target = document.getElementById("downloadMenu")
@@ -541,6 +535,7 @@ async function downloader(){
 	}
 
 	function makeLink(title, href, size){
+		let filename = href.split('/').pop()
 		let a = document.createElement("a")
 		if (db_get("downloader_2", false)){
 			a.title = get_message('downloadStr')
@@ -616,7 +611,8 @@ async function downloader(){
 						var file = new Blob([xhr.response], { type : 'application/octet-stream' });
 						let a_el = document.createElement('a')
 						a_el.href = window.URL.createObjectURL(file);
-						a_el.download = targetFileName + '.mp4'; 
+						let extension = filename.split('.').pop();
+						a_el.download = `${targetFileName}.${extension}`;
 						a_el.click();
 						setTimeout(function(){
 							close_but.click();
@@ -629,7 +625,7 @@ async function downloader(){
 		else{
 			a.href = href
 			a.target = '_blank'
-			a.download = "video.mp4"
+			a.download = filename
 			a.title = get_message('downloadLinkDesc')
 		}
 		a.style.display = "block"
@@ -673,7 +669,7 @@ async function downloader(){
 		})
 	}
 	function formatBytes(bytes, decimals = 2) {
-		if (bytes === 0) return '0 Bytes';
+		if (bytes == 0) return '';
 		const k = 1024;
 		const dm = decimals < 0 ? 0 : decimals;
 		const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
@@ -732,7 +728,8 @@ async function downloader(){
 			summary.style.color = "aqua";
 			summary.style.borderRadius = "8px";
 			summary.style.textAlign = "center";
-			summary.style.transition = "0.2s"
+			summary.style.transition = "0.2s";
+			summary.style.padding = "2px 0";
 			summary.onmouseover = function(){
 				summary.style.background = "blueviolet"
 			}
@@ -742,6 +739,10 @@ async function downloader(){
 
 			details.appendChild(summary);
 			div_.appendChild(details);
+
+			let hr = document.createElement("hr");
+			hr.style.margin = 0;
+			details.appendChild(hr);
 
 			Subtitles.split(",").forEach(async function(e){
 				let temp = e.split("[")[1].split("]");

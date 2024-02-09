@@ -105,6 +105,17 @@ function script(chrome_i18n) {
 		}
 	}
 
+	function LOADER(){
+		return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 100 100" height="50px" style="margin:auto;display:block;" >
+			<g transform="translate(25 50)">
+			<circle cx="0" cy="0" r="6" fill="lightblue"><animateTransform attributeName="transform" type="scale" begin="-0.3s" calcMode="spline" keySplines="0.3 0 0.7 1;0.3 0 0.7 1" values="0;1;0" keyTimes="0;0.5;1" dur="1s" repeatCount="indefinite"></animateTransform></circle></g>
+			<g transform="translate(50 50)">
+			<circle cx="0" cy="0" r="6" fill="lightblue"><animateTransform attributeName="transform" type="scale" begin="-0.16s" calcMode="spline" keySplines="0.3 0 0.7 1;0.3 0 0.7 1" values="0;1;0" keyTimes="0;0.5;1" dur="1s" repeatCount="indefinite"></animateTransform></circle></g>
+			<g transform="translate(75 50)">
+			<circle cx="0" cy="0" r="6" fill="lightblue"><animateTransform attributeName="transform" type="scale" begin="0s" calcMode="spline" keySplines="0.3 0 0.7 1;0.3 0 0.7 1" values="0;1;0" keyTimes="0;0.5;1" dur="1s" repeatCount="indefinite"></animateTransform></circle></g>
+		</svg>`
+	}
+
 	async function createDownloadMenu(array){
 		if (!document.getElementById("downloadMenu")){
 			let div = document.createElement("div")
@@ -125,27 +136,12 @@ function script(chrome_i18n) {
 			div.style.transform = "scale(0)"
 			div.style.transformOrigin = "top center"
 			div.style.transition = "0.5s"
-
-			div.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 100 100" height="50px" style="margin:auto;display:block;" >
-							<g transform="translate(25 50)">
-							<circle cx="0" cy="0" r="6" fill="lightblue"><animateTransform attributeName="transform" type="scale" begin="-0.3333333333333333s" calcMode="spline" keySplines="0.3 0 0.7 1;0.3 0 0.7 1" values="0;1;0" keyTimes="0;0.5;1" dur="1s" repeatCount="indefinite"></animateTransform></circle></g>
-							<g transform="translate(50 50)">
-							<circle cx="0" cy="0" r="6" fill="lightblue"><animateTransform attributeName="transform" type="scale" begin="-0.16666666666666666s" calcMode="spline" keySplines="0.3 0 0.7 1;0.3 0 0.7 1" values="0;1;0" keyTimes="0;0.5;1" dur="1s" repeatCount="indefinite"></animateTransform></circle></g>
-							<g transform="translate(75 50)">
-							<circle cx="0" cy="0" r="6" fill="lightblue"><animateTransform attributeName="transform" type="scale" begin="0s" calcMode="spline" keySplines="0.3 0 0.7 1;0.3 0 0.7 1" values="0;1;0" keyTimes="0;0.5;1" dur="1s" repeatCount="indefinite"></animateTransform></circle></g>
-							</svg>`
-
+			div.style.userSelect = "none"
+			div.innerHTML = LOADER();
 			document.getElementById("send-video-issue").parentNode.appendChild(div)
 		}
 		else{
-			document.getElementById("downloadMenu").innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 100 100" height="50px" style="margin:auto;display:block;" >
-							<g transform="translate(25 50)">
-							<circle cx="0" cy="0" r="6" fill="lightblue"><animateTransform attributeName="transform" type="scale" begin="-0.3333333333333333s" calcMode="spline" keySplines="0.3 0 0.7 1;0.3 0 0.7 1" values="0;1;0" keyTimes="0;0.5;1" dur="1s" repeatCount="indefinite"></animateTransform></circle></g>
-							<g transform="translate(50 50)">
-							<circle cx="0" cy="0" r="6" fill="lightblue"><animateTransform attributeName="transform" type="scale" begin="-0.16666666666666666s" calcMode="spline" keySplines="0.3 0 0.7 1;0.3 0 0.7 1" values="0;1;0" keyTimes="0;0.5;1" dur="1s" repeatCount="indefinite"></animateTransform></circle></g>
-							<g transform="translate(75 50)">
-							<circle cx="0" cy="0" r="6" fill="lightblue"><animateTransform attributeName="transform" type="scale" begin="0s" calcMode="spline" keySplines="0.3 0 0.7 1;0.3 0 0.7 1" values="0;1;0" keyTimes="0;0.5;1" dur="1s" repeatCount="indefinite"></animateTransform></circle></g>
-							</svg>`
+			document.getElementById("downloadMenu").innerHTML = LOADER();
 		}
 
 		let div_target = document.getElementById("downloadMenu")
@@ -192,6 +188,7 @@ function script(chrome_i18n) {
 	}
 
 	function makeLink(title, href, size){
+		let filename = href.split('/').pop()
 		let a = document.createElement("a")
 		if (args.downloader_2){
 			a.title = chrome_i18n.downloadStr
@@ -267,7 +264,8 @@ function script(chrome_i18n) {
 						var file = new Blob([xhr.response], { type : 'application/octet-stream' });
 						let a_el = document.createElement('a')
 						a_el.href = window.URL.createObjectURL(file);
-						a_el.download = targetFileName + '.mp4'; 
+						let extension = filename.split('.').pop();
+						a_el.download = `${targetFileName}.${extension}`;
 						a_el.click();
 						setTimeout(function(){
 							close_but.click();
@@ -280,7 +278,7 @@ function script(chrome_i18n) {
 		else{
 			a.href = href
 			a.target = '_blank'
-			a.download = "video.mp4"
+			a.download = filename
 			a.title = chrome_i18n.downloadLinkDesc
 		}
 		a.style.display = "block"
@@ -325,7 +323,8 @@ function script(chrome_i18n) {
 			summary.style.color = "aqua";
 			summary.style.borderRadius = "8px";
 			summary.style.textAlign = "center";
-			summary.style.transition = "0.2s"
+			summary.style.transition = "0.2s";
+			summary.style.padding = "2px 0";
 			summary.onmouseover = function(){
 				summary.style.background = "blueviolet"
 			}
@@ -335,6 +334,10 @@ function script(chrome_i18n) {
 
 			details.appendChild(summary);
 			div_.appendChild(details);
+
+			let hr = document.createElement("hr");
+			hr.style.margin = 0;
+			details.appendChild(hr);
 
 			Subtitles.split(",").forEach(async function(e){
 				let temp = e.split("[")[1].split("]");
@@ -403,7 +406,7 @@ function script(chrome_i18n) {
 	}
 
 	function formatBytes(bytes, decimals = 2) {
-		if (bytes === 0) return '0 Bytes';
+		if (bytes == 0) return '';
 		const k = 1024;
 		const dm = decimals < 0 ? 0 : decimals;
 		const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
