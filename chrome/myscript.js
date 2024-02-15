@@ -389,19 +389,13 @@ function script(chrome_i18n) {
 	}
 
 
-	async function getFileSize(url)
-	{
-		return new Promise((resolve, reject) => {
-			fetch(url, {headers: {Range: "bytes=0-0"}})
-			var http = new XMLHttpRequest();
-			http.open('HEAD', url, true);
-			http.onreadystatechange = function() {
-				if (this.readyState == this.DONE && this.status === 200) {
-					resolve(this.getResponseHeader('content-length'))
-				}
-			};
-			http.onerror = function(){resolve(false)}
-			http.send();
+	async function getFileSize(url) {
+		return new Promise(async (resolve) => {
+			let controller = new AbortController();
+			fetch(url, {signal: controller.signal}).then(resp=>{
+				resolve(resp.headers.get('Content-Length'))
+				controller.abort();
+			}).catch(_=>{resolve(0)})
 		})
 	}
 
