@@ -26,7 +26,7 @@ chrome.storage.sync.get({ download: true,
 					}
 				}
 				const script = document.createElement('script');
-				script.src = chrome.runtime.getURL('myscript.js');
+				script.src = chrome.runtime.getURL('hdrezka_helper.js');
 				script.dataset.args = JSON.stringify({chrome_arr});
 				document.documentElement.appendChild(script);
 			}

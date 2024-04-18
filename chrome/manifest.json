@@ -6,7 +6,7 @@
    "default_locale": "en",
    "web_accessible_resources": [
       {
-         "resources": [ "myscript.js" ],
+         "resources": [ "hdrezka_helper.js" ],
          "matches": [ "https://hdrezka.cm/*", "https://rezka.ag/*", "https://hdrezka.ag/*", "https://hdrezka.me/*", "https://hdrezka.co/*" ]
       }
    ],
