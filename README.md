@@ -4,7 +4,7 @@
 
 
 <p align="right">
-    <img align="left" src="https://shields.io/badge/версия-v4.3.2-blue">
+    <img align="left" src="https://shields.io/badge/версия-v4.3.3-blue">
     <a href="#донат"><img src="https://shields.io/badge/💲-Поддержать-2ea043"></a>
 </p>
 

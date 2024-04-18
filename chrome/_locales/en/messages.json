@@ -79,5 +79,17 @@
    },
    "subtitlesDesc": {
       "message": "Add subtitles download menu"
+   },
+   "errorStr": {
+      "message": "Error!"
+   },
+   "vpnErrorMsg": {
+      "message": "Try using a VPN!"
+   },
+   "donateTitle": {
+      "message": "Enjoying this extension?"
+   },
+   "donateButton": {
+      "message": "Donate"
    }
 }

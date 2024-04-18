@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         HDrezka Helper
-// @version      4.3.2
+// @version      4.3.3
 // @description  Adds a «Download» button below the video. Export favorites and more.
 // @author       Super Zombi
 // @match        https://hdrezka.cm/*
@@ -42,11 +42,15 @@ const locale = {
 		"fileNamePattern": "File name pattern",
 		"insertVariable": "Insert Variable",
 		"help": "Help",
+		"errorStr": "Error!",
 		"movieTitle": "Movie title",
 		"season": "Season",
 		"episode": "Episode",
 		"translation": "Translation",
-		"resolution": "Resolution"
+		"resolution": "Resolution",
+		"vpnErrorMsg": "Try using a VPN!",
+		"donateTitle": "Enjoying this extension?",
+		"donateButton": "Donate"
 	},
 	'ru': {
 		"settings": "Настройки",
@@ -66,11 +70,15 @@ const locale = {
 		"fileNamePattern": "Шаблон имени файла",
 		"insertVariable": "Вставить переменную",
 		"help": "Помощь",
+		"errorStr": "Ошибка!",
 		"movieTitle": "Название фильма",
 		"season": "Сезон",
 		"episode": "Эпизод",
 		"translation": "Перевод",
-		"resolution": "Качество"
+		"resolution": "Качество",
+		"vpnErrorMsg": "Попробуйте использовать VPN!",
+		"donateTitle": "Нравится расширение?",
+		"donateButton": "Пожертвовать"
 	},
 	'uk': {
 		"settings": "Налаштування",
@@ -90,11 +98,15 @@ const locale = {
 		"fileNamePattern": "Шаблон імені файлу",
 		"insertVariable": "Вставити змінну",
 		"help": "Допомога",
+		"errorStr": "Помилка!",
 		"movieTitle": "Назва фільму",
 		"season": "Сезон",
 		"episode": "Епізод",
 		"translation": "Переклад",
-		"resolution": "Якість"
+		"resolution": "Якість",
+		"vpnErrorMsg": "Спробуйте скористатися VPN!",
+		"donateTitle": "Подобається розширення?",
+		"donateButton": "Пожертвувати"
 	}
 }
 
@@ -259,7 +271,7 @@ GM_registerMenuCommand(get_message('settings'), ()=>{
 		<span style="margin-left:5px; color: blue;">GitHub</span>
 		</a>
 
-		<img style="margin-top:2px;" src="https://shields.io/badge/version-v4.3.2-blue">
+		<img style="margin-top:2px;" src="https://shields.io/badge/version-v4.3.3-blue">
 	</p>
 	`
 	div.appendChild(content)
@@ -484,6 +496,7 @@ async function downloader(){
 			div.style.transformOrigin = "top center"
 			div.style.transition = "0.5s"
 			div.style.userSelect = "none"
+			div.style.overflow = "hidden"
 			div.innerHTML = LOADER;
 			document.getElementById("send-video-issue").parentNode.appendChild(div)
 		}
@@ -511,6 +524,12 @@ async function downloader(){
 		}
 		div_target.innerHTML = ""
 		div_target.appendChild(div_)
+
+		if (div_.children.length == 0){
+			vpnAlert(div_target)
+		} else{
+			donationPopup(div_target)
+		}
 	}
 
 	function buildFileName(name, season, episode, translation, res){
@@ -794,6 +813,81 @@ async function downloader(){
 
 		var final_string = atob(trashString);
 		return final_string;
+	}
+
+
+	function makePopup(parrent){
+		let div = document.createElement("div")
+		div.style.inset = 0
+		div.style.position = "absolute"
+		div.style.zIndex = 2
+		div.style.background = "rgb(0, 0, 0, 0.85)"
+		div.style.padding = "5px"
+		div.style.textAlign = "center"
+		div.style.display = "flex";
+    	div.style.flexDirection = "column";
+    	div.style.justifyContent = "center";
+   		div.style.alignItems = "center";
+    	div.style.gap = "5px";
+		parrent.appendChild(div)
+		return div
+	}
+
+	function vpnAlert(div_target){
+		let popup = makePopup(div_target)
+		popup.style.background = "unset"
+		popup.style.position = "unset"
+		popup.style.padding = "10px"
+		popup.innerHTML = `
+			<svg fill="white" height="55" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+				<path d="m20.45 5.468-4-3a.753.753 0 0 0-.45-.15H8a.753.753 0 0 0-.45.15l-4 3a.753.753 0 0 0-.3.6v4.211c0 4.97 3.126 9.481 7.784 11.228a2.744 2.744 0 0 0 1.937-.001c4.653-1.746 7.779-6.257 7.779-11.227V6.068a.75.75 0 0 0-.3-.6Zm-7.7 6.773V14a.75.75 0 0 1-1.5 0v-1.759c-.589-.282-1-.879-1-1.574 0-.965.785-1.75 1.75-1.75s1.75.785 1.75 1.75c0 .695-.411 1.292-1 1.574Z"/>
+			</svg>
+			<h5 style="color: red; font-size: 1.1em">${get_message('errorStr')}</h5>
+			<h5>${get_message('vpnErrorMsg')}</h5>
+		`
+	}
+
+	function donationPopup(menu_element){
+		function checkLastNotificationTime(){
+			let currentTime = Math.floor(Date.now() / 1000);
+			let lastNotificationTime = localStorage.getItem('lastNotificationTime');
+			if (!lastNotificationTime || (currentTime - lastNotificationTime > 12*60*60)) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		if (checkLastNotificationTime()){
+			let popup = makePopup(menu_element)
+			menu_element.style.minWidth = "175px"
+			popup.innerHTML = `
+				<svg height="48" fill="lime" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+					<path d="M21 24.294h-7.09a.5.5 0 0 1 0-1H21a1.318 1.318 0 1 0 0-2.636h-5.092a.505.505 0 0 1-.312-.11l-1.423-1.138a4.99 4.99 0 0 0-5.099-.69l-1.877.805a.5.5 0 0 1-.394-.918l1.877-.805a5.994 5.994 0 0 1 6.118.827l1.286 1.03H21a2.318 2.318 0 1 1 0 4.635Z"/><path d="M16.956 29.5a4.958 4.958 0 0 1-1.571-.255l-8.452-2.817a.5.5 0 1 1 .316-.95l8.453 2.818a3.988 3.988 0 0 0 3.291-.361l9.867-5.92a1.318 1.318 0 1 0-1.356-2.26l-4.171 2.502a.5.5 0 0 1-.514-.858l4.17-2.502a2.318 2.318 0 1 1 2.385 3.976l-9.866 5.919a4.958 4.958 0 0 1-2.552.708Z"/><path d="M7 27.5H2a.5.5 0 0 1 0-1h4.5v-9H2a.5.5 0 0 1 0-1h5a.5.5 0 0 1 .5.5v10a.5.5 0 0 1-.5.5Z"/><circle cx="3" cy="19.5" r="1"/><path d="M17.5 16.5a7 7 0 1 1 7-7 7.008 7.008 0 0 1-7 7Zm0-13a6 6 0 1 0 6 6 6.007 6.007 0 0 0-6-6Z"/><path d="M17.5 6.972a.5.5 0 0 1-.5-.5v-.918a.5.5 0 1 1 1 0v.918a.5.5 0 0 1-.5.5ZM17.5 13.946a.5.5 0 0 1-.5-.5v-.918a.5.5 0 0 1 1 0v.918a.5.5 0 0 1-.5.5Z"/><path d="M17.5 12.984a2.024 2.024 0 0 1-2.105-1.926.5.5 0 0 1 1 0 1.123 1.123 0 0 0 2.21 0 .87.87 0 0 0-.635-.874l-1.256-.418a1.877 1.877 0 0 1-1.32-1.824 2.114 2.114 0 0 1 4.211 0 .5.5 0 0 1-1 0 1.123 1.123 0 0 0-2.21 0 .87.87 0 0 0 .635.874l1.256.418a1.877 1.877 0 0 1 1.32 1.824 2.024 2.024 0 0 1-2.106 1.926Z"/>
+				</svg>
+				<h5>${get_message('donateTitle')}</h5>
+				<a href="https://donatello.to/super_zombi" target="_blank">
+					<button style="--glow-color: #00a0b0; border: .25em solid var(--glow-color); padding: 0.5em 2em; margin: 0.5em; color: var(--glow-color); font-weight: bold; background: black; border-radius: 0.75em; outline: none; box-shadow: 0 0 1em .25em var(--glow-color), inset 0 0 1em 0 var(--glow-color); text-shadow: 0 0 1em var(--glow-color); transition: all 0.3s;">
+						${get_message('donateButton')}
+					</button>
+				</a>
+			`
+			let button = popup.querySelector("button")
+			button.onmouseover = _=>{
+				button.style.color = "white";
+				button.style.background = "var(--glow-color)";
+				button.style.boxShadow = "0 0 1.25em .5em var(--glow-color)";
+			}
+			button.onmouseout = _=>{
+				button.style.color = "var(--glow-color)";
+				button.style.background = "black";
+				button.style.boxShadow = "0 0 1em .25em var(--glow-color), inset 0 0 1em 0 var(--glow-color)";
+			}
+			button.onclick = _=>{
+				popup.remove()
+				var currentTime = Math.floor(Date.now() / 1000);
+				localStorage.setItem('lastNotificationTime', currentTime);
+			}
+		}
 	}
 }
 

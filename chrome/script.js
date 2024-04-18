@@ -18,6 +18,10 @@ chrome.storage.sync.get({ download: true,
 					downloadLinkDesc: chrome.i18n.getMessage("downloadLinkDesc"),
 					subtitles: chrome.i18n.getMessage("subtitles"),
 					cancelDownload: chrome.i18n.getMessage("cancelDownload"),
+					donateTitle: chrome.i18n.getMessage("donateTitle"),
+					donateButton: chrome.i18n.getMessage("donateButton"),
+					errorStr: chrome.i18n.getMessage("errorStr"),
+					vpnErrorMsg: chrome.i18n.getMessage("vpnErrorMsg"),
 
 					args: {
 						subtitles: results.subtitles,

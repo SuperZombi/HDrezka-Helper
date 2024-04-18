@@ -79,5 +79,17 @@
    },
    "subtitlesDesc": {
       "message": "Добавить меню загрузки субтитров"
+   },
+   "errorStr": {
+      "message": "Ошибка!"
+   },
+   "vpnErrorMsg": {
+      "message": "Попробуйте использовать VPN!"
+   },
+   "donateTitle": {
+      "message": "Нравится расширение?"
+   },
+   "donateButton": {
+      "message": "Пожертвовать"
    }
 }

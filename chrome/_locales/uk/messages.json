@@ -79,5 +79,17 @@
    },
    "subtitlesDesc": {
       "message": "Додати меню завантаження субтитрів"
+   },
+   "errorStr": {
+      "message": "Помилка!"
+   },
+   "vpnErrorMsg": {
+      "message": "Спробуйте скористатися VPN!"
+   },
+   "donateTitle": {
+      "message": "Подобається розширення?"
+   },
+   "donateButton": {
+      "message": "Пожертвувати"
    }
 }
