@@ -10,10 +10,15 @@ chrome.storage.sync.get("urlList", (data) => {
 	});
 
 	chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-		if (changeInfo.url) {
-			let newUrl = new URL(changeInfo.url)
-			if (urlList.includes(newUrl.origin)) {
-				console.log(`Совпадение найдено: ${changeInfo.url}`);
+		if (changeInfo.status == 'complete'){
+			let url = new URL(tab.url)
+			if (urlList.includes(url.origin)) {
+				chrome.scripting.executeScript({
+					target: { tabId: tabId },
+					files : [ "hdrezka_helper.js" ],
+					world: "MAIN"
+				});
+
 			}
 		}
 	});

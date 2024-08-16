@@ -1,11 +1,6 @@
-(() => {
-	const el = document.currentScript;
-	const args = JSON.parse(el.dataset.args);
-	script(args.chrome_arr)
-	el.remove();
-})();
+MainScript()
 
-function script(chrome_i18n) {
+function MainScript(chrome_i18n) {
 	var args = chrome_i18n.args;
 	main();
 	temp_video_src = document.getElementById('player').getElementsByTagName("video")[0].src
