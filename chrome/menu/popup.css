@@ -1,0 +1,35 @@
+#current_url{
+	margin: 0.6rem;
+	font-size: 16px;
+	font-family: monospace;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 5px;
+}
+#current_url img{
+	height: 1em;
+}
+
+.button-43 {
+	background: #37AEE2;
+	border-radius: .5rem;
+	box-sizing: border-box;
+	color: #fff;
+	display: flex;
+	font-size: 14px;
+	justify-content: center;
+	padding: 0.5rem 1.25rem;
+	text-decoration: none;
+	border: 0;
+	cursor: pointer;
+	user-select: none;
+	-webkit-user-select: none;
+	margin: auto;
+}
+.button-43:hover {
+	background: #1E96C8;
+}
+.button-43:active {
+	background: #17759C;
+}

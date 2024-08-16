@@ -4,10 +4,19 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<link rel='stylesheet' href='aqua.min.css'>
 	<link rel='stylesheet' href='options.css'>
+  <link rel='stylesheet' href='popup.css'>
+  <script src="options.js" defer></script>
+  <script src="popup.js" defer></script>
 </head>
 <body>
 	<h3>HDrezka Helper</h3>
 	<hr>
+
+  <div id="current_url"><img src=""><span></span></div>
+  <button id="add_this" class="button-43">Add this website</button>
+  <hr>
+  <div id="websites_list"></div>
+  <hr>
 
   <div id="main-wraper">
     <label>
@@ -56,7 +65,7 @@
       </details>
     </span>
 
-    <label>
+   <!--  <label>
     	<input class="form-check-input" type="checkbox" id="export">
       <a class="cursor" title="__MSG_exportButDesc__">__MSG_exportBut__</a>
 
@@ -69,7 +78,7 @@
     <label>
     	<input class="form-check-input" type="checkbox" id="hideVK">
       <a class="cursor" title="__MSG_hideVkButDesc__">__MSG_hideVkBut__</a>
-    </label>
+    </label> -->
 
   </div>
 
@@ -85,7 +94,6 @@
     	<img style="margin-top:2px;" id="version">
     </p>
     
-  <script src="options.js"></script>
   <script src="localize.js"></script>
 </body>
 </html>
