@@ -18,6 +18,13 @@ async function main(){
 	} else{
 		setupUrlActionButton("add", url)
 	}
+
+	document.querySelector("#websites_settings").onclick = _=>{
+		document.querySelector("#websites_popup").classList.add("show")
+	}
+	document.querySelector("#websites_popup .close").onclick = _=>{
+		document.querySelector("#websites_popup").classList.remove("show")
+	}
 }
 
 
@@ -34,6 +41,7 @@ function getCurrentUrl(callback){
 }
 function setCurrentWebsite(url, icon){
 	document.querySelector("#current_url span").innerHTML = url.hostname;
+	document.querySelector("#current_url").setAttribute("url", url.origin)
 	if (icon){
 		document.querySelector("#current_url img").src = icon;
 	}
@@ -45,7 +53,6 @@ function addNewUrl(url){
 		urlList.push(url)
 		chrome.storage.sync.set({ urlList: urlList });
 		addWebsite(url)
-		setupUrlActionButton("remove", url)
 	}
 }
 function removeUrl(url){
@@ -53,18 +60,23 @@ function removeUrl(url){
 	urlList.splice(index, 1);
 	chrome.storage.sync.set({ urlList: urlList });
 	removeWebsite(url)
-	setupUrlActionButton("add", url)
 }
 
 function setupUrlActionButton(action, url){
 	let button = document.querySelector("#add_this")
 	if (action == "add"){
 		button.innerHTML = "Add this website" // TODO
-		button.onclick = _=>{addNewUrl(url)}
+		button.onclick = _=>{
+			addNewUrl(url);
+			setupUrlActionButton("remove", url)
+		}
 	}
 	else {
 		button.innerHTML = "Remove this website" // TODO
-		button.onclick = _=>{removeUrl(url)}
+		button.onclick = _=>{
+			removeUrl(url)
+			setupUrlActionButton("add", url)
+		}
 	}
 }
 
@@ -76,10 +88,19 @@ function addWebsite(url){
 	div.className = "site"
 	div.innerHTML = `
 		<a href="${url}" target="_blank">${url}</a>
+		<span class="delete"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 485 485"><path d="M67.224 0h350.535v71.81H67.224zM417.776 92.829H67.237V485h350.537V92.829h.002zM165.402 431.447H137.04V146.383h28.362v285.064zm91.287 0h-28.363V146.383h28.363v285.064zm91.281 0h-28.361V146.383h28.361v285.064z"/></svg></span>
 	`
 	root.appendChild(div)
+	div.querySelector(".delete").onclick = _=>{
+		removeUrl(url)
+		if (document.querySelector("#current_url").getAttribute("url") == url){
+			setupUrlActionButton("add", url)
+		}
+	}
 }
 function removeWebsite(url){
 	let el = document.querySelector(`#websites_list a[href="${url}"]`)
-	el.remove()
+	if (el){
+		el.closest('.site').remove()
+	}
 }
