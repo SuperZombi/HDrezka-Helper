@@ -41,6 +41,17 @@
 </p>
 </details>
 
+## Как добавить своё зеркало
+<details><summary></summary>
+  
+  1. Откройте страницу зеркала.
+  2. В верхнем правом меню, где нарисован пазл, выберите иконку плагина.
+  3. В открывшемся окне нажмите "Добавить сайт"
+<p align="center">
+   <img src="github/images/settings_websites_adding.png">
+</p>
+</details>
+
 ## Новое:
 * <details><summary>Импорт и Экспорт закладок.</summary><img src="github/images/favorites.png"></details>
 * Скрытие блока с группой ВК.
