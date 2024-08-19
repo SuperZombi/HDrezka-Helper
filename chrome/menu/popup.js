@@ -1,6 +1,6 @@
 var urlList;
 chrome.storage.sync.get("urlList", (data) => {
-	urlList = data.urlList || [];
+	urlList = data.urlList || ["https://hdrezka.ag", "https://hdrezka.cm", "https://hdrezka.ag", "https://hdrezka.me", "https://hdrezka.co"];
 
 	urlList.forEach(url=>{
 		addWebsite(url)
