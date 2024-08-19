@@ -10,13 +10,19 @@ chrome.storage.sync.get("urlList", (data) => {
 
 async function main(){
 	let {url, icon} = await getCurrentUrl()
-	setCurrentWebsite(url, icon)
-	url = url.origin;
+	if (url.protocol == "http:" || url.protocol == "https:"){
+		setCurrentWebsite(url, icon)
+		url = url.origin;
 
-	if (urlList.includes(url)){
-		setupUrlActionButton("remove", url)
+		if (urlList.includes(url)){
+			setupUrlActionButton("remove", url)
+		} else{
+			setupUrlActionButton("add", url)
+		}
 	} else{
-		setupUrlActionButton("add", url)
+		document.querySelector("#add_this").style.display = "none"
+		document.querySelector("#current_url").style.padding = 0
+		document.querySelector("#current_url span").innerHTML = chrome.i18n.getMessage("sites_list")
 	}
 
 	document.querySelector("#websites_settings").onclick = _=>{
@@ -29,7 +35,7 @@ async function main(){
 
 
 
-function getCurrentUrl(callback){
+function getCurrentUrl(){
 	return new Promise((resolve) => {
 		chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
 			let activeTab = tabs[0];

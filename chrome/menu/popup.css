@@ -12,6 +12,9 @@
 #current_url img{
 	height: 1em;
 }
+#current_url img[src=""] {
+	display: none;
+}
 
 #websites_settings{
 	height: 1.2em;

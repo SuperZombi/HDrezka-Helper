@@ -97,5 +97,8 @@
    },
    "remove_this_site": {
       "message": "Remove this website"
+   },
+   "sites_list": {
+      "message": "Websites list"
    }
 }

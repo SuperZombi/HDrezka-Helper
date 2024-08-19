@@ -97,5 +97,8 @@
    },
    "remove_this_site": {
       "message": "Видалити цей сайт"
+   },
+   "sites_list": {
+      "message": "Список сайтів"
    }
 }
