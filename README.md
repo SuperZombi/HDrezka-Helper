@@ -4,7 +4,7 @@
 
 
 <p align="right">
-    <img align="left" src="https://shields.io/badge/версия-v4.3.3-blue">
+    <img align="left" src="https://shields.io/badge/версия-v5.0.0-blue">
     <a href="#донат"><img src="https://shields.io/badge/💲-Поддержать-2ea043"></a>
 </p>
 
@@ -15,6 +15,8 @@
 </p>
 
 ### <img src="https://www.stevenskelton.ca/flag-icon/png/36/country-4x3/ua.png" height="16px"> У зв'язку з блокуванням Hdrezka в Україні, рекомендується використовувати VPN⚠️
+
+### ❗️ТЕПЕР ПРАЦЮЄ І НА ЗЕРКАЛАХ
 
 ## Установка:
 
@@ -27,7 +29,7 @@
   5. Нажмите "Загрузить распакованое расширение".
   6. Выберите путь к папке ```src```.
   
-### Tampermonkey:
+### Tampermonkey (Устарел):
 1. Установите **[Tampermonkey](https://www.tampermonkey.net/)**.
 2. Установите **[Скрипт](https://raw.githubusercontent.com/SuperZombi/HDrezka-downloader/main/hdrezka_helper.user.js)**.
 
