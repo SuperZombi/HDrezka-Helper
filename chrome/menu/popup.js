@@ -57,7 +57,9 @@ function addNewUrl(url){
 }
 function removeUrl(url){
 	const index = urlList.indexOf(url);
-	urlList.splice(index, 1);
+	if (index > -1) {
+		urlList.splice(index, 1);
+	}
 	chrome.storage.sync.set({ urlList: urlList });
 	removeWebsite(url)
 }
