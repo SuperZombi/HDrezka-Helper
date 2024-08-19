@@ -91,5 +91,11 @@
    },
    "donateButton": {
       "message": "Пожертвувати"
+   },
+   "add_this_site": {
+      "message": "Додати цей сайт"
+   },
+   "remove_this_site": {
+      "message": "Видалити цей сайт"
    }
 }

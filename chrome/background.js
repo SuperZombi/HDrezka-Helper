@@ -6,6 +6,20 @@ chrome.storage.sync.get("urlList", (data) => {
 	chrome.storage.onChanged.addListener((changes) => {
 		if (changes.urlList){
 			urlList = changes.urlList.newValue
+
+			let newValue = changes.urlList.newValue;
+			let oldValue = changes.urlList.oldValue;
+
+			let addedSites = newValue.filter(site => !oldValue || !oldValue.includes(site));
+			addedSites.forEach(site => {
+				chrome.tabs.query({}, function(tabs) {
+					tabs.forEach(tab => {
+						if (tab.url.includes(site)) {
+							executeScript(tab.id)
+						}
+					});
+				});
+			});
 		}
 	});
 
@@ -13,39 +27,40 @@ chrome.storage.sync.get("urlList", (data) => {
 		if (changeInfo.status == 'complete'){
 			let url = new URL(tab.url)
 			if (urlList.includes(url.origin)) {
-				chrome.storage.sync.get({ download: true,
-				  downloader_2: false,
-				  filename_structure: "",
-				  hideVK: true,
-				  subtitles: true,
-				}, results => {
-
-					let chrome_arr = {
-						downloadStr: chrome.i18n.getMessage("downloadStr"),
-						downloadLinkDesc: chrome.i18n.getMessage("downloadLinkDesc"),
-						subtitles: chrome.i18n.getMessage("subtitles"),
-						cancelDownload: chrome.i18n.getMessage("cancelDownload"),
-						donateTitle: chrome.i18n.getMessage("donateTitle"),
-						donateButton: chrome.i18n.getMessage("donateButton"),
-						errorStr: chrome.i18n.getMessage("errorStr"),
-						vpnErrorMsg: chrome.i18n.getMessage("vpnErrorMsg"),
-
-						args: results
-					}
-					chrome.scripting.executeScript({
-						target: { tabId: tabId },
-						// files : [ "hdrezka_helper.js" ],
-						// world: "MAIN"
-						func: MainScript,
-						world: "MAIN",
-						args: [chrome_arr]
-					});
-
-				})
+				executeScript(tabId)
 			}
 		}
 	});
 });
+
+
+function executeScript(tabId){
+	chrome.storage.sync.get({ download: true,
+	  downloader_2: false,
+	  filename_structure: "",
+	  hideVK: true,
+	  subtitles: true,
+	}, results => {
+		let chrome_arr = {
+			downloadStr: chrome.i18n.getMessage("downloadStr"),
+			downloadLinkDesc: chrome.i18n.getMessage("downloadLinkDesc"),
+			subtitles: chrome.i18n.getMessage("subtitles"),
+			cancelDownload: chrome.i18n.getMessage("cancelDownload"),
+			donateTitle: chrome.i18n.getMessage("donateTitle"),
+			donateButton: chrome.i18n.getMessage("donateButton"),
+			errorStr: chrome.i18n.getMessage("errorStr"),
+			vpnErrorMsg: chrome.i18n.getMessage("vpnErrorMsg"),
+
+			args: results
+		}
+		chrome.scripting.executeScript({
+			target: { tabId: tabId },
+			func: MainScript,
+			args: [chrome_arr],
+			world: "MAIN"
+		});
+	})
+}
 
 
 

@@ -67,14 +67,16 @@ function removeUrl(url){
 function setupUrlActionButton(action, url){
 	let button = document.querySelector("#add_this")
 	if (action == "add"){
-		button.innerHTML = "Add this website" // TODO
+		button.innerHTML = chrome.i18n.getMessage("add_this_site")
+		button.classList.remove("red")
 		button.onclick = _=>{
 			addNewUrl(url);
 			setupUrlActionButton("remove", url)
 		}
 	}
 	else {
-		button.innerHTML = "Remove this website" // TODO
+		button.innerHTML = chrome.i18n.getMessage("remove_this_site")
+		button.classList.add("red")
 		button.onclick = _=>{
 			removeUrl(url)
 			setupUrlActionButton("add", url)

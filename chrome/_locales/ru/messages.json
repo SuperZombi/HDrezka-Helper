@@ -91,5 +91,11 @@
    },
    "donateButton": {
       "message": "Пожертвовать"
+   },
+   "add_this_site": {
+      "message": "Добавить этот сайт"
+   },
+   "remove_this_site": {
+      "message": "Убрать этот сайт"
    }
 }

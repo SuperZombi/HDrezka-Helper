@@ -91,5 +91,11 @@
    },
    "donateButton": {
       "message": "Donate"
+   },
+   "add_this_site": {
+      "message": "Add this website"
+   },
+   "remove_this_site": {
+      "message": "Remove this website"
    }
 }
