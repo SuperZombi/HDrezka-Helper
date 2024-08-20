@@ -1,9 +1,10 @@
 var urlList;
+var browser = chrome || browser;
 
-chrome.storage.sync.get("urlList", (data) => {
+browser.storage.local.get("urlList").then((data) => {
 	urlList = data.urlList || ["https://hdrezka.ag", "https://hdrezka.cm", "https://hdrezka.ag", "https://hdrezka.me", "https://hdrezka.co"];
 
-	chrome.storage.onChanged.addListener((changes) => {
+	browser.storage.onChanged.addListener((changes) => {
 		if (changes.urlList){
 			urlList = changes.urlList.newValue
 
@@ -11,7 +12,7 @@ chrome.storage.sync.get("urlList", (data) => {
 			let oldValue = changes.urlList.oldValue;
 
 			let addedSites = newValue.filter(site => !oldValue || !oldValue.includes(site));
-			chrome.tabs.query({}, function(tabs) {
+			browser.tabs.query({}, function(tabs) {
 				tabs.forEach(tab => {
 					let url = new URL(tab.url)
 					if (addedSites.includes(url.origin)) {
@@ -22,7 +23,7 @@ chrome.storage.sync.get("urlList", (data) => {
 		}
 	});
 
-	chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+	browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 		if (changeInfo.status == 'complete'){
 			let url = new URL(tab.url)
 			if (urlList.includes(url.origin)) {
@@ -34,25 +35,25 @@ chrome.storage.sync.get("urlList", (data) => {
 
 
 function executeScript(tabId){
-	chrome.storage.sync.get({ download: true,
+	browser.storage.local.get({ download: true,
 	  downloader_2: false,
 	  filename_structure: "",
 	  hideVK: true,
 	  subtitles: true,
 	}, results => {
 		let chrome_arr = {
-			downloadStr: chrome.i18n.getMessage("downloadStr"),
-			downloadLinkDesc: chrome.i18n.getMessage("downloadLinkDesc"),
-			subtitles: chrome.i18n.getMessage("subtitles"),
-			cancelDownload: chrome.i18n.getMessage("cancelDownload"),
-			donateTitle: chrome.i18n.getMessage("donateTitle"),
-			donateButton: chrome.i18n.getMessage("donateButton"),
-			errorStr: chrome.i18n.getMessage("errorStr"),
-			vpnErrorMsg: chrome.i18n.getMessage("vpnErrorMsg"),
+			downloadStr: browser.i18n.getMessage("downloadStr"),
+			downloadLinkDesc: browser.i18n.getMessage("downloadLinkDesc"),
+			subtitles: browser.i18n.getMessage("subtitles"),
+			cancelDownload: browser.i18n.getMessage("cancelDownload"),
+			donateTitle: browser.i18n.getMessage("donateTitle"),
+			donateButton: browser.i18n.getMessage("donateButton"),
+			errorStr: browser.i18n.getMessage("errorStr"),
+			vpnErrorMsg: browser.i18n.getMessage("vpnErrorMsg"),
 
 			args: results
 		}
-		chrome.scripting.executeScript({
+		browser.scripting.executeScript({
 			target: { tabId: tabId },
 			func: MainScript,
 			args: [chrome_arr],
