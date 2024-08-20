@@ -11,13 +11,12 @@ chrome.storage.sync.get("urlList", (data) => {
 			let oldValue = changes.urlList.oldValue;
 
 			let addedSites = newValue.filter(site => !oldValue || !oldValue.includes(site));
-			addedSites.forEach(site => {
-				chrome.tabs.query({}, function(tabs) {
-					tabs.forEach(tab => {
-						if (tab.url.includes(site)) {
-							executeScript(tab.id)
-						}
-					});
+			chrome.tabs.query({}, function(tabs) {
+				tabs.forEach(tab => {
+					let url = new URL(tab.url)
+					if (addedSites.includes(url.origin)) {
+						executeScript(tab.id)
+					}
 				});
 			});
 		}
