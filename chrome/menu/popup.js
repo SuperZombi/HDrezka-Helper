@@ -1,5 +1,6 @@
+var browser = chrome || browser;
 var urlList;
-chrome.storage.sync.get("urlList", (data) => {
+browser.storage.local.get("urlList", (data) => {
 	urlList = data.urlList || ["https://hdrezka.ag", "https://hdrezka.cm", "https://hdrezka.ag", "https://hdrezka.me", "https://hdrezka.co"];
 
 	urlList.forEach(url=>{
@@ -22,7 +23,7 @@ async function main(){
 	} else{
 		document.querySelector("#add_this").style.display = "none"
 		document.querySelector("#current_url").style.padding = 0
-		document.querySelector("#current_url span").innerHTML = chrome.i18n.getMessage("sites_list")
+		document.querySelector("#current_url span").innerHTML = browser.i18n.getMessage("sites_list")
 	}
 
 	document.querySelector("#websites_settings").onclick = _=>{
@@ -37,7 +38,7 @@ async function main(){
 
 function getCurrentUrl(){
 	return new Promise((resolve) => {
-		chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+		browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
 			let activeTab = tabs[0];
 			let url = new URL(activeTab.url)
 			let icon = activeTab.favIconUrl
@@ -57,7 +58,7 @@ function setCurrentWebsite(url, icon){
 function addNewUrl(url){
 	if (!urlList.includes(url)){
 		urlList.push(url)
-		chrome.storage.sync.set({ urlList: urlList });
+		browser.storage.local.set({ urlList: urlList });
 		addWebsite(url)
 	}
 }
@@ -66,14 +67,14 @@ function removeUrl(url){
 	if (index > -1) {
 		urlList.splice(index, 1);
 	}
-	chrome.storage.sync.set({ urlList: urlList });
+	browser.storage.local.set({ urlList: urlList });
 	removeWebsite(url)
 }
 
 function setupUrlActionButton(action, url){
 	let button = document.querySelector("#add_this")
 	if (action == "add"){
-		button.innerHTML = chrome.i18n.getMessage("add_this_site")
+		button.innerHTML = browser.i18n.getMessage("add_this_site")
 		button.classList.remove("red")
 		button.onclick = _=>{
 			addNewUrl(url);
@@ -81,7 +82,7 @@ function setupUrlActionButton(action, url){
 		}
 	}
 	else {
-		button.innerHTML = chrome.i18n.getMessage("remove_this_site")
+		button.innerHTML = browser.i18n.getMessage("remove_this_site")
 		button.classList.add("red")
 		button.onclick = _=>{
 			removeUrl(url)

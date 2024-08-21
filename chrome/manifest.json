@@ -12,7 +12,8 @@
    ],
    "host_permissions": ["http://*/*","https://*/*"],
    "background": {
-      "service_worker": "background.js"
+      "service_worker": "background.js",
+      "scripts": ["background.js"]
    },
    "options_ui": {
       "open_in_tab": false,

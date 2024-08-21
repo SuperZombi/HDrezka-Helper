@@ -1,3 +1,4 @@
+var browser = chrome || browser;
 const darkThemeMq = window.matchMedia("(prefers-color-scheme: dark)");
 if (darkThemeMq.matches) {
   document.body.className = "dark"
@@ -6,8 +7,8 @@ if (darkThemeMq.matches) {
 else{
   theme = "light"
 }
-const manifestData = chrome.runtime.getManifest();
-document.querySelector("#version").src = `https://shields.io/badge/${chrome.i18n.getMessage("versionStr")}-${manifestData.version}-blue`
+const manifestData = browser.runtime.getManifest();
+document.querySelector("#version").src = `https://shields.io/badge/${browser.i18n.getMessage("versionStr")}-${manifestData.version}-blue`
 
 function obserse(element, arr){
   let els = document.getElementById("main-wraper").getElementsByTagName("label")
@@ -249,7 +250,7 @@ function dinamic_input(init_value){
   }
 }
 
-chrome.storage.sync.get({ download: true,
+browser.storage.local.get({ download: true,
                           downloader_2: false,
                           filename_structure: "",
                           subtitles: true,
@@ -279,9 +280,9 @@ chrome.storage.sync.get({ download: true,
     })
     settings['filename_structure'] = document.querySelector("#filename_structure").getAttribute("value")
 
-    chrome.storage.sync.set(settings, _ => {
+    browser.storage.local.set(settings, _ => {
       // Reload extension to make opt-out change immediate. 
-      chrome.runtime.reload();
+      browser.runtime.reload();
       window.close();
     });
   };
