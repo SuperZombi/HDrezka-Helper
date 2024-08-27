@@ -1,0 +1,104 @@
+{
+   "extDesc": {
+      "message": "Добавляет кнопку «Скачать» под видео. Экспорт закладок и многое другое."
+   },
+   "versionStr": {
+      "message": "версия"
+   },
+   "goToStr": {
+      "message": "Перейти"
+   },
+   "downloadBut": {
+      "message": "Кнопка «Скачать»"
+   },
+   "downloadButDesc": {
+      "message": "Добавить кнопку загрузки видео"
+   },
+   "exportBut": {
+      "message": "Экспорт закладок"
+   },
+   "exportStr":{
+      "message": "Экспорт"
+   },
+   "importStr":{
+      "message": "Импорт"
+   },
+   "exportButDesc": {
+      "message": "Добавить кнопку экспорта закладок"
+   },
+   "animationBut": {
+      "message": "Анимация"
+   },
+   "animationButDesc": {
+      "message": "Анимация появления кнопки"
+   },
+   "hideVkBut": {
+      "message": "Скрывать VK"
+   },
+   "hideVkButDesc": {
+      "message": "Скрывать блок с группой ВК"
+   },
+   "saveBut": {
+      "message": "Сохранить"
+   },
+   "downloadStr": {
+      "message": "Скачать"
+   },
+   "cancelDownload": {
+      "message": "Отменить"
+   },
+   "fileNamePattern": {
+      "message": "Шаблон имени файла"
+   },
+   "pressPercentToPasteVars": {
+      "message": "Нажмите <code>%</code>, чтобы вставить переменную"
+   },
+   "help": {
+      "message": "Помощь"
+   },
+   "movieTitle": {
+      "message": "Название фильма"
+   },
+   "season": {
+      "message": "Сезон"
+   },
+   "episode": {
+      "message": "Эпизод"
+   },
+   "translation": {
+      "message": "Перевод"
+   },
+   "resolution": {
+      "message": "Качество"
+   },
+   "downloadLinkDesc": {
+      "message": "Нажмите на ссылку, удерживая клавишу Alt, чтобы сохранить файл"
+   },
+   "subtitles": {
+      "message": "Субтитры"
+   },
+   "subtitlesDesc": {
+      "message": "Добавить меню загрузки субтитров"
+   },
+   "errorStr": {
+      "message": "Ошибка!"
+   },
+   "vpnErrorMsg": {
+      "message": "Попробуйте использовать VPN!"
+   },
+   "donateTitle": {
+      "message": "Нравится расширение?"
+   },
+   "donateButton": {
+      "message": "Пожертвовать"
+   },
+   "add_this_site": {
+      "message": "Добавить этот сайт"
+   },
+   "remove_this_site": {
+      "message": "Убрать этот сайт"
+   },
+   "sites_list": {
+      "message": "Список сайтов"
+   }
+}
