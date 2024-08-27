@@ -20,8 +20,8 @@
 
 ## Установка:
 
-### [Магазин Chrome](https://chrome.google.com/webstore/detail/hdrezka-helper/dccbdaopjpaemaleakdlahglfbhkdldj)
-### [Магазин Firefox](https://addons.mozilla.org/firefox/addon/hdrezka-helper/)
+### <img width="18px" src="https://www.svgrepo.com/show/452180/chrome.svg"> [Магазин Chrome](https://chrome.google.com/webstore/detail/hdrezka-helper/dccbdaopjpaemaleakdlahglfbhkdldj)
+### <img width="18px" src="https://www.svgrepo.com/show/452204/firefox.svg"> [Магазин Firefox](https://addons.mozilla.org/firefox/addon/hdrezka-helper/)
 
 <hr>
 
