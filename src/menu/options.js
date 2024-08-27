@@ -250,7 +250,7 @@ function dinamic_input(init_value){
   }
 }
 
-browser.storage.local.get({ download: true,
+browser.storage.sync.get({ download: true,
                           downloader_2: false,
                           filename_structure: "",
                           subtitles: true,
@@ -280,7 +280,7 @@ browser.storage.local.get({ download: true,
     })
     settings['filename_structure'] = document.querySelector("#filename_structure").getAttribute("value")
 
-    browser.storage.local.set(settings, _ => {
+    browser.storage.sync.set(settings, _ => {
       // Reload extension to make opt-out change immediate. 
       browser.runtime.reload();
       window.close();

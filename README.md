@@ -4,7 +4,7 @@
 
 
 <p align="right">
-    <img align="left" src="https://shields.io/badge/версия-v5.0.0-blue">
+    <img align="left" src="https://shields.io/badge/версия-v5.1.0-blue">
     <a href="#донат"><img src="https://shields.io/badge/💲-Поддержать-2ea043"></a>
 </p>
 
@@ -16,11 +16,15 @@
 
 ### <img src="https://www.stevenskelton.ca/flag-icon/png/36/country-4x3/ua.png" height="16px"> У зв'язку з блокуванням Hdrezka в Україні, рекомендується використовувати VPN⚠️
 
-### ❗️ТЕПЕР ПРАЦЮЄ І НА ЗЕРКАЛАХ
+### ❗️ТЕПЕР ПРАЦЮЄ НА ЗЕРКАЛАХ
 
 ## Установка:
 
 ### [Магазин Chrome](https://chrome.google.com/webstore/detail/hdrezka-helper/dccbdaopjpaemaleakdlahglfbhkdldj)
+### [Магазин Firefox](https://addons.mozilla.org/firefox/addon/hdrezka-helper/)
+
+<hr>
+
 ### Chrome:
   1. Скачайте последний **[Релиз](https://github.com/SuperZombi/HDrezka-downloader/releases)**.
   2. Извлеките папку ```src``` в место для установки.

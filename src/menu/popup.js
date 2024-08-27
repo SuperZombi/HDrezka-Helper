@@ -1,6 +1,6 @@
 var browser = chrome || browser;
 var urlList;
-browser.storage.local.get("urlList", (data) => {
+browser.storage.sync.get("urlList", (data) => {
 	urlList = data.urlList || ["https://hdrezka.ag", "https://hdrezka.cm", "https://hdrezka.ag", "https://hdrezka.me", "https://hdrezka.co"];
 
 	urlList.forEach(url=>{
@@ -58,7 +58,7 @@ function setCurrentWebsite(url, icon){
 function addNewUrl(url){
 	if (!urlList.includes(url)){
 		urlList.push(url)
-		browser.storage.local.set({ urlList: urlList });
+		browser.storage.sync.set({ urlList: urlList });
 		addWebsite(url)
 	}
 }
@@ -67,7 +67,7 @@ function removeUrl(url){
 	if (index > -1) {
 		urlList.splice(index, 1);
 	}
-	browser.storage.local.set({ urlList: urlList });
+	browser.storage.sync.set({ urlList: urlList });
 	removeWebsite(url)
 }
 

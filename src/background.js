@@ -1,7 +1,7 @@
 var urlList;
 var browser = chrome || browser;
 
-browser.storage.local.get("urlList").then((data) => {
+browser.storage.sync.get("urlList").then((data) => {
 	urlList = data.urlList || ["https://hdrezka.ag", "https://hdrezka.cm", "https://hdrezka.ag", "https://hdrezka.me", "https://hdrezka.co"];
 
 	browser.storage.onChanged.addListener((changes) => {
@@ -35,7 +35,7 @@ browser.storage.local.get("urlList").then((data) => {
 
 
 function executeScript(tabId){
-	browser.storage.local.get({ download: true,
+	browser.storage.sync.get({ download: true,
 	  downloader_2: false,
 	  filename_structure: "",
 	  hideVK: true,
