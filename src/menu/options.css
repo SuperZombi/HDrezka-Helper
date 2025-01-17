@@ -181,3 +181,13 @@ label input[type="checkbox"]{
 #filename_structure_block table tr td:last-child{
 	text-align: center;
 }
+
+.badge {
+	font-size: 9px;
+	background: red;
+	text-transform: uppercase;
+	padding: 3px 5px;
+	border-radius: 16px;
+	vertical-align: middle;
+	margin-left: 4px;
+}

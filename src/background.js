@@ -39,6 +39,7 @@ function executeScript(tabId){
 	  downloader_2: false,
 	  filename_structure: "",
 	  hideVK: true,
+	  mobileMode: false,
 	  subtitles: true,
 	}, results => {
 		let chrome_arr = {
@@ -68,6 +69,7 @@ function MainScript(chrome_i18n) {
 	var args = chrome_i18n.args;
 
 	if (args.hideVK){ hideVK() }
+	if (args.mobileMode){ mobileView() }
 
 	let player = document.getElementById('player')
 	if (player){
@@ -95,6 +97,19 @@ function MainScript(chrome_i18n) {
 		if (args.subtitles){
 			addSubtitles()
 		}
+	}
+
+	function mobileView(){
+		document.querySelector("meta[name='viewport']").content = 'width=device-width'
+		let meta = document.createElement("meta")
+		meta.name = 'viewport'
+		meta.content = 'width=device-width'
+		document.head.appendChild(meta)
+		const style = document.createElement('style');
+		style.innerHTML = `
+			#translators-list li,body{min-width:0}body.active-brand,body.active-brand.pp{padding-top:0!important}#cdnplayer,#cdnplayer-container,#footer,#top-head,#top-nav,#wrapper,.b-container.b-wrapper,.b-footer__inner.b-wrapper,.b-footer__left,.b-tophead.b-wrapper,.b-topnav.b-wrapper,.b-wrapper:has(.b-content__crumbs){width:100%!important}#top-nav{display:flex;height:100%}#search{position:unset}#topnav-menu,.b-post__social_holder .share-label,.b-post__social_holder .share-list,.b-post__wait_status{display:none}.b-tophead-right.user-things.pull-right{width:100%;display:flex;justify-content:space-evenly}#search-results,.b-content__columns,.b-content__inline_inner.b-content__inline_inner_mainprobar,.b-content__inline_inner_main{padding-right:0}.b-content__inline_sidebar{display:none}.b-collections__newest_inner,.b-content__main,.b-wrapper.nopadd{width:100%}.b-post__infotable{display:flex;flex-wrap:wrap;justify-content:center;padding-left:0}.b-post__infotable_left{margin-left:0}#translators-list{display:grid;grid-template-columns:1fr 1fr}.b-content__htitle,.b-post__title,.b-post__origtitle{text-align:center}.b-post__schedule_block,.b-sidelist__holder{overflow:auto}.b-sidelist__holder .b-sidelist{display:flex}.b-sidelist__holder .b-sidelist div{flex-shrink:0}.b-post__schedule_list{width:max-content}.b-post__description{padding:10px}.b-content__inline:has(#videosaves-list){overflow:auto}#videosaves-list .info,#videosaves-list .title{min-width:120px}.b-search__live_all,.b-search__live_section{margin:0}.b-favorites_content__sidebar{float:unset;margin:auto}.b-content__main_filters{margin:0!important;display:flex;flex-direction:column;align-items:flex-start}.b-content__filters_types{display:flex;width:100%;flex-direction:column-reverse}.b-content__inline_items{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));padding:10px;box-sizing:border-box}.b-content__inline_items .b-content__inline_item{width:auto}#newest-slider{width:100%;padding:0}.b-dwnapp{overflow:auto}
+		`;
+		document.head.appendChild(style);
 	}
 
 	function hideVK(){

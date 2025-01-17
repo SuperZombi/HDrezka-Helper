@@ -38,6 +38,9 @@
    "hideVkButDesc": {
       "message": "Hide block with VK group"
    },
+   "mobileMode": {
+      "message": "Mobile mode"
+   },
    "saveBut": {
       "message": "Save"
    },

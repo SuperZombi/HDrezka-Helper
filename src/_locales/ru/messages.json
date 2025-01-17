@@ -38,6 +38,9 @@
    "hideVkButDesc": {
       "message": "Скрывать блок с группой ВК"
    },
+   "mobileMode": {
+      "message": "Мобильный режим"
+   },
    "saveBut": {
       "message": "Сохранить"
    },

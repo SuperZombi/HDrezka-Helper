@@ -256,7 +256,9 @@ browser.storage.sync.get({ download: true,
                           subtitles: true,
                           export: true,
                           export_animation: true,
-                          hideVK: true }, results => {
+                          hideVK: true,
+                          mobileMode: false
+                        }, results => {
   let labels = document.getElementById("main-wraper").getElementsByTagName("label")
   Object.keys(labels).forEach(function(e){
     let input = labels[e].getElementsByTagName("input")[0]
