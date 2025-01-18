@@ -4,7 +4,7 @@
 
 
 <p align="right">
-    <img align="left" src="https://shields.io/badge/версия-v5.2.0-blue">
+    <img align="left" src="https://shields.io/badge/версия-v5.2.1-blue">
     <a href="#донат"><img src="https://shields.io/badge/💲-Поддержать-2ea043"></a>
 </p>
 
@@ -57,7 +57,6 @@
 </details>
 
 ## Новое:
-* Мобильный режим
 * Скачивание субтитров
 * <details><summary>Downloader 2.0</summary>
    (Шаблон имени скачанного файла + быстрая загрузка внутри страницы)
@@ -65,8 +64,9 @@
    <img src="github/images/fileNamePattern.png">
   </details>
 
+* Мобильный режим
 * Скрытие блока с группой ВК.
-* <details><summary>Импорт и Экспорт закладок. (deprecated)</summary><img src="github/images/favorites.png"></details>
+* <details><summary>Импорт и Экспорт закладок. (устарело)</summary><img src="github/images/favorites.png"></details>
 <hr>
 
 #### 💲Донат

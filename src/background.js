@@ -24,10 +24,10 @@ browser.storage.sync.get("urlList").then((data) => {
 	});
 
 	browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-		if (changeInfo.status == 'complete'){
+		if (changeInfo.status == 'complete' || changeInfo.status == 'loading'){
 			let url = new URL(tab.url)
 			if (urlList.includes(url.origin)) {
-				executeScript(tabId)
+				changeInfo.status == 'complete' ? executeScript(tabId) : executeBefore(tabId)
 			}
 		}
 	});
@@ -35,12 +35,12 @@ browser.storage.sync.get("urlList").then((data) => {
 
 
 function executeScript(tabId){
-	browser.storage.sync.get({ download: true,
-	  downloader_2: false,
-	  filename_structure: "",
-	  hideVK: true,
-	  mobileMode: false,
-	  subtitles: true,
+	browser.storage.sync.get({
+		download: true,
+		downloader_2: false,
+		filename_structure: "",
+		hideVK: true,
+		subtitles: true,
 	}, results => {
 		let chrome_arr = {
 			downloadStr: browser.i18n.getMessage("downloadStr"),
@@ -51,7 +51,6 @@ function executeScript(tabId){
 			donateButton: browser.i18n.getMessage("donateButton"),
 			errorStr: browser.i18n.getMessage("errorStr"),
 			vpnErrorMsg: browser.i18n.getMessage("vpnErrorMsg"),
-
 			args: results
 		}
 		browser.scripting.executeScript({
@@ -62,14 +61,41 @@ function executeScript(tabId){
 		});
 	})
 }
+function executeBefore(tabId){
+	browser.storage.sync.get({
+		mobileMode: false
+	}, results => {
+		browser.scripting.executeScript({
+			target:{ tabId: tabId },
+			func: beforeLoaded,
+			args: [results]
+		});
+	})
+}
 
+
+function beforeLoaded(args){
+	if (args.mobileMode){ mobileView() }
+
+	function mobileView(){
+		document.querySelector("meta[name='viewport']").content = 'width=device-width'
+		let meta = document.createElement("meta")
+		meta.name = 'viewport'
+		meta.content = 'width=device-width'
+		document.head.appendChild(meta)
+		const style = document.createElement('style');
+		style.innerHTML = `
+			.b-dwnapp,.b-post__schedule_list,.b-sidelist__holder{overflow:auto}#translators-list li,body{min-width:0}body.active-brand,body.active-brand.pp{padding-top:0!important}#cdnplayer,#cdnplayer-container,#footer,#top-head,#top-nav,#wrapper,.b-container.b-wrapper,.b-footer__inner.b-wrapper,.b-footer__left,.b-tophead.b-wrapper,.b-topnav.b-wrapper,.b-wrapper:has(.b-content__crumbs){width:100%!important}#top-nav{display:flex;height:100%}#search{position:unset}#topnav-menu,.b-content__inline_sidebar,.b-post__social_holder .share-label,.b-post__social_holder .share-list,.b-post__wait_status,.b-simple_episodes__list:before{display:none}.b-tophead-right.user-things.pull-right{width:100%;display:flex;justify-content:space-evenly}#search-results,.b-content__columns,.b-content__inline_inner.b-content__inline_inner_mainprobar,.b-content__inline_inner_main{padding-right:0}#cdnplayer-preloader,.b-collections__newest_inner,.b-content__main,.b-wrapper.nopadd{width:100%}.b-post__infotable{display:flex;flex-wrap:wrap;justify-content:center;padding-left:0}.b-post__infotable_left{margin-left:0}#translators-list{display:grid;grid-template-columns:1fr 1fr}.b-addcomment__actions,.b-content__htitle,.b-post__infolast,.b-post__origtitle,.b-post__title,.b-user__settings_holder_save{text-align:center}.b-sidelist__holder .b-sidelist{display:flex;padding:0 5px}.b-sidelist__holder .b-sidelist div{flex-shrink:0}#ps-content-holder,.b-post__description{padding:10px}.b-content__inline:has(#videosaves-list){overflow:auto}.b-content__inline:has(.b-favorites_content__sidebar){padding-top:10px}#videosaves-list .info,#videosaves-list .title{min-width:120px}.b-search__live_all,.b-search__live_section{margin:0}.b-favorites_content__sidebar{float:unset;margin:auto}.b-content__main_filters{margin:0!important;display:flex;flex-direction:column;align-items:flex-start}.b-content__filters_types{display:flex;width:100%;flex-direction:column-reverse}.b-content__inline_items{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));padding:10px;box-sizing:border-box}.b-navigation{grid-column:1/-1}.b-content__inline_items .b-content__inline_item,.b-post__schedule_table .td-4{width:auto}#newest-slider{width:100%;padding:0}.b-simple_episodes__list{display:grid;grid-template-columns:1fr 1fr 1fr}#hd-comments-list{overflow:hidden}.b-post__actions:has(#user-favorites-holder[style*=block]) td:has(#comments-list-button){display:none}.b-post__schedule_block_title{display:flex}#ps-trailer-player,#ps-trailer-player iframe,.b-content__main_filters_item,.b-post__schedule_block_title .title{width:100%}.b-post__schedule_list .load-more{text-align:left;padding-left:1rem}.b-post__schedule_list table{min-width:max-content}.b-post__schedule_table .td-5{width:auto;padding:1rem}input[type=password],input[type=text],select{width:100%!important;box-sizing:border-box;max-width:90vw;display:block;margin:auto}.b-tabs__main{display:flex;flex-direction:column;gap:5px;padding:10px}.b-user__settings label{margin-left:1rem}textarea.b-area.b-field{max-width:95vw!important;display:block;margin:auto}.b-addcomment__actions .actions-left{float:unset}.b-userprofile__avatar_wrapper{display:flex;flex-direction:column;width:100dvw;align-items:center}.choose-avatar-holder{margin:10px}#login-popup,#register-popup{top:50%!important;left:50%!important;transform:translate(-50%,-50%);margin:0!important;width:95vw;box-sizing:border-box}.register_button{width:100%!important}.b-content__main_filters_item a{width:100%;box-sizing:border-box}
+		`
+		document.head.appendChild(style);
+	}
+}
 
 
 function MainScript(chrome_i18n) {
 	var args = chrome_i18n.args;
 
 	if (args.hideVK){ hideVK() }
-	if (args.mobileMode){ mobileView() }
 
 	let player = document.getElementById('player')
 	if (player){
@@ -97,19 +123,6 @@ function MainScript(chrome_i18n) {
 		if (args.subtitles){
 			addSubtitles()
 		}
-	}
-
-	function mobileView(){
-		document.querySelector("meta[name='viewport']").content = 'width=device-width'
-		let meta = document.createElement("meta")
-		meta.name = 'viewport'
-		meta.content = 'width=device-width'
-		document.head.appendChild(meta)
-		const style = document.createElement('style');
-		style.innerHTML = `
-			#translators-list li,body{min-width:0}body.active-brand,body.active-brand.pp{padding-top:0!important}#cdnplayer,#cdnplayer-container,#footer,#top-head,#top-nav,#wrapper,.b-container.b-wrapper,.b-footer__inner.b-wrapper,.b-footer__left,.b-tophead.b-wrapper,.b-topnav.b-wrapper,.b-wrapper:has(.b-content__crumbs){width:100%!important}#top-nav{display:flex;height:100%}#search{position:unset}#topnav-menu,.b-post__social_holder .share-label,.b-post__social_holder .share-list,.b-post__wait_status{display:none}.b-tophead-right.user-things.pull-right{width:100%;display:flex;justify-content:space-evenly}#search-results,.b-content__columns,.b-content__inline_inner.b-content__inline_inner_mainprobar,.b-content__inline_inner_main{padding-right:0}.b-content__inline_sidebar{display:none}.b-collections__newest_inner,.b-content__main,.b-wrapper.nopadd{width:100%}.b-post__infotable{display:flex;flex-wrap:wrap;justify-content:center;padding-left:0}.b-post__infotable_left{margin-left:0}#translators-list{display:grid;grid-template-columns:1fr 1fr}.b-content__htitle,.b-post__title,.b-post__origtitle{text-align:center}.b-post__schedule_block,.b-sidelist__holder{overflow:auto}.b-sidelist__holder .b-sidelist{display:flex}.b-sidelist__holder .b-sidelist div{flex-shrink:0}.b-post__schedule_list{width:max-content}.b-post__description{padding:10px}.b-content__inline:has(#videosaves-list){overflow:auto}#videosaves-list .info,#videosaves-list .title{min-width:120px}.b-search__live_all,.b-search__live_section{margin:0}.b-favorites_content__sidebar{float:unset;margin:auto}.b-content__main_filters{margin:0!important;display:flex;flex-direction:column;align-items:flex-start}.b-content__filters_types{display:flex;width:100%;flex-direction:column-reverse}.b-content__inline_items{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));padding:10px;box-sizing:border-box}.b-content__inline_items .b-content__inline_item{width:auto}#newest-slider{width:100%;padding:0}.b-dwnapp{overflow:auto}
-		`;
-		document.head.appendChild(style);
 	}
 
 	function hideVK(){

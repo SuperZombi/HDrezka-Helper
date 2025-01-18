@@ -32,7 +32,8 @@
 
 .popup{
 	position: fixed;
-	background: inherit;
+	background: rgb(0, 0, 0, 0.75);
+	backdrop-filter: blur(5px);
 	z-index: 4;
 	top: 0;
 	bottom: 0;
@@ -42,6 +43,7 @@
 	transform-origin: center center;
 	transition: 0.4s;
 	padding: 1rem;
+	padding-top: 2.5rem;
 }
 .popup.show{
 	transform: scale(1);
@@ -50,18 +52,16 @@
 	color: red;
 	font-weight: bold;
 	position: absolute;
-	right: 7px;
-	top: 5px;
+	right: 0.5rem;
+	top: 0.5rem;
 	cursor: pointer;
 }
 
 
 #websites_list{
-	padding-top: 15px;
-	padding-right: 12px;
 	display: flex;
 	flex-direction: column;
-	gap: 3px;
+	gap: 6px;
 	overflow-x: hidden;
 	overflow-y: auto;
 	height: 100%;
