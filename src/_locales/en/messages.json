@@ -103,5 +103,8 @@
    },
    "sites_list": {
       "message": "Websites list"
+   },
+   "confirm_delete": {
+      "message": "Delete %url?"
    }
 }

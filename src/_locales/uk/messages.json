@@ -103,5 +103,8 @@
    },
    "sites_list": {
       "message": "Список сайтів"
+   },
+   "confirm_delete": {
+      "message": "Видалити %url?"
    }
 }

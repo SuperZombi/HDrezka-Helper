@@ -23,7 +23,7 @@ async function main(){
 	} else{
 		document.querySelector("#add_this").style.display = "none"
 		document.querySelector("#current_url").style.padding = 0
-		document.querySelector("#current_url span").innerHTML = browser.i18n.getMessage("sites_list")
+		document.querySelector("#current_url span").textContent = browser.i18n.getMessage("sites_list")
 	}
 
 	document.querySelector("#websites_settings").onclick = _=>{
@@ -47,7 +47,7 @@ function getCurrentUrl(){
 	});
 }
 function setCurrentWebsite(url, icon){
-	document.querySelector("#current_url span").innerHTML = url.hostname;
+	document.querySelector("#current_url span").textContent = url.hostname;
 	document.querySelector("#current_url").setAttribute("url", url.origin)
 	if (icon){
 		document.querySelector("#current_url img").src = icon;
@@ -74,7 +74,7 @@ function removeUrl(url){
 function setupUrlActionButton(action, url){
 	let button = document.querySelector("#add_this")
 	if (action == "add"){
-		button.innerHTML = browser.i18n.getMessage("add_this_site")
+		button.textContent = browser.i18n.getMessage("add_this_site")
 		button.classList.remove("red")
 		button.onclick = _=>{
 			addNewUrl(url);
@@ -82,7 +82,7 @@ function setupUrlActionButton(action, url){
 		}
 	}
 	else {
-		button.innerHTML = browser.i18n.getMessage("remove_this_site")
+		button.textContent = browser.i18n.getMessage("remove_this_site")
 		button.classList.add("red")
 		button.onclick = _=>{
 			removeUrl(url)
@@ -92,20 +92,35 @@ function setupUrlActionButton(action, url){
 }
 
 
-
+function makeSVG(viewBox, path){
+	const svgNamespace = "http://www.w3.org/2000/svg";
+	let svg = document.createElementNS(svgNamespace, "svg");
+	svg.setAttribute("viewBox", viewBox)
+	let path_el = document.createElementNS(svgNamespace, "path");
+	path_el.setAttribute("d", path);
+	svg.append(path_el)
+	return svg
+}
 function addWebsite(url){
 	let root = document.querySelector("#websites_list")
 	let div = document.createElement("div")
 	div.className = "site"
-	div.innerHTML = `
-		<a href="${url}" target="_blank">${url}</a>
-		<span class="delete"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 485 485"><path d="M67.224 0h350.535v71.81H67.224zM417.776 92.829H67.237V485h350.537V92.829h.002zM165.402 431.447H137.04V146.383h28.362v285.064zm91.287 0h-28.363V146.383h28.363v285.064zm91.281 0h-28.361V146.383h28.361v285.064z"/></svg></span>
-	`
+	let a = document.createElement("a")
+	a.href = url
+	a.target = "_blank"
+	a.textContent = url
+	div.appendChild(a)
+	let delete_span = document.createElement("span")
+	delete_span.className = "delete"
+	delete_span.appendChild(makeSVG("0 0 485 485", "M67 0h351v72H67zm351 93H67v392h351V93zM165 431h-28V146h28v285zm92 0h-29V146h29v285zm91 0h-28V146h28v285z"))
+	div.appendChild(delete_span)
 	root.appendChild(div)
-	div.querySelector(".delete").onclick = _=>{
-		removeUrl(url)
-		if (document.querySelector("#current_url").getAttribute("url") == url){
-			setupUrlActionButton("add", url)
+	delete_span.onclick = _=>{
+		if (window.confirm(browser.i18n.getMessage("confirm_delete").replace("%url", url))){
+			removeUrl(url)
+			if (document.querySelector("#current_url").getAttribute("url") == url){
+				setupUrlActionButton("add", url)
+			}
 		}
 	}
 }

@@ -377,7 +377,7 @@ function MainScript(chrome_i18n) {
 					close_but.title = chrome_i18n.cancelDownload
 					close_but.onclick = _=>{
 						xhr.abort();
-						a.querySelector(".download-area").remove()
+						div.remove()
 						a.style.background = null
 						setTimeout(function(){
 							a.removeAttribute("blocked")

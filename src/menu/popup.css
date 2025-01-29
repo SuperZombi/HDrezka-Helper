@@ -61,7 +61,7 @@
 #websites_list{
 	display: flex;
 	flex-direction: column;
-	gap: 6px;
+	gap: 0.5rem;
 	overflow-x: hidden;
 	overflow-y: auto;
 	height: 100%;
