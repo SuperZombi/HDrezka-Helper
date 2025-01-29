@@ -78,7 +78,7 @@ function dinamic_input(init_value){
         
         selectArray.forEach(el=>{
           let a = document.createElement("a")
-          a.innerHTML = el;
+          a.textContent = el;
           a.onmouseover = _=>{
             temp.querySelectorAll(".hover").forEach(el_=>{el_.className = ""})
             a.className = "hover"
@@ -88,7 +88,7 @@ function dinamic_input(init_value){
           }
           a.onclick = _=>{
             temp.classList.remove("opened")
-            temp.innerHTML = el
+            temp.textContent = el
             update_value()
             setTimeout(function(){
               setCursorHere(temp)
@@ -100,7 +100,7 @@ function dinamic_input(init_value){
       }
       else{
         let temp = document.createElement("span")
-        temp.innerHTML = e.key;
+        temp.textContent = e.key;
         if (e.key == " "){
           temp.className = "space"
         }
@@ -190,11 +190,11 @@ function dinamic_input(init_value){
     input.querySelectorAll(":scope > *").forEach(e=>{
       if (e.classList.contains("select-area")){
         if (!e.classList.contains("opened")){
-          string += "%" + e.innerHTML
+          string += "%" + e.textContent.trim()
         }
       }
       else{
-        string += e.innerHTML
+        string += e.textContent.trim()
       }
     })
     input.setAttribute("value", string)
@@ -213,7 +213,10 @@ function dinamic_input(init_value){
         let temp = text.slice(i)
         for (let j = 0; j < selectArray.length; j++){
           if (temp.split(selectArray[j])[0] == "%"){
-            input.innerHTML += `<span class="select-area">${selectArray[j]}</span>`
+            let span = document.createElement("span")
+            span.className = "select-area"
+            span.textContent = selectArray[j]
+            input.appendChild(span)
             i += selectArray[j].length
             break
           }
@@ -221,10 +224,15 @@ function dinamic_input(init_value){
       }
       else{
         if (text[i] == " "){
-          input.innerHTML += '<span class="space"> </span>'
+          let span = document.createElement("span")
+          span.className = "space"
+          span.textContent = " "
+          input.appendChild(span)
         }
         else{
-          input.innerHTML += `<span>${text[i]}</span>`
+          let span = document.createElement("span")
+          span.textContent = text[i]
+          input.appendChild(span)
         }
       }
     }
