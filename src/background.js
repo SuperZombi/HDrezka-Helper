@@ -22,15 +22,15 @@ browser.storage.sync.get("urlList").then((data) => {
 			});
 		}
 	});
+});
 
-	browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-		if (changeInfo.status == 'complete' || changeInfo.status == 'loading'){
-			let url = new URL(tab.url)
-			if (urlList.includes(url.origin)) {
-				changeInfo.status == 'complete' ? executeScript(tabId) : executeBefore(tabId)
-			}
+browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+	if (changeInfo.status == 'complete' || changeInfo.status == 'loading'){
+		let url = new URL(tab.url)
+		if (urlList.includes(url.origin)) {
+			changeInfo.status == 'complete' ? executeScript(tabId) : executeBefore(tabId)
 		}
-	});
+	}
 });
 
 
