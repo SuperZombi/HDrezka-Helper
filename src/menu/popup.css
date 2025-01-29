@@ -43,7 +43,7 @@
 	transform-origin: center center;
 	transition: 0.4s;
 	padding: 1rem;
-	padding-top: 2.5rem;
+	padding-top: 2.75rem;
 }
 .popup.show{
 	transform: scale(1);
