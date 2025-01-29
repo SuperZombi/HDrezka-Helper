@@ -100,7 +100,7 @@ function MainScript(chrome_i18n) {
 
 	let player = document.getElementById('player')
 	if (player){
-		document.title = document.querySelector('.b-content__main .b-post__title').innerText;
+		document.title = document.querySelector('.b-content__main .b-post__title').textContent.trim();
 		if (args.download){
 			main();
 			temp_video_src = document.getElementById('player').getElementsByTagName("video")[0].src
@@ -180,18 +180,54 @@ function MainScript(chrome_i18n) {
 		return final_string;
 	}
 
+	function LOADER(){
+		const svgNamespace = "http://www.w3.org/2000/svg";
+		function createCircle(cx, begin) {
+			let circle = document.createElementNS(svgNamespace, "circle");
+			circle.setAttribute("cx", cx);
+			circle.setAttribute("cy", "12");
+			circle.setAttribute("r", "3");
+			circle.setAttribute("fill", "lightblue");
+
+			let animate = document.createElementNS(svgNamespace, "animate");
+			animate.setAttribute("attributeName", "r");
+			animate.setAttribute("begin", begin);
+			animate.setAttribute("dur", "0.75s");
+			animate.setAttribute("values", "3;.2;3");
+			animate.setAttribute("repeatCount", "indefinite");
+
+			circle.appendChild(animate);
+			return circle;
+		}
+		let svg = document.createElementNS(svgNamespace, "svg");
+		svg.setAttribute("viewBox", "0 0 24 24")
+		svg.style.height = "50px"
+		svg.style.margin = "auto"
+		svg.style.display = "block"
+		svg.appendChild(createCircle("4", "0s"));
+		svg.appendChild(createCircle("12", "0.15s"));
+		svg.appendChild(createCircle("20", "0.3s"));
+		return svg
+	}
+	function makeSVG(viewBox, path){
+		const svgNamespace = "http://www.w3.org/2000/svg";
+		let svg = document.createElementNS(svgNamespace, "svg");
+		svg.setAttribute("viewBox", viewBox)
+		let path_el = document.createElementNS(svgNamespace, "path");
+		path_el.setAttribute("d", path);
+		svg.append(path_el)
+		return svg
+	}
+
 	function createButton() {
 		if (!document.getElementById("downloadButton")){
 			el = document.getElementById("send-video-issue")
 			let div = document.createElement("div");
 			div.id = "downloadButton"
 			div.title = chrome_i18n.downloadStr
-			div.innerHTML = `<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 330 330" xml:space="preserve">
-								<g fill="green">
-									<path d="M211.667,127.121l-31.669,31.666V75c0-8.285-6.716-15-15-15c-8.284,0-15,6.715-15,15v83.787l-31.665-31.666 c-5.857-5.857-15.355-5.857-21.213,0c-5.858,5.859-5.858,15.355,0,21.213l57.271,57.271c2.929,2.93,6.768,4.395,10.606,4.395 c3.838,0,7.678-1.465,10.607-4.393l57.275-57.271c5.857-5.857,5.858-15.355,0.001-21.215 C227.021,121.264,217.524,121.264,211.667,127.121z"/>
-									<path d="M195,240h-60c-8.284,0-15,6.715-15,15c0,8.283,6.716,15,15,15h60c8.284,0,15-6.717,15-15C210,246.715,203.284,240,195,240z"/>
-								</g>
-							</svg>`
+			let svg = makeSVG("0 0 330 330", "m211.667 127.121-31.669 31.666V75c0-8.285-6.716-15-15-15-8.284 0-15 6.715-15 15v83.787l-31.665-31.666c-5.857-5.857-15.355-5.857-21.213 0-5.858 5.859-5.858 15.355 0 21.213l57.271 57.271A14.95 14.95 0 0 0 164.997 210c3.838 0 7.678-1.465 10.607-4.393l57.275-57.271c5.857-5.857 5.858-15.355.001-21.215-5.859-5.857-15.356-5.857-21.213 0zM195 240h-60c-8.284 0-15 6.715-15 15 0 8.283 6.716 15 15 15h60c8.284 0 15-6.717 15-15 0-8.285-6.716-15-15-15z")
+			svg.setAttribute("fill", "green")
+			div.appendChild(svg)
 			div.style.right = "55px"
 			div.style.top = "0"
 			div.style.height = "50px"
@@ -213,16 +249,7 @@ function MainScript(chrome_i18n) {
 		}
 	}
 
-	function LOADER(){
-		return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 100 100" height="50px" style="margin:auto;display:block;" >
-			<g transform="translate(25 50)">
-			<circle cx="0" cy="0" r="6" fill="lightblue"><animateTransform attributeName="transform" type="scale" begin="-0.3s" calcMode="spline" keySplines="0.3 0 0.7 1;0.3 0 0.7 1" values="0;1;0" keyTimes="0;0.5;1" dur="1s" repeatCount="indefinite"></animateTransform></circle></g>
-			<g transform="translate(50 50)">
-			<circle cx="0" cy="0" r="6" fill="lightblue"><animateTransform attributeName="transform" type="scale" begin="-0.16s" calcMode="spline" keySplines="0.3 0 0.7 1;0.3 0 0.7 1" values="0;1;0" keyTimes="0;0.5;1" dur="1s" repeatCount="indefinite"></animateTransform></circle></g>
-			<g transform="translate(75 50)">
-			<circle cx="0" cy="0" r="6" fill="lightblue"><animateTransform attributeName="transform" type="scale" begin="0s" calcMode="spline" keySplines="0.3 0 0.7 1;0.3 0 0.7 1" values="0;1;0" keyTimes="0;0.5;1" dur="1s" repeatCount="indefinite"></animateTransform></circle></g>
-		</svg>`
-	}
+	
 
 	async function createDownloadMenu(array){
 		if (!document.getElementById("downloadMenu")){
@@ -246,11 +273,11 @@ function MainScript(chrome_i18n) {
 			div.style.transition = "0.5s"
 			div.style.userSelect = "none"
 			div.style.overflow = "hidden"
-			div.innerHTML = LOADER();
+			div.appendChild(LOADER())
 			document.getElementById("send-video-issue").parentNode.appendChild(div)
 		}
 		else{
-			document.getElementById("downloadMenu").innerHTML = LOADER();
+			document.getElementById("downloadMenu").replaceChildren(LOADER())
 		}
 
 		let div_target = document.getElementById("downloadMenu")
@@ -271,8 +298,7 @@ function MainScript(chrome_i18n) {
 				}
 			}
 		}
-		div_target.innerHTML = ""
-		div_target.appendChild(div_)
+		div_target.replaceChildren(div_)
 
 		if (div_.children.length == 0){
 			vpnAlert(div_target)
@@ -319,9 +345,9 @@ function MainScript(chrome_i18n) {
 					}
 					let el2 = document.querySelector("#translators-list .active")
 					if (el2){
-						translation = el2.innerText
+						translation = el2.textContent.trim()
 					}
-					name = document.querySelector('.b-content__main .b-post__title').innerText
+					name = document.querySelector('.b-content__main .b-post__title').textContent.trim()
 
 					var targetFileName = buildFileName(name, season, episode, translation, title)
 
@@ -335,9 +361,9 @@ function MainScript(chrome_i18n) {
 					progress.max = 100;
 					let percentage = document.createElement("span")
 					percentage.style.marginLeft = "5px"
-					percentage.innerHTML = "0%"
+					percentage.textContent = "0%"
 					let close_but = document.createElement("button")
-					close_but.innerHTML = "✖"
+					close_but.textContent = "✖"
 					close_but.style.marginLeft = "5px"
 					close_but.style.borderRadius = "50px"
 					close_but.style.border = "2px solid transparent"
@@ -374,7 +400,7 @@ function MainScript(chrome_i18n) {
 					xhr.onprogress = prog=>{
 						let percentComplete = Math.round((prog.loaded / prog.total) * 100);
 						progress.value = percentComplete;
-						percentage.innerHTML = percentComplete + "%"
+						percentage.textContent = percentComplete + "%"
 					}
 					xhr.onload = function () {
 						var file = new Blob([xhr.response], { type : 'application/octet-stream' });
@@ -414,10 +440,10 @@ function MainScript(chrome_i18n) {
 		}
 
 		let span = document.createElement("span")
-		span.innerHTML = title
+		span.textContent = title
 		let span2 = document.createElement("span")
 		span2.style.float = "right"
-		span2.innerHTML = size
+		span2.textContent = size
 
 		a.appendChild(span)
 		a.appendChild(span2)
@@ -435,7 +461,7 @@ function MainScript(chrome_i18n) {
 			details.style.marginTop = "8px";
 			details.style.cursor = "pointer";
 			let summary = document.createElement("summary");
-			summary.innerHTML = chrome_i18n.subtitles;
+			summary.textContent = chrome_i18n.subtitles;
 			summary.style.color = "aqua";
 			summary.style.borderRadius = "8px";
 			summary.style.textAlign = "center";
@@ -542,7 +568,7 @@ function MainScript(chrome_i18n) {
 	}
 	function addCloseButton(popup, callback=null){
 		let div = document.createElement("span")
-		div.innerHTML = "✖"
+		div.textContent = "✖"
 		div.style.position = "absolute"
 		div.style.zIndex = 3
 		div.style.color = "red"
@@ -581,13 +607,18 @@ function MainScript(chrome_i18n) {
 		popup.style.background = "unset"
 		popup.style.position = "unset"
 		popup.style.padding = "10px"
-		popup.innerHTML = `
-			<svg fill="white" height="55" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-				<path d="m20.45 5.468-4-3a.753.753 0 0 0-.45-.15H8a.753.753 0 0 0-.45.15l-4 3a.753.753 0 0 0-.3.6v4.211c0 4.97 3.126 9.481 7.784 11.228a2.744 2.744 0 0 0 1.937-.001c4.653-1.746 7.779-6.257 7.779-11.227V6.068a.75.75 0 0 0-.3-.6Zm-7.7 6.773V14a.75.75 0 0 1-1.5 0v-1.759c-.589-.282-1-.879-1-1.574 0-.965.785-1.75 1.75-1.75s1.75.785 1.75 1.75c0 .695-.411 1.292-1 1.574Z"/>
-			</svg>
-			<h5 style="color: red; font-size: 1.1em">${chrome_i18n.errorStr}</h5>
-			<h5>${chrome_i18n.vpnErrorMsg}</h5>
-		`
+		let svg = makeSVG("0 0 24 24", "m20.45 5.468-4-3a.753.753 0 0 0-.45-.15H8a.753.753 0 0 0-.45.15l-4 3a.753.753 0 0 0-.3.6v4.211c0 4.97 3.126 9.481 7.784 11.228a2.744 2.744 0 0 0 1.937-.001c4.653-1.746 7.779-6.257 7.779-11.227V6.068a.75.75 0 0 0-.3-.6Zm-7.7 6.773V14a.75.75 0 0 1-1.5 0v-1.759c-.589-.282-1-.879-1-1.574 0-.965.785-1.75 1.75-1.75s1.75.785 1.75 1.75c0 .695-.411 1.292-1 1.574Z")
+		svg.setAttribute("fill", "white")
+		svg.style.height = "55px"
+		popup.appendChild(svg)
+
+		let h1 = document.createElement("h5")
+		h1.style.color = "red"
+		h1.textContent = chrome_i18n.errorStr
+		popup.appendChild(h1)
+		let h2 = document.createElement("h5")
+		h2.textContent = chrome_i18n.vpnErrorMsg
+		popup.appendChild(h2)
 	}
 
 	function donationPopup(menu_element){
@@ -603,18 +634,36 @@ function MainScript(chrome_i18n) {
 		if (checkLastNotificationTime()){
 			let popup = makePopup(menu_element)
 			menu_element.style.minWidth = "175px"
-			popup.innerHTML = `
-				<svg height="48" fill="lime" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-					<path d="M21 24.294h-7.09a.5.5 0 0 1 0-1H21a1.318 1.318 0 1 0 0-2.636h-5.092a.505.505 0 0 1-.312-.11l-1.423-1.138a4.99 4.99 0 0 0-5.099-.69l-1.877.805a.5.5 0 0 1-.394-.918l1.877-.805a5.994 5.994 0 0 1 6.118.827l1.286 1.03H21a2.318 2.318 0 1 1 0 4.635Z"/><path d="M16.956 29.5a4.958 4.958 0 0 1-1.571-.255l-8.452-2.817a.5.5 0 1 1 .316-.95l8.453 2.818a3.988 3.988 0 0 0 3.291-.361l9.867-5.92a1.318 1.318 0 1 0-1.356-2.26l-4.171 2.502a.5.5 0 0 1-.514-.858l4.17-2.502a2.318 2.318 0 1 1 2.385 3.976l-9.866 5.919a4.958 4.958 0 0 1-2.552.708Z"/><path d="M7 27.5H2a.5.5 0 0 1 0-1h4.5v-9H2a.5.5 0 0 1 0-1h5a.5.5 0 0 1 .5.5v10a.5.5 0 0 1-.5.5Z"/><circle cx="3" cy="19.5" r="1"/><path d="M17.5 16.5a7 7 0 1 1 7-7 7.008 7.008 0 0 1-7 7Zm0-13a6 6 0 1 0 6 6 6.007 6.007 0 0 0-6-6Z"/><path d="M17.5 6.972a.5.5 0 0 1-.5-.5v-.918a.5.5 0 1 1 1 0v.918a.5.5 0 0 1-.5.5ZM17.5 13.946a.5.5 0 0 1-.5-.5v-.918a.5.5 0 0 1 1 0v.918a.5.5 0 0 1-.5.5Z"/><path d="M17.5 12.984a2.024 2.024 0 0 1-2.105-1.926.5.5 0 0 1 1 0 1.123 1.123 0 0 0 2.21 0 .87.87 0 0 0-.635-.874l-1.256-.418a1.877 1.877 0 0 1-1.32-1.824 2.114 2.114 0 0 1 4.211 0 .5.5 0 0 1-1 0 1.123 1.123 0 0 0-2.21 0 .87.87 0 0 0 .635.874l1.256.418a1.877 1.877 0 0 1 1.32 1.824 2.024 2.024 0 0 1-2.106 1.926Z"/>
-				</svg>
-				<h5 style="color:white">${chrome_i18n.donateTitle}</h5>
-				<a href="https://donatello.to/super_zombi" target="_blank">
-					<button style="--glow-color: #00a0b0; border: .25em solid var(--glow-color); padding: 0.5em 2em; margin: 0.5em; color: var(--glow-color); font-weight: bold; background: black; border-radius: 0.75em; outline: none; box-shadow: 0 0 1em .25em var(--glow-color), inset 0 0 1em 0 var(--glow-color); text-shadow: 0 0 1em var(--glow-color); transition: all 0.3s;">
-						${chrome_i18n.donateButton}
-					</button>
-				</a>
-			`
-			let button = popup.querySelector("button")
+			let svg = makeSVG("0 0 32 32", "M21 24.3h-7.09a.5.5 0 0 1 0-1H21a1.32 1.32 0 1 0 0-2.64h-5.1a.5.5 0 0 1-.3-.11l-1.43-1.14a4.99 4.99 0 0 0-5.1-.69l-1.87.8a.5.5 0 0 1-.4-.91l1.88-.8a6 6 0 0 1 6.12.82l1.28 1.03H21a2.32 2.32 0 1 1 0 4.63Zm-4.04 5.2a4.96 4.96 0 0 1-1.58-.26l-8.45-2.81a.5.5 0 1 1 .32-.95l8.45 2.82a3.99 3.99 0 0 0 3.3-.36l9.86-5.92a1.32 1.32 0 1 0-1.36-2.26l-4.17 2.5a.5.5 0 0 1-.51-.86l4.17-2.5a2.32 2.32 0 1 1 2.38 3.97l-9.86 5.92a4.96 4.96 0 0 1-2.55.71ZM7 27.5H2a.5.5 0 0 1 0-1h4.5v-9H2a.5.5 0 0 1 0-1h5a.5.5 0 0 1 .5.5v10a.5.5 0 0 1-.5.5Zm10.5-11a7 7 0 1 1 7-7 7 7 0 0 1-7 7Zm0-13a6 6 0 1 0 6 6 6 6 0 0 0-6-6Zm0 3.47a.5.5 0 0 1-.5-.5v-.92a.5.5 0 1 1 1 0v.92a.5.5 0 0 1-.5.5Zm0 6.98a.5.5 0 0 1-.5-.5v-.92a.5.5 0 0 1 1 0v.92a.5.5 0 0 1-.5.5Zm0-.97a2.02 2.02 0 0 1-2.1-1.92.5.5 0 0 1 1 0 1.12 1.12 0 0 0 2.2 0 .87.87 0 0 0-.63-.88l-1.26-.41a1.88 1.88 0 0 1-1.32-1.83 2.11 2.11 0 0 1 4.21 0 .5.5 0 0 1-1 0 1.12 1.12 0 0 0-2.2 0 .87.87 0 0 0 .63.88l1.26.41a1.88 1.88 0 0 1 1.32 1.83 2.02 2.02 0 0 1-2.11 1.92Z")
+			svg.setAttribute("fill", "lime")
+			svg.style.height = "48px"
+			popup.appendChild(svg)
+
+			let h = document.createElement("h5")
+			h.style.color = "white"
+			h.textContent = chrome_i18n.donateTitle
+			popup.appendChild(h)
+
+			let a = document.createElement("a")
+			a.href = "https://donatello.to/super_zombi"
+			a.target = "_blank"
+			popup.appendChild(a)
+			
+			let button = document.createElement("button")
+			button.textContent = chrome_i18n.donateButton
+			a.appendChild(button)
+			button.style.setProperty("--glow-color", "#00a0b0");
+			button.style.border = ".25em solid var(--glow-color)";
+			button.style.padding = "0.5em 2em";
+			button.style.margin = "0.5em";
+			button.style.color = "var(--glow-color)";
+			button.style.fontWeight = "bold";
+			button.style.background = "black";
+			button.style.borderRadius = "0.75em";
+			button.style.outline = "none";
+			button.style.boxShadow = "0 0 1em .25em var(--glow-color), inset 0 0 1em 0 var(--glow-color)";
+			button.style.textShadow = "0 0 1em var(--glow-color)";
+			button.style.transition = "all 0.3s";
 			button.onmouseover = _=>{
 				button.style.color = "white";
 				button.style.background = "var(--glow-color)";
