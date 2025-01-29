@@ -41,6 +41,7 @@ function executeScript(tabId){
 		filename_structure: "",
 		hideVK: true,
 		subtitles: true,
+		mobileMode: false,
 	}, results => {
 		let chrome_arr = {
 			downloadStr: browser.i18n.getMessage("downloadStr"),
@@ -236,7 +237,7 @@ function MainScript(chrome_i18n) {
 			div.style.padding = "4px"
 			div.style.filter = "drop-shadow(black 2px 4px 6px)"
 			div.style.zIndex = "100"
-			div.style.right = "0"
+			div.style.right = args.mobileMode ? "5px" : "0"
 			div.style.top = "55px"
 			div.style.display = "none"
 			div.style.opacity = 0
@@ -330,6 +331,7 @@ function MainScript(chrome_i18n) {
 					div.style.alignItems = "center"
 					div.style.padding = "6px 0"
 					let progress = document.createElement("progress")
+					progress.style.width = "100%"
 					progress.max = 100;
 					let percentage = document.createElement("span")
 					percentage.style.marginLeft = "5px"
