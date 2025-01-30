@@ -54,7 +54,7 @@
       "message": "Шаблон імені файлу"
    },
    "pressPercentToPasteVars": {
-      "message": "Натисніть <code>%</code>, щоб вставити змінну"
+      "message": "Натисніть %, щоб вставити змінну"
    },
    "help": {
       "message": "Допомога"

@@ -54,7 +54,7 @@
       "message": "Шаблон имени файла"
    },
    "pressPercentToPasteVars": {
-      "message": "Нажмите <code>%</code>, чтобы вставить переменную"
+      "message": "Нажмите %, чтобы вставить переменную"
    },
    "help": {
       "message": "Помощь"

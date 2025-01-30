@@ -52,6 +52,7 @@ function checkSub(element){
 
 function dinamic_input(init_value){
   var input = document.querySelector("#filename_structure")
+  var fake_input = document.querySelector("#fake_input")
   var selectArray = ["title", "s", "ep", "transl", "res"]
   set_value(init_value)
   document.querySelector("#downloader_2").onchange = e=>{
@@ -65,12 +66,13 @@ function dinamic_input(init_value){
   if (document.querySelector("#downloader_2").checked){
     document.querySelector("#filename_structure_block").style.display = "block"
   }
-  input.onblur = _=>{
+  fake_input.onblur = _=>{
     if (input.querySelector(".cursor")){
       input.querySelector(".cursor").remove()
     }
   }
-  input.onkeydown = function(e){
+  fake_input.onkeydown = function(e){
+    console.log(e)
     if (e.key.length == 1){
       if (e.key == "%"){
         let temp = document.createElement("span")
@@ -184,6 +186,7 @@ function dinamic_input(init_value){
     else{
       setCursorHere(input.lastChild)
     }
+    fake_input.focus()
   }
   function update_value(init=false){
     let string = ""

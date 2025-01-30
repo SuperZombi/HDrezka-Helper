@@ -143,6 +143,12 @@ label input[type="checkbox"]{
 #filename_structure .space{
 	width: 6px;
 }
+#fake_input{
+	position: absolute;
+	opacity: 0;
+	height: 0;
+	z-index: -1;
+}
 @keyframes cursor_anim{
 	0%{
 		opacity: 0;

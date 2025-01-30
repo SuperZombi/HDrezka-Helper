@@ -54,7 +54,7 @@
       "message": "File name pattern"
    },
    "pressPercentToPasteVars": {
-      "message": "Press <code>%</code> to insert var"
+      "message": "Press % to insert var"
    },
    "help": {
       "message": "Help"
