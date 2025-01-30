@@ -35,12 +35,14 @@ function getCurrentUrl(){
 		browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
 			if (tabs.length > 0) {
 				let activeTab = tabs[0];
-				let url = new URL(activeTab.url)
-				let icon = activeTab.favIconUrl || `https://www.google.com/s2/favicons?domain=${url}&sz=128`
-				resolve({url, icon})
-			} else {
-				resolve({url: null, icon: null})
+				let url_href = activeTab.url || activeTab.pendingUrl
+				if (url_href){
+					let url = new URL(url_href)
+					let icon = activeTab.favIconUrl || `https://www.google.com/s2/favicons?domain=${url_href}&sz=128`
+					resolve({url, icon})
+				}
 			}
+			resolve({url: null, icon: null})
 		});
 	});
 }
