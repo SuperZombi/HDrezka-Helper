@@ -206,7 +206,7 @@ function MainScript(chrome_i18n) {
 		}
 		let div = document.createElement("div")
 		div.style.display = "flex"
-		div.style.height = "100%"
+		div.style.height = "100px"
 		let svg = document.createElementNS(svgNamespace, "svg");
 		svg.setAttribute("viewBox", "0 0 24 24")
 		svg.style.height = "50px"
@@ -264,8 +264,7 @@ function MainScript(chrome_i18n) {
 		if (!document.getElementById("downloadMenu")){
 			let div = document.createElement("div")
 			div.id = "downloadMenu"
-			div.style.minHeight = "fit-content"
-			div.style.height = "100%"
+			div.style.minHeight = "60px"
 			div.style.width = "160px"
 			div.style.background = "rgba(93, 93, 93, 0.5)"
 			div.style.backdropFilter = "blur(5px)"

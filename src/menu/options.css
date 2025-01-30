@@ -6,6 +6,9 @@ body{
 	text-align: left;
 	user-select: none;
 	font-family: sans-serif;
+	min-width: 320px;
+	max-width: 360px;
+	margin: auto;
 }
 h3{
 	padding-right: 50px;
@@ -42,7 +45,7 @@ select {
 }
 .sub input[type="checkbox"],
 .sub input[type="radio"] {
-	transform: scale(0.75);
+	transform: scale(0.76);
 	margin-left: 3px;
 }
 .sub::before{

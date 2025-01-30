@@ -40,19 +40,18 @@
 			<label class="sub">
 				<input class="form-check-input" type="checkbox" id="inline_downloader">
 				<a class="cursor" localize="inline_downloader"></a>
-
-				<div id="inline_downloader_options" style="display:none;width:100%;">
-					<label class="sub">
-						<input class="form-check-input" type="radio" name="downloader_type" value="xhr">
-						<a class="cursor" localize="xhr_downloader"></a>
-					</label>
-
-					<label class="sub">
-						<input class="form-check-input" type="radio" name="downloader_type" value="fetch">
-						<a class="cursor" localize="fetch_downloader"></a>
-					</label>
-				</div>
 			</label>
+			<div id="inline_downloader_options" style="display:none;margin-left:8px;">
+				<label class="sub">
+					<input class="form-check-input" type="radio" name="downloader_type" value="xhr">
+					<a class="cursor" localize="xhr_downloader"></a>
+				</label>
+
+				<label class="sub">
+					<input class="form-check-input" type="radio" name="downloader_type" value="fetch">
+					<a class="cursor" localize="fetch_downloader"></a>
+				</label>
+			</div>
 		</label>
 
 		<span id="chunk-select-block" style="margin: 10px 0 10px 15px;display:none;">
