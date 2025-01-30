@@ -1,4 +1,4 @@
-var urlList;
+var urlList = [];
 var browser = chrome || browser;
 
 browser.storage.sync.get("urlList").then((data) => {

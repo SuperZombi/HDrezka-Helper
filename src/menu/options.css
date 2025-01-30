@@ -16,11 +16,12 @@ h3{
 	cursor: pointer;
 }
 label{
-	margin-top: 5px;
+	margin-top: 0.5em;
 	display: flex;
 	align-items: center;
 	flex-wrap: wrap;
 	width: 100%;
+	line-height: 1;
 }
 label input[type="checkbox"]{
 	transform: scale(0.9);

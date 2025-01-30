@@ -1,20 +1,16 @@
 var browser = chrome || browser;
-var urlList;
+var urlList = [];
 browser.storage.sync.get("urlList", (data) => {
 	urlList = data.urlList || ["https://hdrezka.ag", "https://hdrezka.cm", "https://hdrezka.ag", "https://hdrezka.me", "https://hdrezka.co"];
-
-	urlList.forEach(url=>{
-		addWebsite(url)
-	})
+	urlList.forEach(url=>{addWebsite(url)})
 	main()
 });
 
 async function main(){
 	let {url, icon} = await getCurrentUrl()
-	if (url.protocol == "http:" || url.protocol == "https:"){
+	if (url && (url.protocol == "http:" || url.protocol == "https:")){
 		setCurrentWebsite(url, icon)
 		url = url.origin;
-
 		if (urlList.includes(url)){
 			setupUrlActionButton("remove", url)
 		} else{
@@ -25,7 +21,6 @@ async function main(){
 		document.querySelector("#current_url").style.padding = 0
 		document.querySelector("#current_url span").textContent = browser.i18n.getMessage("sites_list")
 	}
-
 	document.querySelector("#websites_settings").onclick = _=>{
 		document.querySelector("#websites_popup").classList.add("show")
 	}
@@ -35,14 +30,17 @@ async function main(){
 }
 
 
-
 function getCurrentUrl(){
 	return new Promise((resolve) => {
 		browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-			let activeTab = tabs[0];
-			let url = new URL(activeTab.url)
-			let icon = activeTab.favIconUrl
-			resolve({url, icon})
+			if (tabs.length > 0) {
+				let activeTab = tabs[0];
+				let url = new URL(activeTab.url)
+				let icon = activeTab.favIconUrl || `https://www.google.com/s2/favicons?domain=${url}&sz=128`
+				resolve({url, icon})
+			} else {
+				resolve({url: null, icon: null})
+			}
 		});
 	});
 }
