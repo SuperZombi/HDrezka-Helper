@@ -14,9 +14,12 @@ browser.storage.sync.get("urlList").then((data) => {
 			let addedSites = newValue.filter(site => !oldValue || !oldValue.includes(site));
 			browser.tabs.query({}, function(tabs) {
 				tabs.forEach(tab => {
-					let url = new URL(tab.url)
-					if (addedSites.includes(url.origin)) {
-						executeScript(tab.id)
+					if (tab.status == "complete"){
+						let url = new URL(tab.url)
+						if (addedSites.includes(url.origin)) {
+							executeScript(tab.id)
+							executeBefore(tab.id)
+						}
 					}
 				});
 			});
