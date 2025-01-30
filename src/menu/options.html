@@ -38,12 +38,33 @@
 			</label>
 
 			<label class="sub">
-				<input class="form-check-input" type="checkbox" id="downloader_2">
-				<a class="cursor">Downloader 2.0</a>
+				<input class="form-check-input" type="checkbox" id="inline_downloader">
+				<a class="cursor" localize="inline_downloader"></a>
+
+				<div id="inline_downloader_options" style="display:none;">
+					<label class="sub">
+						<input class="form-check-input" type="radio" name="downloader_type" value="xhr">
+						<a class="cursor" localize="xhr_downloader"></a>
+					</label>
+
+					<label class="sub">
+						<input class="form-check-input" type="radio" name="downloader_type" value="fetch">
+						<a class="cursor" localize="fetch_downloader"></a>
+					</label>
+				</div>
 			</label>
 		</label>
 
-		<span id="filename_structure_block" style="margin: 8px 0 10px 30px;display:none;">
+		<span id="chunk-select-block" style="margin: 10px 0 10px 30px;display:none;">
+			<span localize="chunk_size"></span>:
+			<select style="font-size: 1rem;" name="chunk_size">
+				<option value="10">10Mb</option>
+				<option value="5">5Mb</option>
+				<option value="2">2Mb</option>
+			</select>
+		</span>
+
+		<span id="filename_structure_block" style="margin: 10px 0 10px 30px;display:none;">
 			<span localize="fileNamePattern"></span>:<br>
 			<div id="filename_structure" tabindex="0"></div>
 			<input id="fake_input">

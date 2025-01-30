@@ -106,5 +106,17 @@
    },
    "confirm_delete": {
       "message": "Удалить %url?"
+   },
+   "inline_downloader": {
+      "message": "Встроенный загрузчик"
+   },
+   "xhr_downloader": {
+      "message": "XHR загрузчик (старый)"
+   },
+   "fetch_downloader": {
+      "message": "Fetch загрузчик (новый)"
+   },
+   "chunk_size": {
+      "message": "Размер фрагмента"
    }
 }

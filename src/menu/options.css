@@ -23,9 +23,14 @@ label{
 	width: 100%;
 	line-height: 1;
 }
-label input[type="checkbox"]{
+label input[type="checkbox"],
+label input[type="radio"] {
 	transform: scale(0.9);
 	margin-right: 5px !important;
+}
+select {
+	border-radius: 5px;
+	padding: 2px;
 }
 .sub{
 	font-size: 11pt;
@@ -35,7 +40,8 @@ label input[type="checkbox"]{
 .sub-disabled{
 	filter: grayscale(1);
 }
-.sub input[type="checkbox"]{
+.sub input[type="checkbox"],
+.sub input[type="radio"] {
 	transform: scale(0.75);
 	margin-left: 3px;
 }
@@ -120,6 +126,9 @@ label input[type="checkbox"]{
 }
 .dark .sub::before{
 	border-color: white;
+}
+.dark input, select {
+	color-scheme: dark;
 }
 
 #filename_structure{

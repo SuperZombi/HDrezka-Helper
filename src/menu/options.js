@@ -50,22 +50,47 @@ function checkSub(element){
   setTimeout(function(){blocking = false;}, 100)
 }
 
+function initHidenBlocks(){
+  document.querySelector("#inline_downloader").onchange = e=>{
+    if (e.target.checked){
+      document.querySelector("#filename_structure_block").style.display = "block"
+      document.querySelector("#inline_downloader_options").style.display = "block"
+      if (document.querySelector('input[type=radio][name="downloader_type"][value="fetch"]').checked){
+        document.querySelector("#chunk-select-block").style.display = "block"
+      }
+    }
+    else{
+      document.querySelector("#filename_structure_block").style.display = "none"
+      document.querySelector("#inline_downloader_options").style.display = "none"
+      document.querySelector("#chunk-select-block").style.display = "none"
+    }
+  }
+  if (document.querySelector("#inline_downloader").checked){
+    document.querySelector("#filename_structure_block").style.display = "block"
+    document.querySelector("#inline_downloader_options").style.display = "block"
+    if (document.querySelector('input[type=radio][name="downloader_type"][value="fetch"]').checked){
+      document.querySelector("#chunk-select-block").style.display = "block"
+    }
+  }
+  document.querySelectorAll('input[type=radio][name="downloader_type"]').forEach(radio=>{
+    radio.onchange = e=>{
+      if (e.target.value == "fetch") {
+        document.querySelector("#chunk-select-block").style.display = "block"
+      } else {
+        document.querySelector("#chunk-select-block").style.display = "none"
+      }
+    }
+  })
+  document.querySelector("select[name='chunk_size']").onchange = _=>{
+    document.getElementById("save").classList.remove("disabled")
+  }
+}
+
 function dinamic_input(init_value){
   var input = document.querySelector("#filename_structure")
   var fake_input = document.querySelector("#fake_input")
   var selectArray = ["title", "s", "ep", "transl", "res"]
   set_value(init_value)
-  document.querySelector("#downloader_2").onchange = e=>{
-    if (e.target.checked){
-      document.querySelector("#filename_structure_block").style.display = "block"
-    }
-    else{
-      document.querySelector("#filename_structure_block").style.display = "none"
-    }
-  }
-  if (document.querySelector("#downloader_2").checked){
-    document.querySelector("#filename_structure_block").style.display = "block"
-  }
   fake_input.onblur = _=>{
     if (input.querySelector(".cursor")){
       input.querySelector(".cursor").remove()
@@ -261,7 +286,9 @@ function dinamic_input(init_value){
 }
 
 browser.storage.sync.get({ download: true,
-                          downloader_2: false,
+                          inline_downloader: false,
+                          downloader_type: "fetch",
+                          chunk_size: 5,
                           filename_structure: "",
                           subtitles: true,
                           export: true,
@@ -272,9 +299,16 @@ browser.storage.sync.get({ download: true,
   let labels = document.getElementById("main-wraper").getElementsByTagName("label")
   Object.keys(labels).forEach(function(e){
     let input = labels[e].getElementsByTagName("input")[0]
-    input.checked = results[input.id]
-    labels[e].onclick = function(){obserse(labels[e], results)}
-    checkSub(labels[e])
+    if (input.type == "checkbox"){
+      input.checked = results[input.id]
+      labels[e].onclick = function(){obserse(labels[e], results)}
+      checkSub(labels[e])
+    }
+    else if (input.type == "radio"){
+      if (input.value == results[input.name]){
+        input.checked = true;
+      }
+    }
   })
 
   if (results['filename_structure'] != ""){
@@ -282,15 +316,25 @@ browser.storage.sync.get({ download: true,
   }else{
     dinamic_input("%title s-%s ep-%ep [%transl]")
   }
+  if (results['chunk_size']){
+    document.querySelector("select[name='chunk_size']").value = results['chunk_size']
+  }
+  initHidenBlocks()
 
   document.getElementById("save").onclick = _ => {
     let labels = document.getElementById("main-wraper").getElementsByTagName("label")
     let settings = {};
     Object.keys(labels).forEach(function(e){
       let input = labels[e].getElementsByTagName("input")[0]
-      settings[input.id] = input.checked;
+      if (input.type == "checkbox"){
+        settings[input.id] = input.checked;
+      }
+      else if (input.type == "radio" && input.checked){
+        settings[input.name] = input.value;
+      }
     })
     settings['filename_structure'] = document.querySelector("#filename_structure").getAttribute("value")
+    settings['chunk_size'] = document.querySelector("select[name='chunk_size']").value
 
     browser.storage.sync.set(settings, _ => {
       // Reload extension to make opt-out change immediate. 

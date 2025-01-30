@@ -106,5 +106,17 @@
    },
    "confirm_delete": {
       "message": "Delete %url?"
+   },
+   "inline_downloader": {
+      "message": "Inline downloader"
+   },
+   "xhr_downloader": {
+      "message": "XHR downloader (old)"
+   },
+   "fetch_downloader": {
+      "message": "Fetch downloader (new)"
+   },
+   "chunk_size": {
+      "message": "Chunk size"
    }
 }

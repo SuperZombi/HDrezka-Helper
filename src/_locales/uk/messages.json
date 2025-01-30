@@ -106,5 +106,17 @@
    },
    "confirm_delete": {
       "message": "Видалити %url?"
+   },
+   "inline_downloader": {
+      "message": "Вбудоване скачування"
+   },
+   "xhr_downloader": {
+      "message": "XHR завантажувач (старий)"
+   },
+   "fetch_downloader": {
+      "message": "Fetch завантажувач (новий)"
+   },
+   "chunk_size": {
+      "message": "Розмір фрагменту"
    }
 }

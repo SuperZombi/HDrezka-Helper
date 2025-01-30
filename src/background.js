@@ -40,7 +40,9 @@ browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 function executeScript(tabId){
 	browser.storage.sync.get({
 		download: true,
-		downloader_2: false,
+		inline_downloader: false,
+		downloader_type: "fetch",
+		chunk_size: 5,
 		filename_structure: "",
 		hideVK: true,
 		subtitles: true,
@@ -334,13 +336,12 @@ function MainScript(chrome_i18n) {
 	function makeLink(title, href, size){
 		let filename = href.split('/').pop()
 		let a = document.createElement("a")
-		if (args.downloader_2){
+		if (args.inline_downloader){
 			a.title = chrome_i18n.downloadStr
-			a.onclick = _=>{
+			a.onclick = async _=>{
 				if (!a.getAttribute("blocked")){
 					a.setAttribute("blocked", true)
 					let season, episode, translation, name;
-					var xhr = new XMLHttpRequest();
 					let el = document.querySelector("#simple-episodes-tabs .active")
 					if (el){
 						season = el.getAttribute("data-season_id")
@@ -351,8 +352,7 @@ function MainScript(chrome_i18n) {
 						translation = el2.textContent.trim()
 					}
 					name = document.querySelector('.b-content__main .b-post__title').textContent.trim()
-
-					var targetFileName = buildFileName(name, season, episode, translation, title)
+					let targetFileName = buildFileName(name, season, episode, translation, title)
 
 					let div = document.createElement("span")
 					div.className = "download-area"
@@ -378,14 +378,6 @@ function MainScript(chrome_i18n) {
 					close_but.style.color = "red";
 					close_but.style.transition = "0.25s"
 					close_but.title = chrome_i18n.cancelDownload
-					close_but.onclick = _=>{
-						xhr.abort();
-						div.remove()
-						a.style.background = null
-						setTimeout(function(){
-							a.removeAttribute("blocked")
-						}, 100)
-					}
 					close_but.onmouseover = _=>{
 						close_but.style.borderColor = "red"
 					}
@@ -397,26 +389,28 @@ function MainScript(chrome_i18n) {
 					div.appendChild(close_but)
 					a.appendChild(div)
 
-					window.URL = window.URL || window.webkitURL;
-					xhr.open('GET', href, true);
-					xhr.responseType = 'blob';
-					xhr.onprogress = prog=>{
-						let percentComplete = Math.round((prog.loaded / prog.total) * 100);
-						progress.value = percentComplete;
-						percentage.textContent = percentComplete + "%"
+					let on_progress = percent=>{
+						progress.value = percent;
+						percentage.textContent = percent + "%"
 					}
-					xhr.onload = function () {
-						var file = new Blob([xhr.response], { type : 'application/octet-stream' });
-						let a_el = document.createElement('a')
-						a_el.href = window.URL.createObjectURL(file);
-						let extension = filename.split('.').pop();
-						a_el.download = `${targetFileName}.${extension}`;
-						a_el.click();
+					let finish = _=>{
+						div.remove()
+						a.style.background = null
 						setTimeout(function(){
-							close_but.click();
-						}, 1000)
-					};
-					xhr.send();
+							a.removeAttribute("blocked")
+						}, 100)
+					}
+					let abort;
+					if (args.downloader_type == "fetch"){
+						abort = await videoDownloadV3(href, targetFileName, on_progress, finish)
+					}
+					else if (args.downloader_type == "xhr") {
+						abort = videoDownloadV2(href, targetFileName, on_progress, finish)
+					}
+					close_but.onclick = _=>{
+						abort()
+						finish()
+					}
 				}
 			}
 		}
@@ -531,6 +525,122 @@ function MainScript(chrome_i18n) {
 				div.style.display = "none"
 			}, 400)
 		}
+	}
+
+	function videoDownloadV2(url, filename, on_progress, on_complete){
+		let xhr = new XMLHttpRequest();
+		xhr.open('GET', url, true);
+		xhr.responseType = 'blob';
+		xhr.onprogress = prog=>{
+			on_progress(Math.round((prog.loaded / prog.total) * 100))
+		}
+		xhr.onload = function () {
+			window.URL = window.URL || window.webkitURL;
+			let file = new Blob([xhr.response], { type : 'application/octet-stream' });
+			let a_el = document.createElement('a')
+			a_el.href = window.URL.createObjectURL(file);
+			a_el.download = `${filename}.mp4`;
+			a_el.click();
+			setTimeout(function(){
+				on_complete()
+			}, 1000)
+		};
+		xhr.send()
+		return ()=>{xhr.abort()}
+	}
+
+	async function videoDownloadV3(url, fileName, on_progress, on_complete){
+		let canDownload = true;
+		let _blobs = [];
+		let _next_offset = 0;
+		let CHUNK_SIZE = parseInt(args.chunk_size)*1024*1024;
+		let downloaded = 0;
+		let filesize = await getFileSize(url)
+		let controller = new AbortController();
+
+		function fetchNextPart(_writable){
+			fetch(url, {
+				signal: controller.signal,
+				method: "GET",
+				headers: {
+					Range: `bytes=${_next_offset}-${Math.min(_next_offset + CHUNK_SIZE, filesize)}`,
+				}
+			})
+			.then((res) => {
+				if (![200, 206].includes(res.status)) { throw new Error("Not 200/206 response: " + res.status); }
+				downloaded += parseInt(res.headers.get("Content-Length"))
+				_next_offset = downloaded;
+				on_progress(Math.round((downloaded / filesize) * 100))
+				return res.blob();
+			})
+			.then((resBlob) => {
+				if (_writable) {
+					_writable.write(resBlob);
+				} else {
+					_blobs.push(resBlob);
+				}
+			})
+			.then(() => {
+				if (_next_offset < filesize) {
+					if (canDownload){
+						fetchNextPart(_writable);
+					} else {
+						throw new Error("Aborted!")
+					}
+				} else {
+					if (_writable) {
+						_writable.close().then(() => {
+							on_complete()
+						});
+					} else {
+						save()
+						on_complete()
+					}
+				}
+			})
+			.catch((reason) => {
+				console.error(reason)
+				on_complete()
+			});
+		};
+
+		function save(){
+			const blob = new Blob(_blobs, { type: "video/mp4" });
+			const blobUrl = window.URL.createObjectURL(blob);
+			const a = document.createElement("a");
+			document.body.appendChild(a);
+			a.href = blobUrl;
+			a.download = fileName;
+			a.click();
+			document.body.removeChild(a);
+			window.URL.revokeObjectURL(blobUrl);
+		};
+
+		const supportsFileSystemAccess = "showSaveFilePicker" in window;
+		if (supportsFileSystemAccess) {
+			window.showSaveFilePicker({
+				suggestedName: fileName,
+				types: [{
+					description: 'Video File',
+					accept: {'video/mp4': ['.mp4']}
+				}]
+			}).then((handle) => {
+				fileName = handle.name;
+				handle.createWritable()
+				.then((writable) => {
+					fetchNextPart(writable);
+				})
+			})
+			.catch((err) => {
+				if (err.name !== "AbortError") {
+					console.error(err.name, err.message);
+				}
+				on_complete()
+			});
+		} else {
+			fetchNextPart(null);
+		}
+		return ()=>{canDownload = false;controller.abort()}
 	}
 
 
