@@ -204,6 +204,9 @@ function MainScript(chrome_i18n) {
 			circle.appendChild(animate);
 			return circle;
 		}
+		let div = document.createElement("div")
+		div.style.display = "flex"
+		div.style.height = "100%"
 		let svg = document.createElementNS(svgNamespace, "svg");
 		svg.setAttribute("viewBox", "0 0 24 24")
 		svg.style.height = "50px"
@@ -212,7 +215,8 @@ function MainScript(chrome_i18n) {
 		svg.appendChild(createCircle("4", "0s"));
 		svg.appendChild(createCircle("12", "0.15s"));
 		svg.appendChild(createCircle("20", "0.3s"));
-		return svg
+		div.appendChild(svg)
+		return div
 	}
 	function makeSVG(viewBox, path){
 		const svgNamespace = "http://www.w3.org/2000/svg";
@@ -260,14 +264,16 @@ function MainScript(chrome_i18n) {
 		if (!document.getElementById("downloadMenu")){
 			let div = document.createElement("div")
 			div.id = "downloadMenu"
-			div.style.minHeight = "50px"
+			div.style.minHeight = "fit-content"
+			div.style.height = "100%"
 			div.style.width = "160px"
 			div.style.background = "rgba(93, 93, 93, 0.5)"
 			div.style.backdropFilter = "blur(5px)"
 			div.style.position = "absolute"
 			div.style.borderRadius = "6px"
 			div.style.padding = "4px"
-			div.style.filter = "drop-shadow(black 2px 4px 6px)"
+			div.style.filter = "drop-shadow(black 0 0 4px)"
+			div.style.boxShadow = "0 2px 4px black"
 			div.style.zIndex = "100"
 			div.style.right = args.mobileMode ? "5px" : "0"
 			div.style.top = "55px"
@@ -747,6 +753,7 @@ function MainScript(chrome_i18n) {
 		if (checkLastNotificationTime()){
 			let popup = makePopup(menu_element)
 			menu_element.style.minWidth = "175px"
+			menu_element.style.minHeight = "150px"
 			let svg = makeSVG("0 0 32 32", "M21 24.3h-7.09a.5.5 0 0 1 0-1H21a1.32 1.32 0 1 0 0-2.64h-5.1a.5.5 0 0 1-.3-.11l-1.43-1.14a4.99 4.99 0 0 0-5.1-.69l-1.87.8a.5.5 0 0 1-.4-.91l1.88-.8a6 6 0 0 1 6.12.82l1.28 1.03H21a2.32 2.32 0 1 1 0 4.63Zm-4.04 5.2a4.96 4.96 0 0 1-1.58-.26l-8.45-2.81a.5.5 0 1 1 .32-.95l8.45 2.82a3.99 3.99 0 0 0 3.3-.36l9.86-5.92a1.32 1.32 0 1 0-1.36-2.26l-4.17 2.5a.5.5 0 0 1-.51-.86l4.17-2.5a2.32 2.32 0 1 1 2.38 3.97l-9.86 5.92a4.96 4.96 0 0 1-2.55.71ZM7 27.5H2a.5.5 0 0 1 0-1h4.5v-9H2a.5.5 0 0 1 0-1h5a.5.5 0 0 1 .5.5v10a.5.5 0 0 1-.5.5Zm10.5-11a7 7 0 1 1 7-7 7 7 0 0 1-7 7Zm0-13a6 6 0 1 0 6 6 6 6 0 0 0-6-6Zm0 3.47a.5.5 0 0 1-.5-.5v-.92a.5.5 0 1 1 1 0v.92a.5.5 0 0 1-.5.5Zm0 6.98a.5.5 0 0 1-.5-.5v-.92a.5.5 0 0 1 1 0v.92a.5.5 0 0 1-.5.5Zm0-.97a2.02 2.02 0 0 1-2.1-1.92.5.5 0 0 1 1 0 1.12 1.12 0 0 0 2.2 0 .87.87 0 0 0-.63-.88l-1.26-.41a1.88 1.88 0 0 1-1.32-1.83 2.11 2.11 0 0 1 4.21 0 .5.5 0 0 1-1 0 1.12 1.12 0 0 0-2.2 0 .87.87 0 0 0 .63.88l1.26.41a1.88 1.88 0 0 1 1.32 1.83 2.02 2.02 0 0 1-2.11 1.92Z")
 			svg.setAttribute("fill", "lime")
 			svg.style.height = "48px"
