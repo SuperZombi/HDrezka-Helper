@@ -72,7 +72,6 @@ function dinamic_input(init_value){
     }
   }
   fake_input.onkeydown = function(e){
-    console.log(e)
     if (e.key.length == 1){
       if (e.key == "%"){
         let temp = document.createElement("span")
@@ -197,7 +196,7 @@ function dinamic_input(init_value){
         }
       }
       else{
-        string += e.textContent.trim()
+        string += e.textContent
       }
     })
     input.setAttribute("value", string)
