@@ -227,6 +227,22 @@ function MainScript(chrome_i18n) {
 		svg.append(path_el)
 		return svg
 	}
+	function closeSVG(color="red"){
+		const svgNamespace = "http://www.w3.org/2000/svg";
+		let svg = document.createElementNS(svgNamespace, "svg");
+		svg.setAttribute("viewBox", "0 0 512 512")
+		svg.setAttribute("fill", color);
+		let circle = document.createElementNS(svgNamespace, "circle");
+		circle.setAttribute("cx", "256");
+		circle.setAttribute("cy", "256");
+		circle.setAttribute("r", "256");
+		svg.append(circle)
+		let path_el = document.createElementNS(svgNamespace, "path");
+		path_el.setAttribute("d", "M334.63 177.37a24 24 0 0 1 0 33.94L289.94 256l44.69 44.69a24 24 0 1 1-33.94 33.94L256 289.94l-44.69 44.69a24 24 0 1 1-33.94-33.94L222.06 256l-44.69-44.69a24 24 0 1 1 33.94-33.94L256 222.06l44.69-44.69a24 24 0 0 1 33.94 0z");
+		path_el.setAttribute("fill", "#fff");
+		svg.append(path_el)
+		return svg
+	}
 
 	function createButton() {
 		if (!document.getElementById("downloadButton")){
@@ -370,28 +386,24 @@ function MainScript(chrome_i18n) {
 					let percentage = document.createElement("span")
 					percentage.style.marginLeft = "5px"
 					percentage.textContent = "0%"
-					let close_but = document.createElement("button")
-					close_but.textContent = "✖"
-					close_but.style.marginLeft = "5px"
-					close_but.style.borderRadius = "50px"
-					close_but.style.border = "2px solid transparent"
-					close_but.style.height = "20px";
+					let close_area = document.createElement("div")
+					close_area.title = chrome_i18n.cancelDownload
+					close_area.style.display = "flex"
+					close_area.style.marginLeft = "5px"
+					let close_but = closeSVG()
+					close_but.style.borderRadius = "50%"
 					close_but.style.width = "20px";
-					close_but.style.display = "flex";
-					close_but.style.alignItems = "center";
-					close_but.style.justifyContent = "center";
-					close_but.style.color = "red";
 					close_but.style.transition = "0.25s"
-					close_but.title = chrome_i18n.cancelDownload
 					close_but.onmouseover = _=>{
-						close_but.style.borderColor = "red"
+						close_but.setAttribute("fill", "#c80000")
 					}
 					close_but.onmouseout = _=>{
-						close_but.style.borderColor = "transparent"
+						close_but.setAttribute("fill", "red")
 					}
+					close_area.appendChild(close_but)
 					div.appendChild(progress)
 					div.appendChild(percentage)
-					div.appendChild(close_but)
+					div.appendChild(close_area)
 					a.appendChild(div)
 
 					let on_progress = percent=>{
@@ -685,39 +697,26 @@ function MainScript(chrome_i18n) {
 		return div
 	}
 	function addCloseButton(popup, callback=null){
-		let div = document.createElement("span")
-		div.textContent = "✖"
-		div.style.position = "absolute"
-		div.style.zIndex = 3
-		div.style.color = "red"
-		div.style.fontWeight = "bold"
-		div.style.top = "2px"
-		div.style.right = "1px"
-		div.style.padding = "2px"
-		div.style.cursor = "pointer"
-		div.style.border = "2px solid red"
-		div.style.borderRadius = "50px"
-		div.style.height = "1em"
-		div.style.width = "1em"
-		div.style.display = "flex";
-		div.style.justifyContent = "center";
-		div.style.alignItems = "center";
-		div.style.background = "transparent";
-		div.style.transition = "0.15s";
-
-		popup.appendChild(div)
-		div.onclick = _=>{
+		let close_but = closeSVG()
+		close_but.style.position = "absolute"
+		close_but.style.zIndex = 3
+		close_but.style.top = "2px"
+		close_but.style.right = "2px"
+		close_but.style.cursor = "pointer"
+		close_but.style.borderRadius = "50%"
+		close_but.style.width = "22px";
+		close_but.style.transition = "0.25s"
+		close_but.onmouseover = _=>{
+			close_but.setAttribute("fill", "#c80000")
+		}
+		close_but.onmouseout = _=>{
+			close_but.setAttribute("fill", "red")
+		}
+		close_but.onclick = _=>{
 			popup.remove()
 			if (callback){ callback() }
 		}
-		div.onmouseover = _=>{
-			div.style.color = "white";
-			div.style.background = "red";
-		}
-		div.onmouseout = _=>{
-			div.style.color = "red";
-			div.style.background = "transparent";
-		}
+		popup.appendChild(close_but)
 	}
 
 	function vpnAlert(div_target){

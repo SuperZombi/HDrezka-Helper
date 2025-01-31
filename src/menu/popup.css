@@ -57,12 +57,16 @@
 	transform: scale(1);
 }
 .popup .close{
-	color: red;
-	font-weight: bold;
 	position: absolute;
 	right: 0.5rem;
 	top: 0.5rem;
 	cursor: pointer;
+	transition: 0.25s;
+	fill: red;
+	height: 24px;
+}
+.popup .close:hover{
+	fill: #c80000;
 }
 
 
@@ -95,6 +99,10 @@
 }
 #websites_list .site .delete svg{
 	height: 80%;
+	transition: 0.25s;
+}
+#websites_list .site .delete:hover svg{
+	fill: red;
 }
 
 .button-43 {
