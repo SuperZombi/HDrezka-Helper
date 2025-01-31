@@ -585,11 +585,32 @@ function MainScript(chrome_i18n) {
 			})
 			.then((res) => {
 				if (![200, 206].includes(res.status)) { throw new Error("Not 200/206 response: " + res.status); }
-				downloaded += parseInt(res.headers.get("Content-Length"))
-				_next_offset = downloaded;
-				on_progress(Math.round((downloaded / filesize) * 100))
-				return res.blob();
+				return new Response(
+					new ReadableStream({
+						start(controller) {
+							const reader = res.body.getReader();
+							read();
+							function read() {
+								reader.read().then(({done, value}) => {
+									if (done) {
+										controller.close();
+										return;
+									}
+									downloaded += value.byteLength;
+									_next_offset = downloaded;
+									on_progress(Math.round((downloaded / filesize) * 100))
+									controller.enqueue(value);
+									read();
+								}).catch(error => {
+									console.error(error);
+									controller.error(error)
+								})
+							}
+						}
+					})
+				);
 			})
+			.then(response => response.blob())
 			.then((resBlob) => {
 				if (_writable) {
 					_writable.write(resBlob);
