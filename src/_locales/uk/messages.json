@@ -41,6 +41,9 @@
    "mobileMode": {
       "message": "Режим телефону"
    },
+   "addBut": {
+      "message": "Додати"
+   },
    "saveBut": {
       "message": "Зберегти"
    },
@@ -49,6 +52,12 @@
    },
    "cancelDownload": {
       "message": "Скасувати"
+   },
+   "url_prompt": {
+      "message": "Введіть url:"
+   },
+   "wrong_url": {
+      "message": "Неправильний url!"
    },
    "fileNamePattern": {
       "message": "Шаблон імені файлу"

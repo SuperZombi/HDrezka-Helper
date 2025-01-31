@@ -130,7 +130,8 @@ select {
 .dark .sub::before{
 	border-color: white;
 }
-.dark input, select {
+.dark input,
+.dark select {
 	color-scheme: dark;
 }
 
@@ -181,7 +182,7 @@ select {
 	z-index: 2;
 }
 .dark .select-area{
-	color: #444444;
+	color: #444;
 }
 #filename_structure .select-area.opened{
 	align-self: flex-start;

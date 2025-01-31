@@ -41,6 +41,9 @@
    "mobileMode": {
       "message": "Мобильный режим"
    },
+   "addBut": {
+      "message": "Добавить"
+   },
    "saveBut": {
       "message": "Сохранить"
    },
@@ -49,6 +52,12 @@
    },
    "cancelDownload": {
       "message": "Отменить"
+   },
+   "url_prompt": {
+      "message": "Введите url:"
+   },
+   "wrong_url": {
+      "message": "Неправильный url!"
    },
    "fileNamePattern": {
       "message": "Шаблон имени файла"

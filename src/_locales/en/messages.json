@@ -41,6 +41,9 @@
    "mobileMode": {
       "message": "Mobile mode"
    },
+   "addBut": {
+      "message": "Add"
+   },
    "saveBut": {
       "message": "Save"
    },
@@ -49,6 +52,12 @@
    },
    "cancelDownload": {
       "message": "Cancel"
+   },
+   "url_prompt": {
+      "message": "Enter url:"
+   },
+   "wrong_url": {
+      "message": "Wrong url!"
    },
    "fileNamePattern": {
       "message": "File name pattern"

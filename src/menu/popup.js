@@ -10,6 +10,8 @@ async function main(){
 	let {url, icon} = await getCurrentUrl()
 	if (url && (url.protocol == "http:" || url.protocol == "https:")){
 		setCurrentWebsite(url, icon)
+		document.querySelector("#add_this").style.display = "block"
+		document.querySelector("#current_url").classList.remove("tiny")
 		url = url.origin;
 		if (urlList.includes(url)){
 			setupUrlActionButton("remove", url)
@@ -17,15 +19,35 @@ async function main(){
 			setupUrlActionButton("add", url)
 		}
 	} else{
-		document.querySelector("#add_this").style.display = "none"
-		document.querySelector("#current_url").style.padding = 0
-		document.querySelector("#current_url span").textContent = browser.i18n.getMessage("sites_list")
+		document.querySelector("#current_url").classList.add("tiny")
 	}
 	document.querySelector("#websites_settings").onclick = _=>{
 		document.querySelector("#websites_popup").classList.add("show")
 	}
 	document.querySelector("#websites_popup .close").onclick = _=>{
 		document.querySelector("#websites_popup").classList.remove("show")
+	}
+	document.querySelector("#add_url").onclick = _=>{
+		let new_url = validUrl(window.prompt(browser.i18n.getMessage("url_prompt")))
+		if (new_url){
+			addNewUrl(new_url.origin)
+			if (document.querySelector("#current_url").getAttribute("url") == new_url.origin){
+				setupUrlActionButton("remove", new_url.origin)
+			}
+		} else {
+			window.alert(browser.i18n.getMessage("wrong_url"))
+		}
+	}
+}
+
+function validUrl(string){
+	if (string && (string.startsWith("http:") || string.startsWith("https:"))){
+		try {
+			let url = new URL(string);
+			return url;
+		} catch (_) {
+			return false;  
+		}
 	}
 }
 
