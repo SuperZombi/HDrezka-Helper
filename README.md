@@ -1,6 +1,6 @@
 # HDrezka Helper
 
-Добавляет кнопку «Скачать» под видео. Экспорт закладок и многое другое.
+Скачивает фильмы и субтитры. Поддерживает зеркала.
 
 
 <p align="right">
@@ -14,9 +14,7 @@
    <img src="github/images/main.png">
 </p>
 
-### <img src="https://www.stevenskelton.ca/flag-icon/png/36/country-4x3/ua.png" height="16px"> У зв'язку з блокуванням Hdrezka в Україні, рекомендується використовувати VPN⚠️
-
-### ❗️ТЕПЕР ПРАЦЮЄ НА ЗЕРКАЛАХ
+### <img src="https://www.stevenskelton.ca/flag-icon/png/36/country-4x3/ua.png" height="16px"> У зв'язку з блокуванням Hdrezka в Україні, рекомендується використовувати VPN!
 
 ## Установка:
 
@@ -33,7 +31,7 @@
   5. Нажмите "Загрузить распакованое расширение".
   6. Выберите путь к папке ```src```.
   
-### Tampermonkey (Устарел):
+### Tampermonkey (Устарело):
 1. Установите **[Tampermonkey](https://www.tampermonkey.net/)**.
 2. Установите **[Скрипт](https://raw.githubusercontent.com/SuperZombi/HDrezka-downloader/main/hdrezka_helper.user.js)**.
 
