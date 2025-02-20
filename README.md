@@ -1,10 +1,11 @@
+<img src="github/images/main_logo.png" align="right" height="148">
+
 # HDrezka Helper
 
 Скачивает фильмы и субтитры. Поддерживает зеркала.
 
-
-<p align="right">
-    <img align="left" src="https://shields.io/badge/версия-v7.1.0-blue">
+<p>
+    <img src="https://shields.io/badge/версия-v7.1.1-blue">
     <a href="#донат"><img src="https://shields.io/badge/💲-Поддержать-2ea043"></a>
 </p>
 

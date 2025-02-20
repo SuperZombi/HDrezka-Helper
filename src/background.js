@@ -19,6 +19,10 @@ browser.storage.sync.get("urlList").then((data) => {
 						if (addedSites.includes(url.origin)) {
 							executeScript(tab.id)
 							executeBefore(tab.id)
+							browser.action.setIcon({
+								path: { 128: "images/logo.png" },
+								tabId: tab.id
+							})
 						}
 					}
 				});
@@ -32,6 +36,10 @@ browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 		let url = new URL(tab.url)
 		if (urlList.includes(url.origin)) {
 			changeInfo.status == 'complete' ? executeScript(tabId) : executeBefore(tabId)
+			browser.action.setIcon({
+				path: { 128: "images/logo.png" },
+				tabId: tab.id
+			})
 		}
 	}
 });

@@ -1,6 +1,6 @@
 {
    "manifest_version": 3,
-   "version": "7.1.0",
+   "version": "7.1.1",
    "name": "HDrezka Helper",
    "description": "__MSG_extDesc__",
    "default_locale": "en",
@@ -15,11 +15,14 @@
       "scripts": ["background.js"]
    },
    "options_ui": {
-      "open_in_tab": false,
+      "open_in_tab": true,
       "page": "menu/options.html"
    },
    "action": {
-      "default_popup": "menu/options.html"
+      "default_popup": "menu/options.html",
+      "default_icon": {
+         "128": "images/logo_gray.png"
+      }
    },
    "homepage_url": "https://github.com/SuperZombi/HDrezka-downloader",
    "browser_specific_settings": {

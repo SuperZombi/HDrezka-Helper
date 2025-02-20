@@ -6,9 +6,9 @@ body{
 	text-align: left;
 	user-select: none;
 	font-family: sans-serif;
-	min-width: 320px;
-	max-width: 360px;
+	width: 360px;
 	margin: auto;
+	box-sizing: border-box;
 }
 h3{
 	padding-right: 50px;
