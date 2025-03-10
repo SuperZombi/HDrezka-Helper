@@ -1,6 +1,8 @@
 name: Build
 
 on:
+  release:
+    types: [published]
   workflow_dispatch:
 
 jobs:
@@ -18,11 +20,12 @@ jobs:
           cd chrome_build
           zip -r ../chrome.zip .
 
-      - name: Upload the artifact
-        uses: actions/upload-artifact@v4
+      - name: Upload to Release
+        uses: xresloader/upload-to-github-release@v1
         with:
-          name: chrome.zip
-          path: chrome.zip
+          file: chrome.zip
+          overwrite: true
+          update_latest_release: true
 
   build-firefox:
     runs-on: ubuntu-latest
@@ -38,8 +41,9 @@ jobs:
           cd firefox_build
           zip -r ../firefox.zip .
 
-      - name: Upload the artifact
-        uses: actions/upload-artifact@v4
+      - name: Upload to Release
+        uses: xresloader/upload-to-github-release@v1
         with:
-          name: firefox.zip
-          path: firefox.zip
+          file: firefox.zip
+          overwrite: true
+          update_latest_release: true
