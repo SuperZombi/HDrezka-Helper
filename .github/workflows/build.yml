@@ -1,0 +1,45 @@
+name: Build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-chrome:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create archive
+        run: |
+          mkdir chrome_build
+          cp -r src/* chrome_build/
+          cp chrome/manifest.json chrome_build/
+          cd chrome_build
+          zip -r ../chrome.zip .
+
+      - name: Upload the artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: chrome.zip
+          path: chrome.zip
+
+  build-firefox:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create archive
+        run: |
+          mkdir firefox_build
+          cp -r src/* firefox_build/
+          cp firefox/manifest.json firefox_build/
+          cd firefox_build
+          zip -r ../firefox.zip .
+
+      - name: Upload the artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: firefox.zip
+          path: firefox.zip
