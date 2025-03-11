@@ -115,16 +115,44 @@ function MainScript(chrome_i18n) {
 
 	if (args.hideVK){ hideVK() }
 
+	let getFilmInfo = _=>{
+		let ifExist = el=>{return el ? el : document.createElement("div")}
+
+		let title = ifExist(document.querySelector('.b-content__main .b-post__title')).textContent.trim()
+		let image = ifExist(document.querySelector('.b-content__main .b-sidecover img')).getAttribute("src")
+		let currentEpisode = ifExist(document.querySelector("#simple-episodes-tabs .active")).textContent.trim()
+		let currentSeason = ifExist(document.querySelector("#simple-seasons-tabs .active")).textContent.trim()
+		return {
+			"title": title, "image": image,
+			"season": currentSeason, "episode": currentEpisode
+		}
+	}
+	
+
 	let player = document.getElementById('player')
 	if (player){
-		document.title = document.querySelector('.b-content__main .b-post__title').textContent.trim();
+		let videoElement=_=>{return player.querySelector("video")}
+		document.title = getFilmInfo().title;
+
+		videoElement().addEventListener("play",_=>{
+			if ("mediaSession" in navigator) {
+				let filmInfo = getFilmInfo()
+				navigator.mediaSession.metadata = new MediaMetadata({
+					title: filmInfo.title,
+					artist: [filmInfo.season, filmInfo.episode].filter(Boolean).join(' • '),
+					artwork: [{ src: filmInfo.image }]
+				});
+			}
+		})
+
 		if (args.download){
 			main();
-			temp_video_src = document.getElementById('player').getElementsByTagName("video")[0].src
+			let temp_video_src = videoElement().src
 			let observer = new MutationObserver(function(mutations) {
 				mutations.forEach(function(mutation) {
-					if (temp_video_src != document.getElementById('player').getElementsByTagName("video")[0].src) {
-						temp_video_src = document.getElementById('player').getElementsByTagName("video")[0].src
+					let current_video_src = videoElement().src
+					if (temp_video_src != current_video_src) {
+						temp_video_src = current_video_src
 						main();
 					}
 				});
