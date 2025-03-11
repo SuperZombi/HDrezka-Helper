@@ -1,6 +1,6 @@
 {
    "manifest_version": 3,
-   "version": "7.2.0",
+   "version": "7.3.0",
    "name": "HDrezka Helper",
    "description": "__MSG_extDesc__",
    "default_locale": "en",
