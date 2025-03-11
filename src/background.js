@@ -513,12 +513,12 @@ function MainScript(chrome_i18n) {
 			details.style.borderRadius = "8px";
 			details.style.margin = "2px";
 			details.style.marginTop = "8px";
-			details.style.cursor = "pointer";
+			details.style.overflow = "hidden"
 			let summary = document.createElement("summary");
 			summary.textContent = chrome_i18n.subtitles;
 			summary.style.color = "aqua";
-			summary.style.borderRadius = "8px";
 			summary.style.textAlign = "center";
+			summary.style.cursor = "pointer";
 			summary.style.transition = "0.2s";
 			summary.style.padding = "2px 0";
 			summary.onmouseover = function(){
