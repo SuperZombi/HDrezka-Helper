@@ -119,7 +119,10 @@ function MainScript(chrome_i18n) {
 		let ifExist = el=>{return el ? el : document.createElement("div")}
 
 		let title = ifExist(document.querySelector('.b-content__main .b-post__title')).textContent.trim()
-		let image = ifExist(document.querySelector('.b-content__main .b-sidecover img')).getAttribute("src")
+		let image = (
+			ifExist(document.querySelector('.b-content__main .b-sidecover a')).getAttribute("href") ||
+			ifExist(document.querySelector('.b-content__main .b-sidecover img')).getAttribute("src")
+		)
 		let currentEpisode = ifExist(document.querySelector("#simple-episodes-tabs .active")).textContent.trim()
 		let currentSeason = ifExist(document.querySelector("#simple-seasons-tabs .active")).textContent.trim()
 		return {
