@@ -65,6 +65,7 @@
 
 * Мобильный режим
 * Скрытие блока с группой ВК.
+* <details><summary>Информация про фильм в шторке</summary><img src="github/images/metadata.jpg"></details> 
 * <details><summary>Импорт и Экспорт закладок. (устарело)</summary><img src="github/images/favorites.png"></details>
 <hr>
 
