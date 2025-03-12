@@ -165,13 +165,10 @@ function MainScript(chrome_i18n) {
 	}
 
 
-	async function main(){
-		var arr = clearTrash(CDNPlayerInfo.streams).split(",")
+	function main(){
+		let arr = clearTrash(CDNPlayerInfo.streams).split(",")
 		createButton()
-		await createDownloadMenu(arr)
-		if (args.subtitles){
-			addSubtitles()
-		}
+		createDownloadMenu(arr)
 	}
 
 	function hideVK(){
@@ -371,8 +368,13 @@ function MainScript(chrome_i18n) {
 
 		if (div_.children.length == 0){
 			vpnAlert(div_target)
+			return
 		} else{
 			donationPopup(div_target)
+		}
+
+		if (args.subtitles){
+			addSubtitles()
 		}
 	}
 
@@ -860,10 +862,14 @@ function MainScript(chrome_i18n) {
 				popup.remove()
 				var currentTime = Math.floor(Date.now() / 1000);
 				localStorage.setItem('lastNotificationTime', currentTime);
+				menu_element.style.minWidth = "unset"
+				menu_element.style.minHeight = "60px"
 			}
 			addCloseButton(popup, _=>{
 				var currentTime = Math.floor(Date.now() / 1000);
 				localStorage.setItem('lastNotificationTime', currentTime);
+				menu_element.style.minWidth = "unset"
+				menu_element.style.minHeight = "60px"
 			})
 		}
 	}
