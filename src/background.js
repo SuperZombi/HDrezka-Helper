@@ -378,14 +378,16 @@ function MainScript(chrome_i18n) {
 		}
 	}
 
-	function buildFileName(name, season, episode, translation, res){
+	function buildFileName(name, season, episode, translation, res, year, nameOriginal){
 		if (args.filename_structure){
 			var selectArray = {
 				"title": name,
 				"s": season,
 				"ep": episode,
 				"transl": translation,
-				"res": res
+				"res": res,
+				"origTitle": nameOriginal,
+				"year": year
 			}
 			let temp = args.filename_structure
 			Object.keys(selectArray).forEach(function(e){
@@ -418,7 +420,9 @@ function MainScript(chrome_i18n) {
 						translation = el2.textContent.trim()
 					}
 					name = document.querySelector('.b-content__main .b-post__title').textContent.trim()
-					let targetFileName = buildFileName(name, season, episode, translation, title)
+					const nameOriginal = document.querySelector('.b-content__main .b-post__origtitle')?.textContent?.trim()
+					const releaseYear = document.querySelector('.b-post__info a[href*="/year/"]')?.getAttribute("href")?.match(/\d{4}/)?.[0]
+					let targetFileName = buildFileName(name, season, episode, translation, title, releaseYear, nameOriginal)
 
 					let div = document.createElement("span")
 					div.className = "download-area"

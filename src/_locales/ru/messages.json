@@ -71,6 +71,9 @@
    "movieTitle": {
       "message": "Название фильма"
    },
+   "origTitle": {
+      "message": "Оригинальное Название фильма"
+   },
    "season": {
       "message": "Сезон"
    },

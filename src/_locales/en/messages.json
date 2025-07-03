@@ -71,6 +71,9 @@
    "movieTitle": {
       "message": "Movie title"
    },
+   "origTitle": {
+      "message": "Original title"
+   },
    "season": {
       "message": "Season"
    },
