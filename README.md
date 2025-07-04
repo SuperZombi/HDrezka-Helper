@@ -1,4 +1,4 @@
-<img src="github/images/main_logo.png" align="right" height="148">
+<img src="github/images/main_logo.png" align="right" width="148">
 
 # HDrezka Helper
 
@@ -15,7 +15,7 @@
    <img src="github/images/main.png">
 </p>
 
-### <img src="https://www.stevenskelton.ca/flag-icon/png/36/country-4x3/ua.png" height="16px"> У зв'язку з блокуванням Hdrezka в Україні, рекомендується використовувати VPN!
+### <img src="https://www.stevenskelton.ca/flag-icon/png/36/country-4x3/ua.png" width="20px"> У зв'язку з блокуванням Hdrezka в Україні, рекомендується використовувати VPN!
 
 ## Установка:
 
