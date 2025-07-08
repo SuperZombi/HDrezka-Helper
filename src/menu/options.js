@@ -89,7 +89,15 @@ function initHidenBlocks(){
 function dinamic_input(init_value){
   var input = document.querySelector("#filename_structure")
   var fake_input = document.querySelector("#fake_input")
-  var selectArray = ["title", "s", "ep", "transl", "res"]
+  var selectArray = {
+    "title": browser.i18n.getMessage("movieTitle"),
+    "origTitle": browser.i18n.getMessage("origTitle"),
+    "s": browser.i18n.getMessage("season"),
+    "ep": browser.i18n.getMessage("episode"),
+    "tr": browser.i18n.getMessage("translation"),
+    "res": browser.i18n.getMessage("resolution"),
+    "year": browser.i18n.getMessage("releaseYear")
+  }
   set_value(init_value)
   fake_input.onblur = _=>{
     if (input.querySelector(".cursor")){
@@ -101,10 +109,10 @@ function dinamic_input(init_value){
       if (e.key == "%"){
         let temp = document.createElement("span")
         temp.className = "select-area opened"
-        
-        selectArray.forEach(el=>{
+        Object.entries(selectArray).forEach(([key, value]) => {
           let a = document.createElement("a")
-          a.textContent = el;
+          a.textContent = key;
+          a.title = value
           a.onmouseover = _=>{
             temp.querySelectorAll(".hover").forEach(el_=>{el_.className = ""})
             a.className = "hover"
@@ -114,7 +122,7 @@ function dinamic_input(init_value){
           }
           a.onclick = _=>{
             temp.classList.remove("opened")
-            temp.textContent = el
+            temp.textContent = key
             update_value()
             setTimeout(function(){
               setCursorHere(temp)
@@ -238,13 +246,14 @@ function dinamic_input(init_value){
     for (let i = 0; i < text.length; i++){
       if (text[i] == "%"){
         let temp = text.slice(i)
-        for (let j = 0; j < selectArray.length; j++){
-          if (temp.split(selectArray[j])[0] == "%"){
+        let root_arr = Object.keys(selectArray)
+        for (let j = 0; j < root_arr.length; j++){
+          if (temp.split(root_arr[j])[0] == "%"){
             let span = document.createElement("span")
             span.className = "select-area"
-            span.textContent = selectArray[j]
+            span.textContent = root_arr[j]
             input.appendChild(span)
-            i += selectArray[j].length
+            i += root_arr[j].length
             break
           }
         }
@@ -314,7 +323,7 @@ browser.storage.sync.get({ download: true,
   if (results['filename_structure'] != ""){
     dinamic_input(results['filename_structure'])
   }else{
-    dinamic_input("%title s-%s ep-%ep [%transl]")
+    dinamic_input("%title s-%s ep-%ep [%tr]")
   }
   if (results['chunk_size']){
     document.querySelector("select[name='chunk_size']").value = results['chunk_size']

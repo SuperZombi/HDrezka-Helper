@@ -83,6 +83,12 @@
    "resolution": {
       "message": "Качество"
    },
+   "origTitle": {
+      "message": "Оригинальное название"
+   },
+   "releaseYear": {
+      "message": "Год выпуска"
+   },
    "downloadLinkDesc": {
       "message": "Нажмите на ссылку, удерживая клавишу Alt, чтобы сохранить файл"
    },

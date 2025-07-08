@@ -83,6 +83,12 @@
    "resolution": {
       "message": "Resolution"
    },
+   "origTitle": {
+      "message": "Original title"
+   },
+   "releaseYear": {
+      "message": "Release year"
+   },
    "downloadLinkDesc": {
       "message": "Alt click on the link to save the file"
    },

@@ -80,6 +80,12 @@
    "translation": {
       "message": "Переклад"
    },
+   "origTitle": {
+      "message": "Оригінальна назва"
+   },
+   "releaseYear": {
+      "message": "Рік випуску"
+   },
    "resolution": {
       "message": "Якість"
    },

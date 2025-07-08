@@ -378,14 +378,16 @@ function MainScript(chrome_i18n) {
 		}
 	}
 
-	function buildFileName(name, season, episode, translation, res){
+	function buildFileName(name, origName, season, episode, translation, res, year){
 		if (args.filename_structure){
 			var selectArray = {
 				"title": name,
+				"origTitle": origName,
 				"s": season,
 				"ep": episode,
-				"transl": translation,
-				"res": res
+				"tr": translation,
+				"res": res,
+				"year": year
 			}
 			let temp = args.filename_structure
 			Object.keys(selectArray).forEach(function(e){
@@ -407,7 +409,7 @@ function MainScript(chrome_i18n) {
 			a.onclick = async _=>{
 				if (!a.getAttribute("blocked")){
 					a.setAttribute("blocked", true)
-					let season, episode, translation, name;
+					let season, episode, translation, origName;
 					let el = document.querySelector("#simple-episodes-tabs .active")
 					if (el){
 						season = el.getAttribute("data-season_id")
@@ -417,8 +419,15 @@ function MainScript(chrome_i18n) {
 					if (el2){
 						translation = el2.textContent.trim()
 					}
-					name = document.querySelector('.b-content__main .b-post__title').textContent.trim()
-					let targetFileName = buildFileName(name, season, episode, translation, title)
+					let name = document.querySelector('.b-content__main .b-post__title').textContent.split("/")[0].trim()
+					let origNameEl = document.querySelector('.b-content__main .b-post__origtitle')
+					if (origNameEl){
+						origName = origNameEl.textContent.split("/")[0].trim()
+					} else{
+						origName = name
+					}
+					let year = document.querySelector('.b-content__main .b-post__info a[href*="/year/"]')?.getAttribute("href")?.match(/\d{4}/)?.[0]
+					let targetFileName = buildFileName(name, origName, season, episode, translation, title, year)
 
 					let div = document.createElement("span")
 					div.className = "download-area"
