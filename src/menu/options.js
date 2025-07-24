@@ -295,6 +295,7 @@ function dinamic_input(init_value){
 }
 
 browser.storage.sync.get({ download: true,
+                          fast_filesize: true,
                           inline_downloader: false,
                           downloader_type: "fetch",
                           chunk_size: 5,

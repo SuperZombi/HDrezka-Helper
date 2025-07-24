@@ -48,6 +48,7 @@ browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 function executeScript(tabId){
 	browser.storage.sync.get({
 		download: true,
+		fast_filesize: true,
 		inline_downloader: false,
 		downloader_type: "fetch",
 		chunk_size: 5,
@@ -361,7 +362,7 @@ function MainScript(chrome_i18n) {
 
 		for (let [quality, links] of Object.entries(result)) {
 			for (let link of links){
-				let size = await getFileSize(link, true);
+				let size = await getFileSize(link, args.fast_filesize);
 				if (size === null){
 					console.error({"_": "Error", "name": quality, "url": link})
 				} else{
@@ -560,7 +561,7 @@ function MainScript(chrome_i18n) {
 				let temp = e.split("[")[1].split("]");
 				let lang = temp[0];
 				let link = temp[1];
-				let size = await getFileSize(link, true) || 0;
+				let size = await getFileSize(link, args.fast_filesize) || 0;
 				size = formatBytes(size, 1);
 
 				let element = makeLink(lang, link, size);
