@@ -348,15 +348,22 @@ function MainScript(chrome_i18n) {
 
 		let div_target = document.getElementById("downloadMenu")
 		let div_ = document.createElement("div")
-		for (const e of array) {
-			var temp = e.split("[")[1].split("]");
-			var quality = temp[0];
-			var links = temp[1].split(" or ").filter(x=>x.endsWith('.mp4'))
+
+		let seen = [];
+		let result = array.map(e => {
+			let temp = e.split("[")[1].split("]");
+			let quality = temp[0].trim();
+			let links = temp[1].split(" or ").map(x => x.trim())
+				.filter(x => x.endsWith(".mp4") && !seen.includes(x));
+			links.forEach(link => seen.push(link));
+			return links.length ? { [quality]: links } : null;
+		}).filter(Boolean).reduce((a, b) => Object.assign(a, b), {});
+
+		for (let [quality, links] of Object.entries(result)) {
 			for (let link of links){
 				let size = await getFileSize(link);
 				if (size){
-					size = formatBytes(size, 1);
-					let element = makeLink(quality, link, size);
+					let element = makeLink(quality, link, formatBytes(size, 1));
 					div_.appendChild(element);
 					break
 				} else{
