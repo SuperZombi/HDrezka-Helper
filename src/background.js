@@ -361,13 +361,13 @@ function MainScript(chrome_i18n) {
 
 		for (let [quality, links] of Object.entries(result)) {
 			for (let link of links){
-				let size = await getFileSize(link);
-				if (size){
+				let size = await getFileSize(link, true);
+				if (size === null){
+					console.error({"_": "Error", "name": quality, "url": link})
+				} else{
 					let element = makeLink(quality, link, formatBytes(size, 1));
 					div_.appendChild(element);
 					break
-				} else{
-					console.error({"_": "Error", "name": quality, "url": link})
 				}
 			}
 		}
@@ -560,7 +560,7 @@ function MainScript(chrome_i18n) {
 				let temp = e.split("[")[1].split("]");
 				let lang = temp[0];
 				let link = temp[1];
-				let size = await getFileSize(link);
+				let size = await getFileSize(link, true) || 0;
 				size = formatBytes(size, 1);
 
 				let element = makeLink(lang, link, size);
@@ -633,7 +633,7 @@ function MainScript(chrome_i18n) {
 		let _next_offset = 0;
 		let CHUNK_SIZE = parseInt(args.chunk_size)*1024*1024;
 		let downloaded = 0;
-		let filesize = await getFileSize(url)
+		let filesize = await getFileSize(url) || 0
 		let controller = new AbortController();
 
 		function fetchNextPart(_writable){
@@ -742,15 +742,26 @@ function MainScript(chrome_i18n) {
 		return ()=>{canDownload = false;controller.abort()}
 	}
 
-
-	async function getFileSize(url) {
-		return new Promise(async (resolve) => {
+	async function getFileSize(url, fast=false) {
+		async function makeRequest(method) {
+			let args = {}
 			let controller = new AbortController();
-			fetch(url, {signal: controller.signal}).then(resp=>{
-				resolve(resp.headers.get('Content-Length'))
+			try {
+				let resp = await fetch(url, {
+					method: method,
+					signal: controller.signal
+				})
 				controller.abort();
-			}).catch(_=>{resolve(0)})
-		})
+				return resp.headers.get('Content-Length') || null
+			} catch (e){
+				return null;
+			}
+		}
+		let size = await makeRequest('HEAD')
+		if (size === null && !fast) {
+			return await makeRequest('GET')
+		}
+		return size
 	}
 
 	function formatBytes(bytes, decimals = 2) {
