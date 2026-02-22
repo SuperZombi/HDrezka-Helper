@@ -116,7 +116,7 @@ function MainScript(chrome_i18n) {
 
 	if (args.hideVK){ hideVK() }
 
-	let getFilmInfo = _=>{
+	function getFilmInfo(){
 		let ifExist = el=>{return el ? el : document.createElement("div")}
 
 		let title = ifExist(document.querySelector('.b-content__main .b-post__title')).textContent.trim()
@@ -221,7 +221,8 @@ function MainScript(chrome_i18n) {
 		try{
 			var final_string = atob(trashString);
 		} catch{
-			console.error(trashString)
+			console.error("[Error] Failed to execute clearTrash() on string")
+			return trashString;
 		}
 		return final_string;
 	}
