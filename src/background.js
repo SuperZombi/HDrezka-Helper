@@ -2,7 +2,7 @@ var urlList = [];
 var browser = chrome || browser;
 
 browser.storage.sync.get("urlList").then((data) => {
-	urlList = data.urlList || ["https://hdrezka.ag", "https://hdrezka.cm", "https://hdrezka.me", "https://hdrezka.co", "https://hdrezka-home.tv"];
+	urlList = data.urlList || ["https://hdrezka.ag", "https://hdrezka.cm", "https://hdrezka.me", "https://hdrezka.co", "https://hdrezka-home.tv", "https://hello-rezka.tv"];
 
 	browser.storage.onChanged.addListener((changes) => {
 		if (changes.urlList){

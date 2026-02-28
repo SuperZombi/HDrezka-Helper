@@ -1,7 +1,7 @@
 var browser = chrome || browser;
 var urlList = [];
 browser.storage.sync.get("urlList", (data) => {
-	urlList = data.urlList || ["https://hdrezka.ag", "https://hdrezka.cm", "https://hdrezka.me", "https://hdrezka.co", "https://hdrezka-home.tv"];
+	urlList = data.urlList || ["https://hdrezka.ag", "https://hdrezka.cm", "https://hdrezka.me", "https://hdrezka.co", "https://hdrezka-home.tv", "https://hello-rezka.tv"];
 	urlList.forEach(url=>{addWebsite(url)})
 	main()
 });
