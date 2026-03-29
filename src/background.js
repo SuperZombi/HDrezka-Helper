@@ -25,11 +25,11 @@ browser.storage.sync.get("urlList").then((data) => {
 							})
 						}
 					}
-				});
-			});
+				})
+			})
 		}
-	});
-});
+	})
+})
 
 browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 	if (changeInfo.status == 'complete' || changeInfo.status == 'loading'){
@@ -42,7 +42,7 @@ browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 			})
 		}
 	}
-});
+})
 
 
 function executeScript(tabId){
@@ -117,21 +117,69 @@ function MainScript(chrome_i18n) {
 	if (args.hideVK){ hideVK() }
 
 	function getFilmInfo(){
-		let ifExist = el=>{return el ? el : document.createElement("div")}
-
-		let title = ifExist(document.querySelector('.b-content__main .b-post__title')).textContent.trim()
-		let image = (
-			ifExist(document.querySelector('.b-content__main .b-sidecover a')).getAttribute("href") ||
-			ifExist(document.querySelector('.b-content__main .b-sidecover img')).getAttribute("src")
+		const title = document.querySelector('.b-content__main .b-post__title')?.textContent.trim()
+		const post_id = (
+			document.getElementById("post_id")?.getAttribute("value") ||
+			document.getElementById("send-video-issue")?.getAttribute("data-id") ||
+			document.getElementById("user-favorites-holder")?.getAttribute("data-post_id") ||
+			window.location.pathname.split("/").filter(Boolean).pop().split("-")[0]
 		)
-		let currentEpisode = ifExist(document.querySelector("#simple-episodes-tabs .active")).textContent.trim()
-		let currentSeason = ifExist(document.querySelector("#simple-seasons-tabs .active")).textContent.trim()
+		const image = (
+			document.querySelector('.b-content__main .b-sidecover a')?.getAttribute("href") ||
+			document.querySelector('.b-content__main .b-sidecover img')?.getAttribute("src")
+		)
+		const filmType = document.head.querySelector('meta[property="og:type"]')?.getAttribute("content")
+		if (!(filmType && ["video.tv_series", "video.movie"].includes(filmType))){
+			console.error("Failed to get film type")
+		}
+		const currentEpisode = _=>{
+			const el = document.querySelector("#simple-episodes-tabs .active")
+			if (el){
+				return {
+					id: el.getAttribute("data-episode_id"),
+					name: el.textContent.trim()
+				}
+			}
+		}
+		const currentSeason = _=>{
+			const el = document.querySelector("#simple-seasons-tabs .active")
+			if (el){
+				return {
+					id: el.getAttribute("data-tab_id"),
+					name: el.textContent.trim()
+				}
+			}
+		}
+		const translator = _=>{
+			const el = document.querySelector("#translators-list .active")
+			if (el){
+				return {
+					id: el.getAttribute("data-translator_id"),
+					name: el.textContent.trim()
+				}
+			} else {
+				const tr = [...document.querySelectorAll(".b-post__info tr")]
+					.find(e => e.textContent.includes("переводе"))
+				if (!tr){console.error("Failed to find translator name")}
+				const tr_name = tr?.querySelector("td:last-child").textContent.trim()
+				
+				const initCDNEvents = {'video.tv_series': 'initCDNSeriesEvents', 'video.movie': 'initCDNMoviesEvents'}
+				const tr_id = document.documentElement.textContent
+					.split(`sof.tv.${initCDNEvents[filmType]}`).pop().split("{")[0].split(",")[1].trim()
+				return {
+					id: tr_id,
+					name: tr_name
+				}
+			}
+		}
 		return {
+			"id": post_id,
+			"type": filmType,
 			"title": title, "image": image,
-			"season": currentSeason, "episode": currentEpisode
+			"season": currentSeason(), "episode": currentEpisode(),
+			"translator": translator()
 		}
 	}
-	
 
 	let player = document.getElementById('player')
 	if (player){
@@ -143,33 +191,26 @@ function MainScript(chrome_i18n) {
 				let filmInfo = getFilmInfo()
 				navigator.mediaSession.metadata = new MediaMetadata({
 					title: filmInfo.title,
-					artist: [filmInfo.season, filmInfo.episode].filter(Boolean).join(' • '),
+					artist: [filmInfo.season.name, filmInfo.episode.name].filter(Boolean).join(' • '),
 					artwork: [{ src: filmInfo.image }]
-				});
+				})
 			}
 		})
 
 		if (args.download){
-			main();
+			main()
 			let temp_video_src = videoElement().src
 			let observer = new MutationObserver(function(mutations) {
 				mutations.forEach(function(mutation) {
 					let current_video_src = videoElement().src
 					if (temp_video_src != current_video_src) {
 						temp_video_src = current_video_src
-						main();
+						main()
 					}
-				});
-			});
-			observer.observe(document.querySelector("body"), {childList: true, subtree: true});
+				})
+			})
+			observer.observe(document.querySelector("body"), {childList: true, subtree: true})
 		}
-	}
-
-
-	function main(){
-		let arr = clearTrash(CDNPlayerInfo.streams).split(",")
-		createButton()
-		createDownloadMenu(arr)
 	}
 
 	function hideVK(){
@@ -177,6 +218,54 @@ function MainScript(chrome_i18n) {
 		if (el_){
 			el_.style.display = "none";
 		}
+	}
+
+	function main(){
+		createButton()
+		const film_info = getFilmInfo()
+		console.table(film_info)
+		updateDownloadMenuHeader(
+			film_info.type == "video.tv_series" ? 
+				[film_info.season.name, film_info.episode.name].filter(Boolean).join(' • ') :
+				film_info.translator ? film_info.translator.name : film_info.title
+		)
+		updateDownloadMenuBody(LOADER())
+		makeRequest({
+			data: {
+				id: film_info.id,
+				translator_id: film_info.translator.id,
+				season: film_info?.season?.id,
+				episode: film_info?.episode?.id,
+				action: film_info.type == "video.movie" ? "get_movie" : "get_stream"
+			}
+		}).then(data => {
+			createDownloadMenu(data)
+		}).catch(err=>{
+			console.error(err)
+			vpnAlert()
+		})
+	}
+
+	async function makeRequest({
+		url = "ajax/get_cdn_series/",
+		data = {}
+	}){
+		const filtered = Object.fromEntries(
+			Object.entries(data).filter(([k, v]) => v)
+		)
+		const res = await fetch(new URL(url, window.location.origin), {
+			method: "POST",
+			headers: {"Content-Type": "application/x-www-form-urlencoded"},
+			body: new URLSearchParams(filtered)
+		})
+		if (!res.ok) {
+			throw new Error(`Request failed: ${res.status}`)
+		}
+		const result = await res.json()
+		if (!result?.success) {
+			throw new Error(`Server error: ${result?.message}`)
+		}
+		return result
 	}
 
 	function clearTrash(data){
@@ -227,169 +316,164 @@ function MainScript(chrome_i18n) {
 		return final_string;
 	}
 
-	function LOADER(){
-		const svgNamespace = "http://www.w3.org/2000/svg";
-		function createCircle(cx, begin) {
-			let circle = document.createElementNS(svgNamespace, "circle");
-			circle.setAttribute("cx", cx);
-			circle.setAttribute("cy", "12");
-			circle.setAttribute("r", "3");
-			circle.setAttribute("fill", "lightblue");
-
-			let animate = document.createElementNS(svgNamespace, "animate");
-			animate.setAttribute("attributeName", "r");
-			animate.setAttribute("begin", begin);
-			animate.setAttribute("dur", "0.75s");
-			animate.setAttribute("values", "3;.2;3");
-			animate.setAttribute("repeatCount", "indefinite");
-
-			circle.appendChild(animate);
-			return circle;
-		}
-		let div = document.createElement("div")
-		div.style.display = "flex"
-		div.style.height = "100px"
-		let svg = document.createElementNS(svgNamespace, "svg");
-		svg.setAttribute("viewBox", "0 0 24 24")
-		svg.style.height = "50px"
-		svg.style.margin = "auto"
-		svg.style.display = "block"
-		svg.appendChild(createCircle("4", "0s"));
-		svg.appendChild(createCircle("12", "0.15s"));
-		svg.appendChild(createCircle("20", "0.3s"));
-		div.appendChild(svg)
-		return div
-	}
-	function makeSVG(viewBox, path){
-		const svgNamespace = "http://www.w3.org/2000/svg";
-		let svg = document.createElementNS(svgNamespace, "svg");
-		svg.setAttribute("viewBox", viewBox)
-		let path_el = document.createElementNS(svgNamespace, "path");
-		path_el.setAttribute("d", path);
-		svg.append(path_el)
-		return svg
-	}
-	function closeSVG(color="red"){
-		const svgNamespace = "http://www.w3.org/2000/svg";
-		let svg = document.createElementNS(svgNamespace, "svg");
-		svg.setAttribute("viewBox", "0 0 512 512")
-		svg.setAttribute("fill", color);
-		let circle = document.createElementNS(svgNamespace, "circle");
-		circle.setAttribute("cx", "256");
-		circle.setAttribute("cy", "256");
-		circle.setAttribute("r", "256");
-		svg.append(circle)
-		let path_el = document.createElementNS(svgNamespace, "path");
-		path_el.setAttribute("d", "M334.63 177.37a24 24 0 0 1 0 33.94L289.94 256l44.69 44.69a24 24 0 1 1-33.94 33.94L256 289.94l-44.69 44.69a24 24 0 1 1-33.94-33.94L222.06 256l-44.69-44.69a24 24 0 1 1 33.94-33.94L256 222.06l44.69-44.69a24 24 0 0 1 33.94 0z");
-		path_el.setAttribute("fill", "#fff");
-		svg.append(path_el)
-		return svg
-	}
-
 	function createButton() {
 		if (!document.getElementById("downloadButton")){
-			el = document.getElementById("send-video-issue")
-			let div = document.createElement("div");
-			div.id = "downloadButton"
-			div.title = chrome_i18n.downloadStr
-			let svg = makeSVG("0 0 330 330", "m211.667 127.121-31.669 31.666V75c0-8.285-6.716-15-15-15-8.284 0-15 6.715-15 15v83.787l-31.665-31.666c-5.857-5.857-15.355-5.857-21.213 0-5.858 5.859-5.858 15.355 0 21.213l57.271 57.271A14.95 14.95 0 0 0 164.997 210c3.838 0 7.678-1.465 10.607-4.393l57.275-57.271c5.857-5.857 5.858-15.355.001-21.215-5.859-5.857-15.356-5.857-21.213 0zM195 240h-60c-8.284 0-15 6.715-15 15 0 8.283 6.716 15 15 15h60c8.284 0 15-6.717 15-15 0-8.285-6.716-15-15-15z")
+			const parent = document.getElementById("send-video-issue")
+			const button = document.createElement("div");
+			button.id = "downloadButton"
+			button.title = chrome_i18n.downloadStr
+			const svg = makeSVG("0 0 330 330", "m211.667 127.121-31.669 31.666V75c0-8.285-6.716-15-15-15-8.284 0-15 6.715-15 15v83.787l-31.665-31.666c-5.857-5.857-15.355-5.857-21.213 0-5.858 5.859-5.858 15.355 0 21.213l57.271 57.271A14.95 14.95 0 0 0 164.997 210c3.838 0 7.678-1.465 10.607-4.393l57.275-57.271c5.857-5.857 5.858-15.355.001-21.215-5.859-5.857-15.356-5.857-21.213 0zM195 240h-60c-8.284 0-15 6.715-15 15 0 8.283 6.716 15 15 15h60c8.284 0 15-6.717 15-15 0-8.285-6.716-15-15-15z")
 			svg.setAttribute("fill", "green")
-			div.appendChild(svg)
-			div.style.right = "55px"
-			div.style.top = "0"
-			div.style.height = "50px"
-			div.style.width = "50px"
-			div.style.position = "absolute"
-			div.style.cursor = "pointer"
-			div.style.transition = "0.3s"
-			div.style.background = "#2d2d2d"
-
-			div.onmouseover = function(){
-				div.style.background = "#4D4D4D"
+			button.appendChild(svg)
+			button.style.right = "55px"
+			button.style.top = "0"
+			button.style.height = "50px"
+			button.style.width = "50px"
+			button.style.position = "absolute"
+			button.style.cursor = "pointer"
+			button.style.transition = "0.3s"
+			button.style.background = "#2d2d2d"
+			button.onmouseover = function(){
+				button.style.background = "#4D4D4D"
 			}
-			div.onmouseout = function(){
-				div.style.background = "#2d2d2d"
+			button.onmouseout = function(){
+				button.style.background = "#2d2d2d"
 			}
-			div.onclick = show_download_menu
+			button.onclick = show_download_menu
+			parent.parentNode.insertBefore(button, parent);
+		}
+		if (!document.getElementById("downloadMenu")){
+			const menu = document.createElement("div")
+			menu.id = "downloadMenu"
+			menu.style.minHeight = "120px"
+			menu.style.width = "200px"
+			menu.style.background = "rgba(93, 93, 93, 0.5)"
+			menu.style.backdropFilter = "blur(5px)"
+			menu.style.position = "absolute"
+			menu.style.borderRadius = "6px"
+			menu.style.padding = "4px"
+			menu.style.filter = "drop-shadow(black 0 0 4px)"
+			menu.style.boxShadow = "0 2px 4px black"
+			menu.style.zIndex = "100"
+			menu.style.right = args.mobileMode ? "5px" : "0"
+			menu.style.top = "55px"
+			menu.style.display = "none"
+			menu.style.opacity = 0
+			menu.style.transform = "scale(0)"
+			menu.style.transformOrigin = "top center"
+			menu.style.transition = "0.5s"
+			menu.style.userSelect = "none"
+			menu.style.overflow = "hidden"
+			menu.style.flexDirection = "column"
 
-			el.parentNode.insertBefore(div, el);
+			const header = document.createElement("h4")
+			header.className = "download-menu-header"
+			header.style.whiteSpace = "nowrap"
+			header.style.textAlign = "center"
+			header.style.overflow = "hidden"
+			header.style.textOverflow = "ellipsis"
+			header.style.padding = "0.5rem 0.25rem"
+			header.style.borderBottom = "1px solid gray"
+
+			const body = document.createElement("div")
+			body.className = "download-menu-body"
+			body.style.margin = "auto"
+			body.style.width = "100%"
+			body.style.paddingTop = "5px"
+			
+			const popup = document.createElement("div")
+			popup.className = "download-menu-popup"
+			popup.style.position = "absolute"
+			popup.style.inset = 0
+			popup.style.zIndex = 2
+			popup.style.background = "rgb(0, 0, 0, 0.85)"
+			popup.style.padding = "5px"
+			popup.style.visibility = "hidden"
+			popup.style.display = "flex";
+			popup.style.flexDirection = "column";
+			popup.style.justifyContent = "center";
+			popup.style.alignItems = "center";
+			popup.style.gap = "5px";
+			popup.style.transition = "0.5s ease-in-out"
+			popup.style.textAlign = "center"
+
+			menu.appendChild(header)
+			menu.appendChild(body)
+			menu.appendChild(popup)
+			document.getElementById("send-video-issue").parentNode.appendChild(menu)
+		}
+		else{
+			updateDownloadMenuHeader()
+			updateDownloadMenuBody(LOADER())
+		}
+	}
+	function downloadMenuExists(){
+		if (document.getElementById("downloadMenu")){return true}
+		else {console.error("Trying to change download menu, but it is not created yet.")}
+	}
+	function updateDownloadMenuHeader(text=""){
+		if (downloadMenuExists()){
+			const header = document.querySelector("#downloadMenu .download-menu-header")
+			header.textContent = text
+			header.style.visibility = text ? "visible" : "hidden"
+		}
+	}
+	function updateDownloadMenuBody(content=null){
+		if (downloadMenuExists()){
+			document.querySelector("#downloadMenu .download-menu-body").replaceChildren(...content?.children || [])
+		}
+	}
+	function updateDownloadMenuPopup(content=null, visible=true){
+		if (downloadMenuExists()){
+			const popup = document.querySelector("#downloadMenu .download-menu-popup")
+			popup.replaceChildren(...content?.children || [])
+			popup.style.opacity = visible ? 1 : 0
+			popup.style.visibility = visible ? "visible" : "hidden"
 		}
 	}
 
-	
+	async function createDownloadMenu(data){
+		if (data.url){
+			const array = clearTrash(data.url).split(",")
+			let seen = [];
+			const result = array.map(e => {
+				let temp = e.split("[")[1].split("]");
+				let quality = temp[0].trim();
+				let links = temp[1].split(" or ").map(x => x.trim())
+					.filter(x => x.endsWith(".mp4") && !seen.includes(x));
+				links.forEach(link => seen.push(link));
+				return links.length ? { [quality]: links } : null;
+			}).filter(Boolean).reduce((a, b) => Object.assign(a, b), {});
 
-	async function createDownloadMenu(array){
-		if (!document.getElementById("downloadMenu")){
-			let div = document.createElement("div")
-			div.id = "downloadMenu"
-			div.style.minHeight = "60px"
-			div.style.width = "160px"
-			div.style.background = "rgba(93, 93, 93, 0.5)"
-			div.style.backdropFilter = "blur(5px)"
-			div.style.position = "absolute"
-			div.style.borderRadius = "6px"
-			div.style.padding = "4px"
-			div.style.filter = "drop-shadow(black 0 0 4px)"
-			div.style.boxShadow = "0 2px 4px black"
-			div.style.zIndex = "100"
-			div.style.right = args.mobileMode ? "5px" : "0"
-			div.style.top = "55px"
-			div.style.display = "none"
-			div.style.opacity = 0
-			div.style.transform = "scale(0)"
-			div.style.transformOrigin = "top center"
-			div.style.transition = "0.5s"
-			div.style.userSelect = "none"
-			div.style.overflow = "hidden"
-			div.appendChild(LOADER())
-			document.getElementById("send-video-issue").parentNode.appendChild(div)
-		}
-		else{
-			document.getElementById("downloadMenu").replaceChildren(LOADER())
-		}
-
-		let div_target = document.getElementById("downloadMenu")
-		let div_ = document.createElement("div")
-
-		let seen = [];
-		let result = array.map(e => {
-			let temp = e.split("[")[1].split("]");
-			let quality = temp[0].trim();
-			let links = temp[1].split(" or ").map(x => x.trim())
-				.filter(x => x.endsWith(".mp4") && !seen.includes(x));
-			links.forEach(link => seen.push(link));
-			return links.length ? { [quality]: links } : null;
-		}).filter(Boolean).reduce((a, b) => Object.assign(a, b), {});
-
-		for (let [quality, links] of Object.entries(result)) {
-			for (let link of links){
-				let size = await getFileSize(link, args.fast_filesize);
-				if (size === null){
-					console.error({"_": "Error", "name": quality, "url": link})
-				} else{
-					let element = makeLink(quality, link, formatBytes(size, 1));
-					div_.appendChild(element);
-					break
+			const root = document.createElement("div")
+			for (let [quality, links] of Object.entries(result)) {
+				for (let link of links){
+					let size = await getFileSize(link, args.fast_filesize);
+					if (size === null){
+						console.error({"_": "Error", "name": quality, "url": link})
+					} else{
+						let element = makeLink(quality, link, formatBytes(size, 1));
+						root.appendChild(element);
+						break
+					}
 				}
 			}
-		}
-		div_target.replaceChildren(div_)
-
-		if (div_.children.length == 0){
-			vpnAlert(div_target)
-			return
-		} else{
-			donationPopup(div_target)
-		}
-
-		if (args.subtitles){
-			addSubtitles()
+			if (root.children.length == 0){
+				vpnAlert()
+			} else {
+				if (args.subtitles && data.subtitle){
+					const subs_el = buildSubtitles(data.subtitle)
+					root.appendChild(subs_el)
+				}
+				updateDownloadMenuBody(root)
+				donationPopup()
+			}
 		}
 	}
 
 	function buildFileName(name, origName, season, episode, translation, res, year){
 		if (args.filename_structure){
-			var selectArray = {
+			let selectArray = {
 				"title": name,
 				"origTitle": origName,
 				"s": season,
@@ -527,48 +611,38 @@ function MainScript(chrome_i18n) {
 		return a;
 	}
 
-	function addSubtitles(){
-		const Subtitles = CDNPlayerInfo.subtitle;
-		if (Subtitles){
-			let div_ = document.getElementById("downloadMenu");
-			let details = document.createElement("details");
-			details.style.border = "1px solid white";
-			details.style.borderRadius = "8px";
-			details.style.margin = "2px";
-			details.style.marginTop = "8px";
-			details.style.overflow = "hidden"
-			let summary = document.createElement("summary");
-			summary.textContent = chrome_i18n.subtitles;
-			summary.style.color = "aqua";
-			summary.style.textAlign = "center";
-			summary.style.cursor = "pointer";
-			summary.style.transition = "0.2s";
-			summary.style.padding = "2px 0";
-			summary.onmouseover = function(){
-				summary.style.background = "blueviolet"
-			}
-			summary.onmouseout = function(){
-				summary.style.background = null
-			}
-
-			details.appendChild(summary);
-			div_.appendChild(details);
-
-			let hr = document.createElement("hr");
-			hr.style.margin = 0;
-			details.appendChild(hr);
-
-			Subtitles.split(",").forEach(async function(e){
-				let temp = e.split("[")[1].split("]");
-				let lang = temp[0];
-				let link = temp[1];
-				let size = await getFileSize(link, args.fast_filesize) || 0;
-				size = formatBytes(size, 1);
-
-				let element = makeLink(lang, link, size);
-				details.appendChild(element);
-			})
+	function buildSubtitles(data){
+		const details = document.createElement("details")
+		details.style.border = "1px solid gray";
+		details.style.borderRadius = "8px";
+		details.style.marginTop = "6px";
+		details.style.overflow = "hidden"
+		const summary = document.createElement("summary")
+		summary.textContent = chrome_i18n.subtitles;
+		summary.style.textAlign = "center";
+		summary.style.cursor = "pointer";
+		summary.style.transition = "0.2s";
+		summary.style.padding = "4px 5px";
+		summary.style.borderBottom = "1px solid gray";
+		summary.onmouseover = function(){
+			summary.style.background = "gray"
 		}
+		summary.onmouseout = function(){
+			summary.style.background = null
+		}
+		details.appendChild(summary)
+
+		const array = data.split(",")
+		array.forEach(async function(e){
+			let temp = e.split("[")[1].split("]");
+			let lang = temp[0];
+			let link = temp[1];
+			let size = await getFileSize(link, args.fast_filesize) || 0;
+			size = formatBytes(size, 1);
+			let element = makeLink(lang, link, size);
+			details.appendChild(element);
+		})
+		return details
 	}
 
 	var timer;
@@ -578,7 +652,7 @@ function MainScript(chrome_i18n) {
 			document.body.onclick = hide_download_menu
 		}, 50)
 		if (div.style.display == "none"){
-			div.style.display = "block"
+			div.style.display = "flex"
 			setTimeout(function(){
 				div.style.transform = "scale(1)"
 				div.style.opacity = 1
@@ -775,65 +849,83 @@ function MainScript(chrome_i18n) {
 		return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
 	}
 
-	function makePopup(parrent){
-		let div = document.createElement("div")
-		div.style.inset = 0
-		div.style.position = "absolute"
-		div.style.zIndex = 2
-		div.style.background = "rgb(0, 0, 0, 0.85)"
-		div.style.padding = "5px"
-		div.style.textAlign = "center"
-		div.style.display = "flex";
-		div.style.flexDirection = "column";
-		div.style.justifyContent = "center";
-		div.style.alignItems = "center";
-		div.style.gap = "5px";
-		parrent.appendChild(div)
+	function LOADER(){
+		const svgNamespace = "http://www.w3.org/2000/svg";
+		function createCircle(cx, begin) {
+			let circle = document.createElementNS(svgNamespace, "circle");
+			circle.setAttribute("cx", cx);
+			circle.setAttribute("cy", "12");
+			circle.setAttribute("r", "3");
+			circle.setAttribute("fill", "lightblue");
+
+			let animate = document.createElementNS(svgNamespace, "animate");
+			animate.setAttribute("attributeName", "r");
+			animate.setAttribute("begin", begin);
+			animate.setAttribute("dur", "0.75s");
+			animate.setAttribute("values", "3;.2;3");
+			animate.setAttribute("repeatCount", "indefinite");
+
+			circle.appendChild(animate);
+			return circle;
+		}
+		const div = document.createElement("div")
+		const svg = document.createElementNS(svgNamespace, "svg");
+		svg.setAttribute("viewBox", "0 0 24 24")
+		svg.style.height = "50px"
+		svg.style.margin = "auto"
+		svg.style.display = "block"
+		svg.appendChild(createCircle("4", "0s"));
+		svg.appendChild(createCircle("12", "0.15s"));
+		svg.appendChild(createCircle("20", "0.3s"));
+		div.appendChild(svg)
 		return div
 	}
-	function addCloseButton(popup, callback=null){
-		let close_but = closeSVG()
-		close_but.style.position = "absolute"
-		close_but.style.zIndex = 3
-		close_but.style.top = "2px"
-		close_but.style.right = "2px"
-		close_but.style.cursor = "pointer"
-		close_but.style.borderRadius = "50%"
-		close_but.style.width = "22px";
-		close_but.style.transition = "0.25s"
-		close_but.onmouseover = _=>{
-			close_but.setAttribute("fill", "#c80000")
-		}
-		close_but.onmouseout = _=>{
-			close_but.setAttribute("fill", "red")
-		}
-		close_but.onclick = _=>{
-			popup.remove()
-			if (callback){ callback() }
-		}
-		popup.appendChild(close_but)
+	function makeSVG(viewBox, path){
+		const svgNamespace = "http://www.w3.org/2000/svg";
+		let svg = document.createElementNS(svgNamespace, "svg");
+		svg.setAttribute("viewBox", viewBox)
+		let path_el = document.createElementNS(svgNamespace, "path");
+		path_el.setAttribute("d", path);
+		svg.append(path_el)
+		return svg
+	}
+	function closeSVG(color="red"){
+		const svgNamespace = "http://www.w3.org/2000/svg";
+		let svg = document.createElementNS(svgNamespace, "svg");
+		svg.setAttribute("viewBox", "0 0 512 512")
+		svg.setAttribute("fill", color);
+		let circle = document.createElementNS(svgNamespace, "circle");
+		circle.setAttribute("cx", "256");
+		circle.setAttribute("cy", "256");
+		circle.setAttribute("r", "256");
+		svg.append(circle)
+		let path_el = document.createElementNS(svgNamespace, "path");
+		path_el.setAttribute("d", "M334.63 177.37a24 24 0 0 1 0 33.94L289.94 256l44.69 44.69a24 24 0 1 1-33.94 33.94L256 289.94l-44.69 44.69a24 24 0 1 1-33.94-33.94L222.06 256l-44.69-44.69a24 24 0 1 1 33.94-33.94L256 222.06l44.69-44.69a24 24 0 0 1 33.94 0z");
+		path_el.setAttribute("fill", "#fff");
+		svg.append(path_el)
+		return svg
 	}
 
-	function vpnAlert(div_target){
-		let popup = makePopup(div_target)
-		popup.style.background = "unset"
-		popup.style.position = "unset"
-		popup.style.padding = "10px"
-		let svg = makeSVG("0 0 24 24", "m20.45 5.468-4-3a.753.753 0 0 0-.45-.15H8a.753.753 0 0 0-.45.15l-4 3a.753.753 0 0 0-.3.6v4.211c0 4.97 3.126 9.481 7.784 11.228a2.744 2.744 0 0 0 1.937-.001c4.653-1.746 7.779-6.257 7.779-11.227V6.068a.75.75 0 0 0-.3-.6Zm-7.7 6.773V14a.75.75 0 0 1-1.5 0v-1.759c-.589-.282-1-.879-1-1.574 0-.965.785-1.75 1.75-1.75s1.75.785 1.75 1.75c0 .695-.411 1.292-1 1.574Z")
+	function vpnAlert(){
+		const div = document.createElement("div")
+		const svg = makeSVG("0 0 24 24", "m20.45 5.468-4-3a.753.753 0 0 0-.45-.15H8a.753.753 0 0 0-.45.15l-4 3a.753.753 0 0 0-.3.6v4.211c0 4.97 3.126 9.481 7.784 11.228a2.744 2.744 0 0 0 1.937-.001c4.653-1.746 7.779-6.257 7.779-11.227V6.068a.75.75 0 0 0-.3-.6Zm-7.7 6.773V14a.75.75 0 0 1-1.5 0v-1.759c-.589-.282-1-.879-1-1.574 0-.965.785-1.75 1.75-1.75s1.75.785 1.75 1.75c0 .695-.411 1.292-1 1.574Z")
 		svg.setAttribute("fill", "white")
 		svg.style.height = "55px"
-		popup.appendChild(svg)
+		div.appendChild(svg)
 
-		let h1 = document.createElement("h5")
+		const h1 = document.createElement("h5")
 		h1.style.color = "red"
 		h1.textContent = chrome_i18n.errorStr
-		popup.appendChild(h1)
-		let h2 = document.createElement("h5")
+		div.appendChild(h1)
+		const h2 = document.createElement("h5")
 		h2.textContent = chrome_i18n.vpnErrorMsg
-		popup.appendChild(h2)
+		div.appendChild(h2)
+		updateDownloadMenuPopup(div)
+		updateDownloadMenuHeader()
+		updateDownloadMenuBody()
 	}
 
-	function donationPopup(menu_element){
+	function donationPopup(){
 		function checkLastNotificationTime(){
 			let currentTime = Math.floor(Date.now() / 1000);
 			let lastNotificationTime = localStorage.getItem('lastNotificationTime');
@@ -844,25 +936,23 @@ function MainScript(chrome_i18n) {
 			}
 		}
 		if (checkLastNotificationTime()){
-			let popup = makePopup(menu_element)
-			menu_element.style.minWidth = "175px"
-			menu_element.style.minHeight = "150px"
-			let svg = makeSVG("0 0 32 32", "M21 24.3h-7.09a.5.5 0 0 1 0-1H21a1.32 1.32 0 1 0 0-2.64h-5.1a.5.5 0 0 1-.3-.11l-1.43-1.14a4.99 4.99 0 0 0-5.1-.69l-1.87.8a.5.5 0 0 1-.4-.91l1.88-.8a6 6 0 0 1 6.12.82l1.28 1.03H21a2.32 2.32 0 1 1 0 4.63Zm-4.04 5.2a4.96 4.96 0 0 1-1.58-.26l-8.45-2.81a.5.5 0 1 1 .32-.95l8.45 2.82a3.99 3.99 0 0 0 3.3-.36l9.86-5.92a1.32 1.32 0 1 0-1.36-2.26l-4.17 2.5a.5.5 0 0 1-.51-.86l4.17-2.5a2.32 2.32 0 1 1 2.38 3.97l-9.86 5.92a4.96 4.96 0 0 1-2.55.71ZM7 27.5H2a.5.5 0 0 1 0-1h4.5v-9H2a.5.5 0 0 1 0-1h5a.5.5 0 0 1 .5.5v10a.5.5 0 0 1-.5.5Zm10.5-11a7 7 0 1 1 7-7 7 7 0 0 1-7 7Zm0-13a6 6 0 1 0 6 6 6 6 0 0 0-6-6Zm0 3.47a.5.5 0 0 1-.5-.5v-.92a.5.5 0 1 1 1 0v.92a.5.5 0 0 1-.5.5Zm0 6.98a.5.5 0 0 1-.5-.5v-.92a.5.5 0 0 1 1 0v.92a.5.5 0 0 1-.5.5Zm0-.97a2.02 2.02 0 0 1-2.1-1.92.5.5 0 0 1 1 0 1.12 1.12 0 0 0 2.2 0 .87.87 0 0 0-.63-.88l-1.26-.41a1.88 1.88 0 0 1-1.32-1.83 2.11 2.11 0 0 1 4.21 0 .5.5 0 0 1-1 0 1.12 1.12 0 0 0-2.2 0 .87.87 0 0 0 .63.88l1.26.41a1.88 1.88 0 0 1 1.32 1.83 2.02 2.02 0 0 1-2.11 1.92Z")
+			const popup = document.createElement("div")
+			const svg = makeSVG("0 0 32 32", "M21 24.3h-7.09a.5.5 0 0 1 0-1H21a1.32 1.32 0 1 0 0-2.64h-5.1a.5.5 0 0 1-.3-.11l-1.43-1.14a4.99 4.99 0 0 0-5.1-.69l-1.87.8a.5.5 0 0 1-.4-.91l1.88-.8a6 6 0 0 1 6.12.82l1.28 1.03H21a2.32 2.32 0 1 1 0 4.63Zm-4.04 5.2a4.96 4.96 0 0 1-1.58-.26l-8.45-2.81a.5.5 0 1 1 .32-.95l8.45 2.82a3.99 3.99 0 0 0 3.3-.36l9.86-5.92a1.32 1.32 0 1 0-1.36-2.26l-4.17 2.5a.5.5 0 0 1-.51-.86l4.17-2.5a2.32 2.32 0 1 1 2.38 3.97l-9.86 5.92a4.96 4.96 0 0 1-2.55.71ZM7 27.5H2a.5.5 0 0 1 0-1h4.5v-9H2a.5.5 0 0 1 0-1h5a.5.5 0 0 1 .5.5v10a.5.5 0 0 1-.5.5Zm10.5-11a7 7 0 1 1 7-7 7 7 0 0 1-7 7Zm0-13a6 6 0 1 0 6 6 6 6 0 0 0-6-6Zm0 3.47a.5.5 0 0 1-.5-.5v-.92a.5.5 0 1 1 1 0v.92a.5.5 0 0 1-.5.5Zm0 6.98a.5.5 0 0 1-.5-.5v-.92a.5.5 0 0 1 1 0v.92a.5.5 0 0 1-.5.5Zm0-.97a2.02 2.02 0 0 1-2.1-1.92.5.5 0 0 1 1 0 1.12 1.12 0 0 0 2.2 0 .87.87 0 0 0-.63-.88l-1.26-.41a1.88 1.88 0 0 1-1.32-1.83 2.11 2.11 0 0 1 4.21 0 .5.5 0 0 1-1 0 1.12 1.12 0 0 0-2.2 0 .87.87 0 0 0 .63.88l1.26.41a1.88 1.88 0 0 1 1.32 1.83 2.02 2.02 0 0 1-2.11 1.92Z")
 			svg.setAttribute("fill", "lime")
 			svg.style.height = "48px"
 			popup.appendChild(svg)
 
-			let h = document.createElement("h5")
+			const h = document.createElement("h5")
 			h.style.color = "white"
 			h.textContent = chrome_i18n.donateTitle
 			popup.appendChild(h)
 
-			let a = document.createElement("a")
+			const a = document.createElement("a")
 			a.href = "https://donatello.to/super_zombi"
 			a.target = "_blank"
 			popup.appendChild(a)
 			
-			let button = document.createElement("button")
+			const button = document.createElement("button")
 			button.textContent = chrome_i18n.donateButton
 			a.appendChild(button)
 			button.style.setProperty("--glow-color", "#00a0b0");
@@ -887,19 +977,32 @@ function MainScript(chrome_i18n) {
 				button.style.background = "black";
 				button.style.boxShadow = "0 0 1em .25em var(--glow-color), inset 0 0 1em 0 var(--glow-color)";
 			}
-			button.onclick = _=>{
-				popup.remove()
-				var currentTime = Math.floor(Date.now() / 1000);
-				localStorage.setItem('lastNotificationTime', currentTime);
-				menu_element.style.minWidth = "unset"
-				menu_element.style.minHeight = "60px"
+
+			const close_but = closeSVG()
+			close_but.style.position = "absolute"
+			close_but.style.zIndex = 3
+			close_but.style.top = "3px"
+			close_but.style.right = "3px"
+			close_but.style.cursor = "pointer"
+			close_but.style.borderRadius = "50%"
+			close_but.style.width = "22px";
+			close_but.style.transition = "0.25s"
+			close_but.onmouseover = _=>{
+				close_but.setAttribute("fill", "#c80000")
 			}
-			addCloseButton(popup, _=>{
-				var currentTime = Math.floor(Date.now() / 1000);
-				localStorage.setItem('lastNotificationTime', currentTime);
-				menu_element.style.minWidth = "unset"
-				menu_element.style.minHeight = "60px"
-			})
+			close_but.onmouseout = _=>{
+				close_but.setAttribute("fill", "red")
+			}
+			popup.appendChild(close_but)
+
+			const popupAction = _=>{
+				updateDownloadMenuPopup(popup, false)
+				const currentTime = Math.floor(Date.now() / 1000)
+				localStorage.setItem('lastNotificationTime', currentTime)
+			}
+			close_but.onclick = _=>popupAction()
+			button.onclick = _=>popupAction()
+			updateDownloadMenuPopup(popup)
 		}
 	}
-};
+}

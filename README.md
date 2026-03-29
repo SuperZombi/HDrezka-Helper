@@ -5,7 +5,7 @@
 Скачивает фильмы и субтитры. Поддерживает зеркала.
 
 <p>
-    <img src="https://shields.io/badge/версия-v7.6.0-blue">
+    <img src="https://shields.io/badge/версия-v8.0.0-blue">
     <a href="#донат"><img src="https://shields.io/badge/💲-Поддержать-2ea043"></a>
 </p>
 
@@ -31,11 +31,6 @@
   4. Включите "Режим разработчика".
   5. Нажмите "Загрузить распакованое расширение".
   6. Выберите путь к папке ```src```.
-  
-### Tampermonkey (Устарело):
-1. Установите **[Tampermonkey](https://www.tampermonkey.net/)**.
-2. Установите **[Скрипт](https://raw.githubusercontent.com/SuperZombi/HDrezka-downloader/main/hdrezka_helper.user.js)**.
-
 
 ## Настройки
 <details><summary></summary>
@@ -55,7 +50,7 @@
 </p>
 </details>
 
-## Новое:
+## Функции:
 * Скачивание субтитров
 * <details><summary>Downloader 2.0</summary>
    (Шаблон имени скачанного файла + быстрая загрузка внутри страницы)
@@ -64,9 +59,9 @@
   </details>
 
 * Мобильный режим
-* Скрытие блока с группой ВК.
+* Скрытие блока с группой ВК
 * <details><summary>Информация про фильм в шторке</summary><img src="github/images/metadata.jpg"></details> 
-* <details><summary>Импорт и Экспорт закладок. (устарело)</summary><img src="github/images/favorites.png"></details>
+* <details><summary><s>Импорт и Экспорт закладок</s> (устарело)</summary><img src="github/images/favorites.png"></details>
 <hr>
 
 #### 💲Донат
