@@ -5,7 +5,7 @@
 Скачивает фильмы и субтитры. Поддерживает зеркала.
 
 <p>
-    <img src="https://shields.io/badge/версия-v8.0.0-blue">
+    <img src="https://shields.io/badge/версия-v8.0.1-blue">
     <a href="#донат"><img src="https://shields.io/badge/💲-Поддержать-2ea043"></a>
 </p>
 

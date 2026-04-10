@@ -438,7 +438,7 @@ function MainScript(chrome_i18n) {
 			let seen = [];
 			const result = array.map(e => {
 				let temp = e.split("[")[1].split("]");
-				let quality = temp[0].trim();
+				let quality = temp[0].replace(/<[^>]*>/g, "").trim();
 				let links = temp[1].split(" or ").map(x => x.trim())
 					.filter(x => x.endsWith(".mp4") && !seen.includes(x));
 				links.forEach(link => seen.push(link));
