@@ -381,6 +381,7 @@ function MainScript(chrome_i18n) {
 			header.style.textOverflow = "ellipsis"
 			header.style.padding = "0.5rem 0.25rem"
 			header.style.borderBottom = "1px solid gray"
+			header.style.color = "white"
 
 			const body = document.createElement("div")
 			body.className = "download-menu-body"
