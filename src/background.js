@@ -191,10 +191,18 @@ function MainScript(chrome_i18n) {
 				let filmInfo = getFilmInfo()
 				navigator.mediaSession.metadata = new MediaMetadata({
 					title: filmInfo.title,
-					artist: [filmInfo.season.name, filmInfo.episode.name].filter(Boolean).join(' • '),
+					artist: [filmInfo.season?.name, filmInfo.episode?.name].filter(Boolean).join(' • ') || filmInfo.translator?.name,
 					artwork: [{ src: filmInfo.image }]
 				})
 			}
+		})
+		videoElement().addEventListener("timeupdate",_=>{
+			const video = videoElement()
+			navigator.mediaSession.setPositionState({
+				duration: video.duration || 0,
+				playbackRate: video.playbackRate,
+				position: video.currentTime
+			})
 		})
 
 		if (args.download){
@@ -225,9 +233,8 @@ function MainScript(chrome_i18n) {
 		const film_info = getFilmInfo()
 		console.table(film_info)
 		updateDownloadMenuHeader(
-			film_info.type == "video.tv_series" ? 
-				[film_info.season.name, film_info.episode.name].filter(Boolean).join(' • ') :
-				film_info.translator ? film_info.translator.name : film_info.title
+			[film_info.season?.name, film_info.episode?.name].filter(Boolean).join(' • ') ||
+			film_info.translator?.name || film_info.title
 		)
 		updateDownloadMenuBody(LOADER())
 		makeRequest({
