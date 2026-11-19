@@ -32,6 +32,24 @@
   5. Нажмите "Загрузить распакованое расширение".
   6. Выберите путь к папке ```src```.
 
+## Сборка из исходников
+
+Для сборки нужен [Node.js](https://nodejs.org/) 18+.
+
+```bash
+npm install           # установка зависимостей (один раз)
+npm run build         # собрать Chrome и Firefox
+npm run build:chrome  # только Chrome
+npm run build:firefox # только Firefox
+npm run clean         # очистить папку dist
+```
+
+Результат сборки находится в папке `dist`:
+* `dist/chrome` и `dist/firefox` — распакованные расширения для загрузки в режиме разработчика;
+* `dist/hdrezka-helper-chrome-v<версия>.zip` и `dist/hdrezka-helper-firefox-v<версия>.zip` — архивы для публикации в магазинах.
+
+Версия берётся из `chrome/manifest.json` и `firefox/manifest.json`.
+
 ## Настройки
 <details><summary></summary>
 <p align="center">

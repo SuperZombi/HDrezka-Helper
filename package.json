@@ -1,0 +1,20 @@
+{
+  "name": "hdrezka-helper",
+  "version": "8.1.1",
+  "private": true,
+  "description": "Build tooling for the HDrezka Helper browser extension",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "build:chrome": "node scripts/build.mjs chrome",
+    "build:firefox": "node scripts/build.mjs firefox",
+    "clean": "node scripts/build.mjs --clean"
+  },
+  "devDependencies": {
+    "archiver": "^8.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
