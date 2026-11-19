@@ -5,45 +5,43 @@ on:
     types: [published]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
-  build-chrome:
+  build:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chrome, firefox]
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
-      - name: Create archive
-        run: |
-          mkdir chrome_build
-          cp -r src/* chrome_build/
-          cp chrome/manifest.json chrome_build/
-          cd chrome_build
-          zip -r ../chrome.zip .
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build ${{ matrix.browser }} extension
+        run: npm run build:${{ matrix.browser }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ matrix.browser }}-extension
+          path: dist/*.zip
+          if-no-files-found: error
 
       - name: Upload to Release
-        uses: xresloader/upload-to-github-release@v1
+        if: github.event_name == 'release'
+        uses: xresloader/upload-to-github-release@v1.6.2
         with:
-          file: chrome.zip
-          overwrite: true
-          update_latest_release: true
-
-  build-firefox:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
-
-      - name: Create archive
-        run: |
-          mkdir firefox_build
-          cp -r src/* firefox_build/
-          cp firefox/manifest.json firefox_build/
-          cd firefox_build
-          zip -r ../firefox.zip .
-
-      - name: Upload to Release
-        uses: xresloader/upload-to-github-release@v1
-        with:
-          file: firefox.zip
+          file: dist/*.zip
           overwrite: true
           update_latest_release: true
